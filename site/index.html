@@ -1,0 +1,123 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+</head>
+<body>
+
+
+<!-- Temporary (to be replaced by AppView) -->
+
+<ul id="person-list">
+
+</ul>
+
+<hr>
+
+<ul id="expense-list">
+
+</ul>
+
+
+<!-- Templates start here -->
+
+<script type="text/template" id="person-template">
+	<i><%= name %></i>
+</script>
+
+<script type="text/template" id="person-participate-template">
+	<input type="checkbox"> <%= name %>
+</script>
+
+<script type="text/template" id="expense-template">
+	<b><%= description %> (<%= amount %>)</b>
+</script>
+
+<script type="text/template" id="expense-edit-template">
+	<header>
+	</header>
+	<ul>
+
+	</ul>
+</script>
+
+<script type="text/template" id="expense-edit-header-template">
+	<u><%= description %> (<%= amount %>)</u>
+	<input type="date" value="<% var d = new Date(date); print(d.getFullYear() + '-' + d.getMonth()+1 + '-' + d.getDate()) %>">
+</script>
+
+<script type="text/template" id="participation-template">
+	<input type="checkbox" <%=participating ? "checked" : ""%>> <%= person.get('name') %> <input type="text" value="<%= amount %>">
+</script>
+
+
+<!-- 
+	Look into minification / concatnation of scripts (buildscript!)
+	https://github.com/h5bp/node-build-script
+-->
+
+<script src="js/libs/jquery-1.9.1.js"></script>
+<script src="js/libs/underscore.js"></script>
+<script src="js/libs/backbone.js"></script>
+<script src="js/libs/backbone-relational.js"></script>
+
+<script src="js/models/Expense.js"></script>
+<script src="js/models/Person.js"></script>
+<script src="js/models/Participation.js"></script>
+
+<script src="js/collections/ExpenseList.js"></script>
+<script src="js/collections/PersonList.js"></script>
+<script src="js/collections/ParticipationList.js"></script>
+
+<script src="js/views/AListView.js"></script>
+<script src="js/views/ExpenseListView.js"></script>
+<script src="js/views/PersonListView.js"></script>
+<script src="js/views/ParticipationListView.js"></script>
+
+<script src="js/views/ExpenseView.js"></script>
+<script src="js/views/ExpenseEditView.js"></script>
+<script src="js/views/PersonView.js"></script>
+<script src="js/views/ParticipationView.js"></script>
+
+
+<script>
+// If you're wondering what the heck we're doing here: 
+// http://addyosmani.github.io/backbone-fundamentals
+
+
+
+// calls here are temporary, just to provide some data to play around with
+
+var q = {};
+
+$(function () {
+	app.expenses = new app.ExpenseList();
+	app.persons = new app.PersonList();
+	
+	q.vEl = new app.ExpenseListView({
+		collection: app.expenses,
+		el: '#expense-list'
+	});
+	new app.PersonListView({
+		collection: app.persons,
+		el: '#person-list'
+	});
+
+	q.p1 = new app.Person({name: "aHans"});
+	q.p2 = new app.Person({name: "bWurst"});
+
+	q.pa1 = new app.Participation({participating: true, person: q.p2.cid, amount: 100})
+	q.pa2 = new app.Participation({participating: true, person: q.p1.cid, amount: 10})
+
+	q.expense = new app.Expense({description: "a nice meal", participations: [q.pa1.cid, q.pa2.cid]})
+
+	app.persons.add(q.p2);
+	app.persons.add(q.p1);
+	app.persons.add(new app.Person({name: "Schmitz"}));
+	app.expenses.add(q.expense);
+});
+</script>
+
+</body>
+</html>
