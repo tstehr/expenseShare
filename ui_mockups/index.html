@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<!-- This is by no means production ready code!!!! -->
+<head>
+	<meta charset="utf-8">
+
+	<title>test</title>
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="viewport" content="width=device-width, user-scalable=no">
+
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		html {
+			font-size: 18px;
+			font-family: "Helvetica", "Arial", sans-serif;
+			font-weight: bold;
+			text-shadow: 0px 1px 0px white;
+			color: hsl(0, 90%, 45%);
+			background: black;
+		}
+		body, html {
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+		}
+
+		.module {
+			overflow:hidden;
+			position:relative;
+			height:100%;
+		}
+		.module-body {
+			position: absolute;
+			top: 3rem;
+			left: 0;
+			bottom: 0;
+			right: 0;
+			overflow-x: hidden;
+			overflow-y: scroll;
+			-webkit-overflow-scrolling: touch;
+		}
+
+
+		.line {
+			background: hsl(0, 0%, 93%);
+			overflow: hidden;
+		}
+		.line > strong, .line > span {
+			display: block;
+			height: 3rem;
+			padding: .2rem .8rem 0;
+			line-height: 2.8rem;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			overflow:hidden;
+		}
+		.line > strong {
+			background: hsl(0, 0%, 88%);
+			border-bottom: 1px solid hsl(0, 0%, 84%);
+		}
+		.line > span {
+			border-bottom: 1px solid hsl(0, 0%, 90%);
+		}
+
+
+
+
+
+		.list {
+			list-style: none;
+			display: table;
+			table-layout: fixed;
+			width: 100%;
+			height: 3rem;
+		}
+		.list .line {
+			display: table-row;
+		}
+		.list .line > strong, .list .line > span {
+			display: table-cell;
+		}
+		.list .line > span {
+			width: 5.5rem;
+			text-align:right;
+		}
+
+
+
+	</style>
+</head>
+<body>
+	<section class="module">
+		<header class="line">
+			<span>	
+				<a href="#">Back</a>
+				April '12
+				<a href="#">Back</a>	
+			</span>
+		</header>
+		<div class="module-body">
+			<ul class="list">
+				<li class="line">
+					<strong>Der Gerät</strong>
+					<span>25.55€</span>
+				</li>
+				<li class="line">
+					<strong>Wrappen</strong>
+					<span>105.20€</span>
+				</li>
+				<li class="line">
+					<strong>Wrappen</strong>
+					<span>105.20€</span>
+				</li>
+				<li class="line">
+					<strong>Wrappen</strong>
+					<span>105.20€</span>
+				</li>
+				<li class="line">
+					<strong>Wrappen</strong>
+					<span>105.20€</span>
+				</li>
+				<li class="line">
+					<strong>Wrappen</strong>
+					<span>105.20€</span>
+				</li>
+				<li class="line">
+					<strong>Wrappen</strong>
+					<span>105.20€</span>
+				</li>
+				<li class="line">
+					<strong>Wrappen</strong>
+					<span>105.20€</span>
+				</li>
+				<li class="line">
+					<strong>Wrappen</strong>
+					<span>105.20€</span>
+				</li>
+				<li class="line">
+					<strong>Wrappen</strong>
+					<span>105.20€</span>
+				</li>
+				<li class="line">
+					<strong>Wrappen</strong>
+					<span>105.20€</span>
+				</li>
+				<li class="line">
+					<strong>Wrappen</strong>
+					<span>105.20€</span>
+				</li>
+				<li class="line">
+					<strong>Wrappen</strong>
+					<span>105.20€</span>
+				</li>
+				<li class="line">
+					<strong>Wrappen</strong>
+					<span>105.20€</span>
+				</li>
+				<li class="line">
+					<strong>Wrappen</strong>
+					<span>105.20€</span>
+				</li>
+				<li class="line">
+					<strong>Wrappen</strong>
+					<span>105.20€</span>
+				</li>
+				<li class="line">
+					<strong>Wrappen</strong>
+					<span>105.20€</span>
+				</li>
+				<li class="line">
+					<strong>Wrappen</strong>
+					<span>105.20€</span>
+				</li>
+				<li class="line">
+					<strong>Wrappen</strong>
+					<span>105.20€</span>
+				</li>
+			</ul>
+		</div>
+	</section>
+
+	<script>
+		document.addEventListener('touchmove', function (e) {
+			e.preventDefault();
+		});
+
+		document.querySelector('.list').addEventListener('touchmove', function (e) {
+			e.stopPropagation();
+		});
+
+		// TODO investigate http://forecast.io/
+	</script>
+</body>
