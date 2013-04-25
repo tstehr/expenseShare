@@ -18,11 +18,57 @@ body, html {
 	overflow: hidden;
 }
 
+
+a {
+	-webkit-touch-callout: none;
+}
+
+
+.line {
+	display: block;
+	height: 3rem;
+	padding: .2rem .8rem 0;
+	line-height: 2.8rem;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow:hidden;
+}
+.line.main, strong.line {
+	background: hsl(0, 0%, 88%);
+	border-bottom: 1px solid hsl(0, 0%, 84%);
+}
+.line.aside, span.line {
+	background: hsl(0, 0%, 93%);
+	border-bottom: 1px solid hsl(0, 0%, 90%);
+}
+
+
+
+
 .module {
 	overflow:hidden;
 	position:relative;
 	height:100%;
 }
+.module-header > a {
+	position: absolute;
+	top: .2rem;
+	left: 0;
+	width: 3rem;
+	text-indent: 100%;
+	overflow: hidden;
+}
+.module-header > a:nth-of-type(2) { 
+	left: inherit;
+	right: 0;
+}
+.module-header > h1 {
+	font-size: 1rem;
+	margin: 0 3rem;
+	text-align: center;
+}
+
+
 .module-body {
 	position: absolute;
 	top: 3rem;
@@ -33,30 +79,13 @@ body, html {
 	overflow-y: scroll;
 	-webkit-overflow-scrolling: touch;
 }
-
-
-.line {
-	background: hsl(0, 0%, 93%);
-	overflow: hidden;
+.scroll-wrapper {
+	width: 100%;
+	height: 100%;
+	overflow-y: scroll;
+	overflow-x:hidden;
+	-webkit-overflow-scrolling: touch;
 }
-.line > strong, .line > span {
-	display: block;
-	height: 3rem;
-	padding: .2rem .8rem 0;
-	line-height: 2.8rem;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	overflow:hidden;
-}
-.line > strong {
-	background: hsl(0, 0%, 88%);
-	border-bottom: 1px solid hsl(0, 0%, 84%);
-}
-.line > span {
-	border-bottom: 1px solid hsl(0, 0%, 90%);
-}
-
-
 
 
 
@@ -67,13 +96,34 @@ body, html {
 	width: 100%;
 	height: 3rem;
 }
-.list .line {
+.list > li {
 	display: table-row;
 }
-.list .line > strong, .list .line > span {
+.list .line  {
 	display: table-cell;
 }
-.list .line > span {
+
+.expense-list span.line {
 	width: 5.5rem;
 	text-align:right;
+}
+
+.participation-list span.line {
+	width: 3rem;	
+}
+.participation-list span:nth-child(3).line {
+	width: 5.5rem;
+}
+.participation-list input[type=text] {
+	border: 0;
+	background: transparent;
+	font: inherit;
+	color: inherit;
+	font-color: inherit;
+	text-shadow: inherit;
+	width: 3.5rem;
+	text-align: right;
+}
+.participation-list input[type=text]:focus {
+	outline: none;
 }

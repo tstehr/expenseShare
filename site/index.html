@@ -35,11 +35,8 @@
 </script>
 
 <script type="text/template" id="expense-edit-template">
-	<header>
-	</header>
-	<ul>
-
-	</ul>
+	<header></header>
+	<ul></ul>
 </script>
 
 <script type="text/template" id="expense-edit-header-template">
@@ -87,22 +84,23 @@
 
 
 
-// calls here are temporary, just to provide some data to play around with
-
+// stuff on "q" is temporary, just to provide some example data to play around with
 var q = {};
 
 $(function () {
 	app.expenses = new app.ExpenseList();
 	app.persons = new app.PersonList();
-	
-	q.vEl = new app.ExpenseListView({
-		collection: app.expenses,
-		el: '#expense-list'
-	});
+
 	new app.PersonListView({
-		collection: app.persons,
+		model: app.persons,
 		el: '#person-list'
 	});
+
+	new app.ExpenseListView({
+		model: app.expenses,
+		el: '#expense-list'
+	});
+
 
 	q.p1 = new app.Person({name: "aHans"});
 	q.p2 = new app.Person({name: "bWurst"});
