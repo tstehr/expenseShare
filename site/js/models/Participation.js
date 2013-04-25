@@ -17,5 +17,8 @@ app.Participation = Backbone.RelationalModel.extend({
 	initialize: function () {
 		// TODO respond to "destroy" of this.person
 		// this.listenTo(this.person, 'destroy', ...)
+	},
+	handlePersonDestroy: function () {
+		
 	}
 })

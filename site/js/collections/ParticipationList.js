@@ -7,6 +7,8 @@ app.ParticipationList = Backbone.Collection.extend({
 		return part.get('person').get('name').toLowerCase();
 	},
 	getByPerson: function (person) {
-		return this.findWhere({person: person});
+		return this.find(function (part) {
+			return part.get('person') == person;
+		});
 	}
 });
