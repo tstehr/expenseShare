@@ -92,12 +92,12 @@ $(function () {
 	app.persons = new app.PersonList();
 
 	new app.PersonListView({
-		model: app.persons,
+		collection: app.persons,
 		el: '#person-list'
 	});
 
 	new app.ExpenseListView({
-		model: app.expenses,
+		collection: app.expenses,
 		el: '#expense-list'
 	});
 
