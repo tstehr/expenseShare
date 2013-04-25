@@ -21,18 +21,18 @@ app.Expense = Backbone.RelationalModel.extend({
 	}],
 	initialize: function () {
 		// setting date to current time, if it isn't set
-		if(this.get('date') == null) {
+		if (this.get('date') == null) {
 			this.set('date', Date.now());
 		}
 		
+		// initialize the amount
 		this.calculateAmount();
-		this.addAllParticipations(app.persons);
-
-		this.listenTo(this.get('participations'), 'change add remove', this.calculateAmount);
-
+			
 		this.listenTo(app.persons, 'reset', this.addAllParticipations);
 		this.listenTo(app.persons, 'add', this.addOneParticipation);
 		this.listenTo(app.persons, 'remove', this.removeOneParticipation);
+		
+		this.listenTo(this.get('participations'), 'change add remove', this.calculateAmount);
 	},
 	calculateAmount: function () {
 		this.set('amount', this.get('participations').reduce(function (memo, part) {
