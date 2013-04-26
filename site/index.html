@@ -9,15 +9,9 @@
 
 <!-- Temporary (to be replaced by AppView) -->
 
-<ul id="person-list">
+<div id="app">
 
-</ul>
-
-<hr>
-
-<ul id="expense-list">
-
-</ul>
+</div>
 
 
 <!-- Templates start here -->
@@ -67,15 +61,17 @@
 <script src="js/collections/PersonList.js"></script>
 <script src="js/collections/ParticipationList.js"></script>
 
+<script src="js/views/AppView.js"></script>
+<script src="js/views/ExpenseView.js"></script>
+<script src="js/views/ExpenseEditView.js"></script>
+<script src="js/views/PersonView.js"></script>
+<script src="js/views/ParticipationView.js"></script>
+
 <script src="js/views/AListView.js"></script>
 <script src="js/views/ExpenseListView.js"></script>
 <script src="js/views/PersonListView.js"></script>
 <script src="js/views/ParticipationListView.js"></script>
 
-<script src="js/views/ExpenseView.js"></script>
-<script src="js/views/ExpenseEditView.js"></script>
-<script src="js/views/PersonView.js"></script>
-<script src="js/views/ParticipationView.js"></script>
 
 
 <script>
@@ -91,16 +87,11 @@ $(function () {
 	app.expenses = new app.ExpenseList();
 	app.persons = new app.PersonList();
 
-	new app.PersonListView({
-		collection: app.persons,
-		el: '#person-list'
+	app.appView = new app.AppView({
+		el: '#app'
 	});
 
-	new app.ExpenseListView({
-		collection: app.expenses,
-		el: '#expense-list'
-	});
-
+	app.appView.render();
 
 	q.p1 = new app.Person({name: "aHans"});
 	q.p2 = new app.Person({name: "bWurst"});

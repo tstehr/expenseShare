@@ -17,6 +17,7 @@ app.AListView = Backbone.View.extend({
 	},
 	render: function () {
 		this.addAll(this.collection);
+		return this;
 	},
 	createView: function (model) {
 		console.error('implement');
