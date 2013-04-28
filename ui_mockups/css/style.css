@@ -102,6 +102,10 @@ Increase touch-target size
 	overflow-y: scroll;
 	-webkit-overflow-scrolling: touch;
 }
+/* 
+Hack for -webkit-overflow-scrolling 
+https://github.com/joelambert/ScrollFix/issues/2
+*/
 .scroll-wrapper {
 	width: 100%;
 	height: 100%;
