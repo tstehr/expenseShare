@@ -11,6 +11,8 @@ html {
 	text-shadow: 0px 1px 0px white;
 	color: hsl(0, 90%, 45%);
 	background: black;
+
+	-webkit-user-select: none;
 }
 body, html {
 	width: 100%;
@@ -21,6 +23,17 @@ body, html {
 
 a {
 	-webkit-touch-callout: none;
+}
+
+.visuallyhidden {
+	border: 0;
+	clip: rect(0 0 0 0);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	width: 1px;
 }
 
 
@@ -50,14 +63,24 @@ a {
 	position:relative;
 	height:100%;
 }
+
 .module-header > a {
 	position: absolute;
 	top: .2rem;
 	left: 0;
 	width: 3rem;
-	text-indent: 100%;
-	overflow: hidden;
+	text-align: center;
+	text-decoration: none;
+	color: inherit;
 }
+/*
+Increase touch-target size
+.module-header > a:active {
+	outline: 5px solid pink;
+	height: 5rem;
+	width: 5rem;
+	z-index: 5;
+}*/
 .module-header > a:nth-of-type(2) { 
 	left: inherit;
 	right: 0;

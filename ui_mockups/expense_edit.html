@@ -23,7 +23,7 @@
 					<li>
 						<span class="line"><input type="checkbox"></span>
 						<strong class="line">Person X</strong>
-						<span class="line"><input type="number" value="25.55" pattern="\d+(\.\d*)?">€</span>
+						<span class="line"><input type="text" value="25.55" pattern="\d*">€</span>
 					</li>
 				</ul>
 			</div>
@@ -31,4 +31,11 @@
 </section>
 
 <script src="js/scroll.js"></script>
+<script>
+document.querySelectorAll('input[type=text]')[0].addEventListener('input', function (e) {
+	var str = e.target.value.trim().split('.').join('');
+	console.log(str, parseInt(str, 10));
+});
+</script>
+
 </body>
