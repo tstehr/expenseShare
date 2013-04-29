@@ -7,8 +7,6 @@
 <body>
 
 
-<!-- Temporary (to be replaced by AppView) -->
-
 <div id="app">
 
 </div>
@@ -43,7 +41,7 @@
 </script>
 
 
-<!-- 
+<!--
 	TODO Look into minification / concatnation of scripts (buildscript!)
 	https://github.com/h5bp/node-build-script
 -->
@@ -73,15 +71,10 @@
 <script src="js/views/ParticipationListView.js"></script>
 
 
-
 <script>
 // If you're wondering what the heck we're doing here: 
 // http://addyosmani.github.io/backbone-fundamentals
 
-
-
-// stuff on "q" is temporary, just to provide some example data to play around with
-var q = {};
 
 $(function () {
 	app.expenses = new app.ExpenseList();
@@ -92,21 +85,6 @@ $(function () {
 	});
 
 	app.appView.render();
-
-	q.p1 = new app.Person({name: "aHans"});
-	q.p2 = new app.Person({name: "bWurst"});
-
-	q.pa1 = new app.Participation({participating: true, person: q.p2.cid, amount: 100})
-	q.pa2 = new app.Participation({participating: true, person: q.p1.cid, amount: 10})
-
-	q.expense = new app.Expense({description: "a nice meal", participations: [q.pa1.cid, q.pa2.cid]})
-
-	app.persons.add(q.p2);
-	app.persons.add(q.p1);
-
-	app.persons.add(new app.Person({name: "Schmitz"}));
-
-	app.expenses.add(q.expense);
 });
 </script>
 
