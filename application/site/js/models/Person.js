@@ -6,5 +6,6 @@ var app = app || {};
 app.Person = Backbone.RelationalModel.extend({
 	defaults: {
 		name: null
-	}
+	},
+	urlRoot: '/api/persons'
 });

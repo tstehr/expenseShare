@@ -14,6 +14,7 @@ app.Expense = Backbone.RelationalModel.extend({
 		relatedModel: 'app.Participation',
 		includeInJSON: Backbone.Model.prototype.idAttribute,
 		collectionType: 'app.ParticipationList',
+		autoFetch: true,
 		reverseRelation: {
 			key: 'expense',
 			includeInJSON: Backbone.Model.prototype.idAttribute
@@ -27,7 +28,10 @@ app.Expense = Backbone.RelationalModel.extend({
 		
 		// initialize the amount
 		this.calculateAmount();
-			
+
+		// initialize participations
+		this.addAllParticipations(app.persons);
+
 		this.listenTo(app.persons, 'reset', this.addAllParticipations);
 		this.listenTo(app.persons, 'add', this.addOneParticipation);
 		this.listenTo(app.persons, 'remove', this.removeOneParticipation);

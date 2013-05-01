@@ -12,8 +12,10 @@ app.Participation = Backbone.RelationalModel.extend({
 		type: Backbone.HasOne,
 		key: 'person',
 		relatedModel: 'app.Person',
-		includeInJSON: Backbone.Model.prototype.idAttribute
+		includeInJSON: Backbone.Model.prototype.idAttribute,
+		autoFetch: true
 	}],
+	urlRoot: '/api/participations',
 	initialize: function () {
 		// TODO respond to "destroy" of this.person
 		// this.listenTo(this.person, 'destroy', ...)

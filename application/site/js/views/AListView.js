@@ -11,12 +11,13 @@ app.AListView = Backbone.View.extend({
 	initialize: function () {
 		this._viewPointers = {};
 
+		// TODO // FIXME sometimes changes to collection get not reflected correctly
 		this.listenTo(this.collection, 'add', this.handleAdd);
-		this.listenTo(this.collection, 'remove', this.removeOne);
-		this.listenTo(this.collection, 'reset', this.addAll);
+		this.listenTo(this.collection, 'remove', this.remove);
+		this.listenTo(this.collection, 'reset', this.reset);
 	},
 	render: function () {
-		this.addAll(this.collection);
+		this.reset(this.collection);
 		return this;
 	},
 	createView: function (model) {
@@ -46,13 +47,13 @@ app.AListView = Backbone.View.extend({
 			children.filter(':eq(' + (index-1) + ')').after(view.render().el);
 		}
 	},
-	addAll: function (collection) {
+	reset: function (collection) {
 		this.$el.empty();
 		collection.each(_.bind(function (model, index, collection) {
 			this.addOne(model, index);
 		}, this));
 	},
-	removeOne: function (model, collection, options) {
+	remove: function (model, collection, options) {
 		this.$('> :nth-child(' + (options.index+1) + ')').remove();
 	}
 });
