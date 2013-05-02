@@ -20,21 +20,22 @@ app.Expense = Backbone.RelationalModel.extend({
 			includeInJSON: Backbone.Model.prototype.idAttribute
 		}
 	}],
+	urlRoot: '/api/expenses',
 	initialize: function () {
 		// setting date to current time, if it isn't set
 		if (this.get('date') == null) {
 			this.set('date', Date.now());
 		}
-		
+
 		// initialize the amount
 		this.calculateAmount();
 
 		// initialize participations
-		this.addAllParticipations(app.persons);
+		/*this.addAllParticipations(app.persons);
 
 		this.listenTo(app.persons, 'reset', this.addAllParticipations);
 		this.listenTo(app.persons, 'add', this.addOneParticipation);
-		this.listenTo(app.persons, 'remove', this.removeOneParticipation);
+		this.listenTo(app.persons, 'remove', this.removeOneParticipation);*/
 		
 		this.listenTo(this.get('participations'), 'change add remove', this.calculateAmount);
 	},

@@ -115,7 +115,7 @@ createMockRESTInterface(app, 'persons', [{
 }, {
 	id: 2,
 	name: 'Meier'
-}, {
+}/*, {
 	id: 3,
 	name: 'Schultze'
 }, {
@@ -124,7 +124,7 @@ createMockRESTInterface(app, 'persons', [{
 }, {
 	id: 5,
 	name: 'Wurst'
-}], makeId);
+}*/], makeId);
 
 createMockRESTInterface(app, 'participations', [{
 	id: 100,
@@ -135,7 +135,7 @@ createMockRESTInterface(app, 'participations', [{
 }, {
 	id: 101,
 	person: 2,
-	expense: 200, 
+	expense: 201, 
 	amount: 10,
 	participating: true
 }], makeId);
@@ -143,10 +143,11 @@ createMockRESTInterface(app, 'participations', [{
 createMockRESTInterface(app, 'expenses', [{
 	id: 200,
 	description: 'Wrappen',
-	participations: [100, 101]
+	participations: [100]
 }, {
-	id: makeId(),
-	description: 'Burger'
+	id: 201,
+	description: 'Burger',
+	participations: [101]
 }, {
 	id: makeId(),
 	description: 'Spaghetti'

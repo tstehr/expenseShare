@@ -11,7 +11,7 @@ app.ParticipationView = Backbone.View.extend({
 	},
 
 	initialize: function () {
-		this.listenTo(this.model.get('person'), 'change:name', this.render);
+		// this.listenTo(this.model.get('person'), 'change:name', this.render);
 	},
 	render: function () {
 		this.$el.html(this.template(_.clone(this.model.attributes)));

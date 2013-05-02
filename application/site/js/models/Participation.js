@@ -18,7 +18,7 @@ app.Participation = Backbone.RelationalModel.extend({
 	urlRoot: '/api/participations',
 	initialize: function () {
 		// TODO respond to "destroy" of this.person
-		// this.listenTo(this.person, 'destroy', ...)
+		// this.listenTo(this, 'change:person', ...
 	},
 	handlePersonDestroy: function () {
 		
