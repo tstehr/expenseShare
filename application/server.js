@@ -46,13 +46,18 @@ var createMockRESTInterface = function (app, name, elements, makeId) {
 
 	// getting one element 
 	app.get('/api/' + name + '/:id', function (req, res) {
-		elements.some(function (element) {
-			if (element.id === parseInt(req.params.id, 10)) {
-				res.set('Content-type', 'application/json; charset=utf8');
+		res.set('Content-type', 'application/json; charset=utf8');
+
+		var found = elements.some(function (element) {
+			if (element.id.toString() === req.params.id) {
 				res.send(JSON.stringify(element));
 				return true;
 			}
 		});
+
+		if (!found) {
+			res.send('');
+		}
 	});
 
 	// adding an element
@@ -71,7 +76,7 @@ var createMockRESTInterface = function (app, name, elements, makeId) {
 	// updating an existing element
 	app.put('/api/' + name + '/:id', function (req, res) {
 		elements.some(function (element) {
-			if (element.id === parseInt(req.params.id, 10)) {
+			if (element.id.toString() === req.params.id) {
 				Object.keys(req.body).forEach(function (key) {
 					element[key] = req.body[key];
 				});
@@ -115,7 +120,7 @@ createMockRESTInterface(app, 'persons', [{
 }, {
 	id: 2,
 	name: 'Meier'
-}/*, {
+}, {
 	id: 3,
 	name: 'Schultze'
 }, {
@@ -124,7 +129,7 @@ createMockRESTInterface(app, 'persons', [{
 }, {
 	id: 5,
 	name: 'Wurst'
-}*/], makeId);
+}], makeId);
 
 createMockRESTInterface(app, 'participations', [{
 	id: 100,
@@ -135,19 +140,25 @@ createMockRESTInterface(app, 'participations', [{
 }, {
 	id: 101,
 	person: 2,
-	expense: 201, 
+	expense: 200, 
 	amount: 10,
+	participating: true
+}, {
+	id: 102,
+	person: 3,
+	expense: 201, 
+	amount: 42,
 	participating: true
 }], makeId);
 
 createMockRESTInterface(app, 'expenses', [{
 	id: 200,
 	description: 'Wrappen',
-	participations: [100]
+	participations: [100, 101]
 }, {
 	id: 201,
 	description: 'Burger',
-	participations: [101]
+	participations: [102]
 }, {
 	id: makeId(),
 	description: 'Spaghetti'
@@ -157,6 +168,11 @@ createMockRESTInterface(app, 'expenses', [{
 }, {
 	id: makeId(),
 	description: 'Der Gerät'
+}], makeId);
+
+createMockRESTInterface(app, 'months', [{
+	id: '2013-05',
+	expenses: [200, 201]
 }], makeId);
 
 

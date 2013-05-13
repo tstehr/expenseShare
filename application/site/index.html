@@ -18,6 +18,11 @@
 	<i><%= name %></i> <code>#<%= id %></code>
 </script>
 
+<script type="text/template" id="month-template">
+	<u><%= id %> (<%= totalAmount %>)</u>
+	<ul></ul>
+</script>
+
 <script type="text/template" id="expense-template">
 	<b><%= description %> (<%= amount %>)  <code>#<%= id %></code></b>
 </script>
@@ -29,7 +34,6 @@
 
 <script type="text/template" id="expense-edit-header-template">
 	<u><%= description %> (<%= amount %>) </u> <code>#<%= id %></code> <br>
-	<input type="date" value="<% var d = new Date(date); print(d.getFullYear() + '-' + d.getMonth()+1 + '-' + d.getDate()) %>">
 </script>
 
 <script type="text/template" id="participation-template">
@@ -47,6 +51,7 @@
 <script src="js/libs/backbone.js"></script>
 <script src="js/libs/backbone-relational.js"></script>
 
+<script src="js/models/Month.js"></script>
 <script src="js/models/Expense.js"></script>
 <script src="js/models/Person.js"></script>
 <script src="js/models/Participation.js"></script>
@@ -56,6 +61,7 @@
 <script src="js/collections/ParticipationList.js"></script>
 
 <script src="js/views/AppView.js"></script>
+<script src="js/views/MonthView.js"></script>
 <script src="js/views/ExpenseView.js"></script>
 <script src="js/views/ExpenseEditView.js"></script>
 <script src="js/views/PersonView.js"></script>
@@ -73,7 +79,6 @@
 
 
 $(function () {
-	app.expenses = new app.ExpenseList();
 	app.persons = new app.PersonList();
 
 	app.appView = new app.AppView({
@@ -81,6 +86,29 @@ $(function () {
 	});
 
 	app.appView.render();
+
+
+	x = app.Month.findOrCreate({id: '2013-05'});
+
+	app.persons.fetch()
+		.then(function () {
+			return x.fetch();
+		})
+		.then(function () {
+			return $.when.apply(this, x.fetchRelated('expenses'));
+		})
+		.then(function () {
+			return x.get('expenses').reduce(function (memo, expense) {
+				return $.when.apply(this, expense.fetchRelated('participations').concat(memo));
+			}, {});
+		})
+		.then(function () {
+			console.log('finish\'d', arguments);
+		}, function () {
+			console.log('fail\'d', arguments);
+		})
+	;
+		
 });
 </script>
 

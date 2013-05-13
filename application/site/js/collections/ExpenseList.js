@@ -4,7 +4,6 @@ var app = app || {};
 // Ideas: https://gist.github.com/aniero/705733 https://github.com/GeReV/Backbone.PagedCollection
 app.ExpenseList = Backbone.Collection.extend({
 	model: app.Expense,
-	url: '/api/expenses',
 	comparator: function (expense) {
 		return expense.get('date');
 	}

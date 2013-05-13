@@ -5,6 +5,7 @@ var app = app || {};
  */
 app.Participation = Backbone.RelationalModel.extend({
 	defaults: {
+		id: null,
 		participating: false,
 		amount: 0
 	},
