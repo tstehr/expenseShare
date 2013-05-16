@@ -18,7 +18,10 @@
 </script>
 
 <script type="text/template" id="month-template">
-	<u><%= id %> (<%= totalAmount %>)</u>
+	<u><%= id %> (<%= amount %>)</u>
+	<a href="/month/<%= prevMonth %>/">back</a> 
+	<a href="/month/<%= nextMonth %>/">back</a>
+	<p><%= JSON.stringify(pam) %></p>
 	<ul></ul>
 </script>
 
@@ -49,6 +52,8 @@
 <script src="js/libs/underscore.js"></script>
 <script src="js/libs/backbone.js"></script>
 <script src="js/libs/backbone-relational.js"></script>
+
+<script src="js/util/Util.js"></script>
 
 <script src="js/models/Month.js"></script>
 <script src="js/models/Expense.js"></script>
@@ -102,6 +107,9 @@ $(function () {
 			}, {});
 		})
 		.then(function () {
+			app.appView.showMonth("2013-05");
+
+
 			console.log('finish\'d', arguments);
 		}, function () {
 			console.log('fail\'d', arguments);

@@ -7,7 +7,7 @@ app.ExpenseView = Backbone.View.extend({
 		this.listenTo(this.model, 'change:description change:amount', this.render);
 	},
 	render: function () {
-		this.$el.html(this.template(this.model.toJSON()));
+		this.$el.html(this.template(this.model.toJSONDecorated()));
 		return this;
 	}
 });

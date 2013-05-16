@@ -31,7 +31,7 @@ app.ExpenseEditView = Backbone.View.extend({
 	},
 
 	renderHeader: function () {
-		this.$('header').html(this.headerTemplate(this.model.toJSON()));
+		this.$('header').html(this.headerTemplate(this.model.toJSONDecorated()));
 		return this;
 	},
 

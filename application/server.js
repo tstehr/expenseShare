@@ -18,7 +18,7 @@ app.use(app.router);
 app.use(express.static(path.join(application_root, 'site')));
 
 //Show all errors in development
-app.use(express.errorHandler({ 
+app.use(express.errorHandler({
 	dumpExceptions: true, 
 	showStack: true 
 }));

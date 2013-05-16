@@ -5,9 +5,7 @@ var app = app || {};
  */
 app.Month = Backbone.RelationalModel.extend({
 	defaults: {
-		id: null,
-		totalAmount: null,
-		personAmountMap: null
+		id: null
 	},
 	relations: [{
 		key: 'expenses',
@@ -22,18 +20,13 @@ app.Month = Backbone.RelationalModel.extend({
 		}
 	}],
 	urlRoot: '/api/months',
-	initialize: function () {
-		this.calculateAmount();
-
-		this.listenTo(this.get('expenses'), 'change add remove', this.calculateAmount);
-	},
-	calculateAmount: function () {
-		var pam = {};
+	getAmountAndPam: function () {
+		var pam = {}, amount;
 
 		// calculate total
-		this.set('totalAmount', this.get('expenses').reduce(function (memo, expense) {
+		amount = this.get('expenses').reduce(function (memo, expense) {
 			// add up per person
-			var perParticipant, participants = [];
+			var amountPerExpense = 0, perParticipant, participants = [];
 
 			// add up all contributions by participants
 			expense.get('participations').forEach(function (part) {
@@ -43,10 +36,11 @@ app.Month = Backbone.RelationalModel.extend({
 
 					pam[personCid] = pam[personCid] || 0;
 					if (typeof part.get('amount') === 'number') {
+						amountPerExpense += part.get('amount');
 						pam[personCid] += part.get('amount');
 					}
 
-					// remeber participating persons to subtract their part
+					// remember participating persons to subtract their part
 					if (part.get('participating') == true) {
 						participants.push(personCid);
 					}
@@ -54,7 +48,7 @@ app.Month = Backbone.RelationalModel.extend({
 			});
 
 			if (participants.length > 0) {
-				perParticipant = expense.get('amount') / participants.length;
+				perParticipant = amountPerExpense / participants.length;
 
 				participants.forEach(function (personCid) {
 					pam[personCid] = pam[personCid] || 0;
@@ -63,8 +57,42 @@ app.Month = Backbone.RelationalModel.extend({
 			}
 
 			// add up total
-			return memo + expense.get('amount');
-		}, 0));
-		this.set('personAmountMap', pam);
+			return memo + amountPerExpense;
+		}, 0);
+
+		return {
+			amount: amount,
+			pam: pam
+		};
+	},
+	toJSONDecorated: function() {
+		var that = this;
+
+		return _.extend(
+			this.toJSON(), 
+			this.getAmountAndPam(), 
+			(function () {
+				var sp, month, year, prevMonth, nextMonth;
+				sp = that.get('id').split('-');
+				year = parseInt(sp[0], 10);
+				month = parseInt(sp[1], 10);
+				
+				if (month === 1) {
+					prevMonth = app.Util.formatNumber(year - 1, 4) + '-12';
+				} else {
+					prevMonth = app.Util.formatNumber(year, 4) + '-' + app.Util.formatNumber(month - 1, 2);
+				}
+				if (month === 12) {
+					nextMonth = app.Util.formatNumber(year + 1, 4) + '-01';
+				} else {
+					nextMonth = app.Util.formatNumber(year, 4) + '-' + app.Util.formatNumber(month + 1, 2);
+				}
+
+				return {
+					prevMonth: prevMonth,
+					nextMonth: nextMonth
+				};
+			}())
+		);
 	}
 });
