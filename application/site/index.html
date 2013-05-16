@@ -76,6 +76,7 @@
 <script src="js/views/PersonListView.js"></script>
 <script src="js/views/ParticipationListView.js"></script>
 
+<script src="js/routers/AppRouter.js"></script>
 
 <script>
 // If you're wondering what the heck we're doing here: 
@@ -92,6 +93,9 @@ $(function () {
 	app.appView.render();
 
 
+	var siteRouter = new expenseRouter();
+	Backbone.history.start();
+	
 	x = app.Month.findOrCreate({id: '2013-05'});
 
 	app.persons.fetch()
