@@ -56,10 +56,8 @@ app.Expense = Backbone.RelationalModel.extend({
 	},
 	calculateAmount: function () {
 		this.set('amount', this.get('participations').reduce(function (memo, part) {
-			if (part.get('participating')) {
+			if (typeof part.get('amount') === 'number') {
 				return memo + part.get('amount');
-			} else {
-				return memo;
 			}
 		}, 0));
 	},

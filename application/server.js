@@ -145,10 +145,14 @@ createMockRESTInterface(app, 'participations', [{
 	participating: true
 }, {
 	id: 102,
-	person: 3,
-	expense: 201, 
-	amount: 42,
+	person: 2,
+	expense: 200, 
+	amount: 10,
 	participating: true
+}, {
+	id: 103,
+	person: 3,
+	expense: 200
 }], makeId);
 
 createMockRESTInterface(app, 'expenses', [{

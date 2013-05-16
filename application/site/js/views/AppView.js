@@ -10,7 +10,21 @@ app.AppView = Backbone.View.extend({
 		});
 	},
 	render: function () {
-		console.log('abc');
 		this.$el.append(this.personListView.render().el);
+		if (this.activeView) {
+			this.$el.append(this.activeView.render().el);
+		}
+	},
+	destroyActiveView: function () {
+		if (this.activeView && this.activeView.destroy && typeof this.activeView.destroy === 'function') {
+			this.activeView.destroy();
+		}
+	},
+	showMonth: function (id) {
+		this.destroyActiveView();
+		this.activeView = new app.MonthView({
+			model: app.Month.findOrCreate({id: id})
+		});
+		this.render();
 	}
 });
