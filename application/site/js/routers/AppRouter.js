@@ -10,8 +10,9 @@ var app = app || {};
 
 app.AppRouter = Backbone.Router.extend({
 	routes: {
-		'month/:date' : 'showByDate',
-		'': 'default'
+		'month/:date' : 'showByMonth',
+		'': 'showCurrentMonth',
+		'*path': 'showError'
 	},
 	initialize: function () {
 		this.route(/(.*)\/+$/, 'removeTrailingSlashes', function (path) {
@@ -19,12 +20,16 @@ app.AppRouter = Backbone.Router.extend({
 			this.navigate(path, true);
 		});
 	},
-	showByDate: function(date) {
+	showByMonth: function(date) {
 		app.appView.showMonth(date);
 	},
-	default: function (path) {
+	showCurrentMonth: function (path) {
 		var now = new Date();
 		var currentMonth = app.Util.formatNumber(now.getFullYear(), 4) + '-' + app.Util.formatNumber(now.getMonth() + 1, 2); 
 		this.navigate('month/' + currentMonth, true);
+	},
+	showError: function (path) {
+		// TODO add proper error handeling
+		alert('The destination you\'ve called is not availible: "' + path + '"')
 	}
 });

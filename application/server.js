@@ -11,11 +11,11 @@ var app = express();
 //parses request body and populates request.body
 app.use(express.bodyParser());
 
-//perform route lookup based on url and HTTP method
-app.use(app.router);
-
 //Where to serve static content
 app.use(express.static(path.join(application_root, 'site')));
+
+//perform route lookup based on url and HTTP method
+app.use(app.router);
 
 //Show all errors in development
 app.use(express.errorHandler({
@@ -179,6 +179,10 @@ createMockRESTInterface(app, 'months', [{
 	expenses: [200, 201]
 }], makeId);
 
+
+app.get('*', function (req, res) {
+	res.sendfile(path.join(application_root, 'site/index.html'));
+});
 
 // </uglycode>
 
