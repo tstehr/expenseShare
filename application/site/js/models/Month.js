@@ -79,9 +79,9 @@ app.Month = Backbone.RelationalModel.extend({
 			transfers[personCid] = {};
 		});
 
-		maxPerPerson = _.max(pam, function (x) {
+		maxPerPerson = Math.abs(_.max(pam, function (x) {
 			return Math.abs(x);
-		});
+		}));
 
 		randomness = 1;
 
@@ -110,6 +110,10 @@ app.Month = Backbone.RelationalModel.extend({
 				return memo + Math.pow(pam[personCid] + (changes[personCid] || 0), 2);
 			}, 0) / personCids.length) / maxPerPerson;
 			
+			if (sd < 0) {
+				console.log('WTF!!!!');
+			}
+
 			randomness = Math.exp(sd) - 1;
 
 			i++;
@@ -120,17 +124,6 @@ app.Month = Backbone.RelationalModel.extend({
 		console.log(changes);
 		console.log(transfers);
 		console.groupEnd();
-	},
-	randomPam: function(cids) {
-		var MAX = 2000, IT = 500;
-		var pam = {}, p1, p2;
-
-		for (var i; i < IT; i++) {
-			p1 = personCids[app.Util.randomInt(0, personCids.length - 1)];
-			do {
-				p2 = personCids[app.Util.randomInt(0, personCids.length - 1)];
-			} while (p2 === p1);
-		}
 	},
 	toJSONDecorated: function() {
 		var that = this;
