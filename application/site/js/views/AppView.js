@@ -1,6 +1,9 @@
 var app = app || {};
 
 app.AppView = Backbone.View.extend({
+	events: {
+		'click a[href^="/"]': 'navigate'
+	},
 	initialize: function () {
 		// TODO use a template and bind the model elements to elements in the template instead of 
 		// appending to this.$el
@@ -13,6 +16,16 @@ app.AppView = Backbone.View.extend({
 		this.$el.append(this.personListView.render().el);
 		if (this.activeView) {
 			this.$el.append(this.activeView.render().el);
+		}
+	},
+	navigate: function (e) {
+		var url;
+		if (!e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
+			e.preventDefault();
+			url = $(e.currentTarget).attr('href').replace(/^\//, "");
+			app.appRouter.navigate(url, {
+				trigger: true
+			});
 		}
 	},
 	destroyActiveView: function () {

@@ -65,6 +65,12 @@ app.Month = Backbone.RelationalModel.extend({
 			pam: pam
 		};
 	},
+	distributePam: function(pam) {
+		var p = _.groupBy(pam, function (v) {
+			return 1;
+		});
+		console.log(p);
+	},
 	toJSONDecorated: function() {
 		var that = this;
 

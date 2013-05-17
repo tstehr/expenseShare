@@ -2,20 +2,29 @@ var app = app || {};
 
 // TODO implement this. should interact with AppView
 // Idea: http://addyosmani.github.io/backbone-fundamentals/#routers
-//app.ExpenseShareRouter = Backbone.Router.extend({
-//	"month" : 
+
 // Routen
 // /month/[YYYY]-[dd]  app.appView.showMonth
 // /expense/[id]
 // /persons/
-//});
 
-var expenseRouter = Backbone.Router.extend({
+app.AppRouter = Backbone.Router.extend({
 	routes: {
-		"monthView/:date" : "showByDate"
+		'month/:date' : 'showByDate',
+		'': 'default'
 	},
-	showByDate: function(date){
-	//	document.write(date);
+	initialize: function () {
+		this.route(/(.*)\/+$/, 'removeTrailingSlashes', function (path) {
+			path = path.replace(/(\/)+$/, '');
+			this.navigate(path, true);
+		});
+	},
+	showByDate: function(date) {
 		app.appView.showMonth(date);
 	},
-	});
+	default: function (path) {
+		var now = new Date();
+		var currentMonth = app.Util.formatNumber(now.getFullYear(), 4) + '-' + app.Util.formatNumber(now.getMonth() + 1, 2); 
+		this.navigate('month/' + currentMonth, true);
+	}
+});

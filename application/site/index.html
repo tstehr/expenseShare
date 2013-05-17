@@ -19,8 +19,8 @@
 
 <script type="text/template" id="month-template">
 	<u><%= id %> (<%= amount %>)</u>
-	<a href="/month/<%= prevMonth %>/">back</a> 
-	<a href="/month/<%= nextMonth %>/">back</a>
+	<a href="/month/<%= prevMonth %>">previous</a> 
+	<a href="/month/<%= nextMonth %>">next</a>
 	<p><%= JSON.stringify(pam) %></p>
 	<ul></ul>
 </script>
@@ -93,8 +93,7 @@ $(function () {
 	app.appView.render();
 
 
-	var siteRouter = new expenseRouter();
-	Backbone.history.start();
+	app.appRouter = new app.AppRouter();
 	
 	x = app.Month.findOrCreate({id: '2013-05'});
 
@@ -111,8 +110,7 @@ $(function () {
 			}, {});
 		})
 		.then(function () {
-			app.appView.showMonth("2013-05");
-
+			Backbone.history.start({pushState: true});
 
 			console.log('finish\'d', arguments);
 		}, function () {
