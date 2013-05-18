@@ -6,14 +6,6 @@ app.Util = {
 		pad = pad || ' ';
 		return Array(l - str.length + 1).join(pad) + str;
 	},
-	signum: function (nr) {
-		if (nr > 0) {
-			return 1;
-		} else if (nr < 0) {
-			return -1
-		}
-		return 0;
-	},
 	formatNumber: function(nr, l) {
 		return app.Util.pad(parseInt(nr, 10).toString(), l, "0");
 	},
