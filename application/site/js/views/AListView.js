@@ -12,6 +12,7 @@ app.AListView = Backbone.View.extend({
 		this._viewPointers = {};
 
 		// TODO // FIXME sometimes changes to collection get not reflected correctly
+		// This seems to happen when multiple "add" events for changes to a collection come in in the wrong order 
 		this.listenTo(this.collection, 'add', this.handleAdd);
 		this.listenTo(this.collection, 'remove', this.remove);
 		this.listenTo(this.collection, 'reset', this.reset);
