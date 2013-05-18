@@ -56,5 +56,6 @@ app.AListView = Backbone.View.extend({
 	},
 	remove: function (model, collection, options) {
 		this.$('> :nth-child(' + (options.index+1) + ')').remove();
+		this.removeView(model);
 	}
 });
