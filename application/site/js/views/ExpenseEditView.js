@@ -10,7 +10,7 @@ app.ExpenseEditView = Backbone.View.extend({
 	headerTemplate: _.template($('#expense-edit-header-template').html()),
 
 	initialize: function () {
-		this.participationView = new app.ParticipationListView({
+		this.participationView = new app.ParticipationCollectionView({
 			collection: this.model.get('participations')
 		});
 

@@ -1,6 +1,6 @@
 var app = app || {};
 
-app.PersonList = Backbone.Collection.extend({
+app.PersonCollection = Backbone.Collection.extend({
 	model: app.Person,
 	url: '/api/persons',
 	comparator: function (person) {

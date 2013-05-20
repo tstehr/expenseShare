@@ -13,7 +13,7 @@ app.Expense = Backbone.RelationalModel.extend({
 		type: Backbone.HasMany,
 		relatedModel: 'app.Participation',
 		includeInJSON: Backbone.Model.prototype.idAttribute,
-		collectionType: 'app.ParticipationList',
+		collectionType: 'app.ParticipationCollection',
 		autoFetch: true,
 		reverseRelation: {
 			key: 'expense',

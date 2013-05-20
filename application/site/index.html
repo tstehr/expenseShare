@@ -60,9 +60,9 @@
 <script src="/js/models/Person.js"></script>
 <script src="/js/models/Participation.js"></script>
 
-<script src="/js/collections/ExpenseList.js"></script>
-<script src="/js/collections/PersonList.js"></script>
-<script src="/js/collections/ParticipationList.js"></script>
+<script src="/js/collections/ExpenseCollection.js"></script>
+<script src="/js/collections/PersonCollection.js"></script>
+<script src="/js/collections/ParticipationCollection.js"></script>
 
 <script src="/js/views/AppView.js"></script>
 <script src="/js/views/MonthView.js"></script>
@@ -72,9 +72,9 @@
 <script src="/js/views/ParticipationView.js"></script>
 
 <script src="/js/views/AListView.js"></script>
-<script src="/js/views/ExpenseListView.js"></script>
-<script src="/js/views/PersonListView.js"></script>
-<script src="/js/views/ParticipationListView.js"></script>
+<script src="/js/views/ExpenseCollectionView.js"></script>
+<script src="/js/views/PersonCollectionView.js"></script>
+<script src="/js/views/ParticipationCollectionView.js"></script>
 
 <script src="/js/routers/AppRouter.js"></script>
 
@@ -84,7 +84,7 @@
 
 
 $(function () {
-	app.persons = new app.PersonList();
+	app.persons = new app.PersonCollection();
 
 	app.appView = new app.AppView({
 		el: '#app'

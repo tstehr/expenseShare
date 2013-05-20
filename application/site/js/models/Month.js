@@ -12,7 +12,7 @@ app.Month = Backbone.RelationalModel.extend({
 		type: Backbone.HasMany,
 		relatedModel: 'app.Expense',
 		includeInJSON: Backbone.Model.prototype.idAttribute,
-		collectionType: 'app.ExpenseList',
+		collectionType: 'app.ExpenseCollection',
 		autoFetch: true,
 		reverseRelation: {
 			key: 'month',

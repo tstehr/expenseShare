@@ -4,7 +4,7 @@ app.MonthView = Backbone.View.extend({
 	tagName: 'div',
 	template: _.template($('#month-template').html()),
 	initialize: function () {
-		this.expenseListView = new app.ExpenseListView({
+		this.expenseCollectionView = new app.ExpenseCollectionView({
 			collection: this.model.get('expenses')
 		});
 
@@ -17,8 +17,8 @@ app.MonthView = Backbone.View.extend({
 	render: function () {
 		// TODO decouple
 		this.$el.html(this.template(this.model.toJSONDecorated()));
-		this.expenseListView.setElement(this.$('ul'));
-		this.expenseListView.render();
+		this.expenseCollectionView.setElement(this.$('ul'));
+		this.expenseCollectionView.render();
 		return this;
 	}
 });

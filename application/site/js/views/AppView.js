@@ -8,12 +8,12 @@ app.AppView = Backbone.View.extend({
 		// TODO use a template and bind the model elements to elements in the template instead of 
 		// appending to this.$el
 
-		this.personListView = new app.PersonListView({
+		this.personCollectionView = new app.PersonCollectionView({
 			collection: app.persons
 		});
 	},
 	render: function () {
-		this.$el.append(this.personListView.render().el);
+		this.$el.append(this.personCollectionView.render().el);
 		if (this.activeView) {
 			this.$el.append(this.activeView.render().el);
 		}
