@@ -1,6 +1,6 @@
 var app = app || {};
 
-app.AppView = Backbone.View.extend({
+app.AppView = app.AView.extend({
 	events: {
 		'click a[href^="/"]': 'navigate'
 	},
@@ -33,10 +33,17 @@ app.AppView = Backbone.View.extend({
 			this.activeView.destroy();
 		}
 	},
-	showMonth: function (id) {
+	showMonthView: function (id) {
 		this.destroyActiveView();
 		this.activeView = new app.MonthView({
 			model: app.Month.findOrCreate({id: id})
+		});
+		this.render();
+	},
+	showExpenseEditView: function (id) {
+		this.destroyActiveView();
+		this.activeView = new app.ExpenseEditView({
+			model: app.Expense.findOrCreate({id: id})
 		});
 		this.render();
 	}

@@ -131,21 +131,21 @@ app.Month = Backbone.RelationalModel.extend({
 
 		return transfers;
 	},
+	getMonthData: function () {
+		return app.Util.parseMonthId(this.get('id'));
+	},
 	getRelatedMonths: function () {
-		var sp, month, year, prevMonth, nextMonth;
-		sp = this.get('id').split('-');
-		year = parseInt(sp[0], 10);
-		month = parseInt(sp[1], 10);
+		var data = app.Util.parseMonthId(this.get('id'));
 		
-		if (month === 1) {
-			prevMonth = app.Util.formatNumber(year - 1, 4) + '-12';
+		if (data.month === 1) {
+			prevMonth = app.Util.formatNumber(data.year - 1, 4) + '-12';
 		} else {
-			prevMonth = app.Util.formatNumber(year, 4) + '-' + app.Util.formatNumber(month - 1, 2);
+			prevMonth = app.Util.formatNumber(data.year, 4) + '-' + app.Util.formatNumber(data.month - 1, 2);
 		}
-		if (month === 12) {
-			nextMonth = app.Util.formatNumber(year + 1, 4) + '-01';
+		if (data.month === 12) {
+			nextMonth = app.Util.formatNumber(data.year + 1, 4) + '-01';
 		} else {
-			nextMonth = app.Util.formatNumber(year, 4) + '-' + app.Util.formatNumber(month + 1, 2);
+			nextMonth = app.Util.formatNumber(data.year, 4) + '-' + app.Util.formatNumber(data.month + 1, 2);
 		}
 
 		return {
@@ -158,8 +158,9 @@ app.Month = Backbone.RelationalModel.extend({
 
 		return _.extend(
 			this.toJSON(), 
-			this.getAmountAndTransfers(), 
-			this.getRelatedMonths()
+			this.getMonthData(),
+			this.getRelatedMonths(),
+			this.getAmountAndTransfers()
 		);
 	}
 });

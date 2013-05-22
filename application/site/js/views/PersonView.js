@@ -1,6 +1,6 @@
 var app = app || {};
 
-app.PersonView = Backbone.View.extend({
+app.PersonView = app.AView.extend({
 	tagName: 'li',
 	template: _.template($('#person-template').html()),
 	initialize: function () {

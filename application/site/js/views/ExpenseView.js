@@ -1,6 +1,6 @@
 var app = app || {};
 
-app.ExpenseView = Backbone.View.extend({
+app.ExpenseView = app.AView.extend({
 	tagName: 'li',
 	template: _.template($('#expense-template').html()),
 	initialize: function () {

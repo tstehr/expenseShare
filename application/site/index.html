@@ -13,20 +13,30 @@
 
 <!-- Templates start here -->
 
-<script type="text/template" id="person-template">
-	<i><%= name %></i> <code>#<%= id %></code>
+<script type="text/template" id="a-module-template">
+	<header class="module-header"></header>
+	<div class="module-body"></div>
 </script>
 
-<script type="text/template" id="month-template">
-	<u><%= id %> (<%= amount %>)</u>
-	<a href="/month/<%= prevMonth %>">previous</a> 
-	<a href="/month/<%= nextMonth %>">next</a>
-	<p><%= JSON.stringify(transfers) %></p>
-	<ul></ul>
+<script type="text/template" id="month-header-template">
+	<h1><%= title %> (<%= amount %>)</h1>
+	<p>
+		<a href="/month/<%= prevMonth %>">prev</a>
+		<a href="/month/<%= nextMonth %>">next</a>
+	</p>
+</script>
+
+<script type="text/template" id="month-body-template">
+	<div class="expenses"></div>
+	<div class="transfers"></div>
+</script>
+
+<script type="text/template" id="person-template">
+	<input type="text" value="<%= name %>"> <code>#<%= id %></code>
 </script>
 
 <script type="text/template" id="expense-template">
-	<b><%= description %> (<%= amount %>)  <code>#<%= id %></code></b>
+	<a href="/expense/<%= id %>"><%= description %> (<%= amount %>)  <code>#<%= id %></code></a>
 </script>
 
 <script type="text/template" id="expense-edit-template">
@@ -35,7 +45,8 @@
 </script>
 
 <script type="text/template" id="expense-edit-header-template">
-	<u><%= description %> (<%= amount %>) </u> <code>#<%= id %></code> <br>
+	<h1><%= description %> (<%= amount %>) <code>#<%= id %></code></h1>
+	<p><a href="/month/<%= month %>">back</a></p>
 </script>
 
 <script type="text/template" id="participation-template">
@@ -64,6 +75,7 @@
 <script src="/js/collections/PersonCollection.js"></script>
 <script src="/js/collections/ParticipationCollection.js"></script>
 
+<script src="/js/views/AView.js"></script>
 <script src="/js/views/AppView.js"></script>
 <script src="/js/views/MonthView.js"></script>
 <script src="/js/views/ExpenseView.js"></script>
@@ -92,9 +104,9 @@ $(function () {
 
 	app.appView.render();
 
-
 	app.appRouter = new app.AppRouter();
-	
+	Backbone.history.start({pushState: true});
+
 	x = app.Month.findOrCreate({id: '2013-05'});
 
 	app.persons.fetch()
@@ -110,7 +122,6 @@ $(function () {
 			}, {});
 		})
 		.then(function () {
-			Backbone.history.start({pushState: true});
 
 			console.log('finish\'d', arguments);
 		}, function () {

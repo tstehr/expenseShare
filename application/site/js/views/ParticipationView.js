@@ -1,6 +1,6 @@
 var app = app || {};
 
-app.ParticipationView = Backbone.View.extend({
+app.ParticipationView = app.AView.extend({
 	tagName: 'li',
 
 	template: _.template($('#participation-template').html()),

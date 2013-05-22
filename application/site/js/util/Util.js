@@ -12,6 +12,18 @@ app.Util = {
 	randomInt: function(min, max) {
 		return Math.floor(Math.random() * (max - min + 1)) + min;
 	},
+	parseMonthId: function (mid) {
+		var sp;
+		if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(mid)) {
+			throw new TypeError('Not correctly formatted!');
+		}
+		sp = mid.split('-');
+
+		return {
+			year: parseInt(sp[0], 10),
+			month: parseInt(sp[1], 10)
+		};
+	},
 	randomPam: function(personCids, max, iterations) {
 		var pam = {}, change, p1, p2;
 
