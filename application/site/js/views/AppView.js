@@ -29,7 +29,7 @@ app.AppView = app.AView.extend({
 		}
 	},
 	destroyActiveView: function () {
-		if (this.activeView && this.activeView.destroy && typeof this.activeView.destroy === 'function') {
+		if (this.activeView) {
 			this.activeView.destroy();
 		}
 	},

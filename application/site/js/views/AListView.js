@@ -22,6 +22,10 @@ app.AListView = app.AView.extend({
 		return this;
 	},
 	destroy: function () {
+		var viewPointers = this._viewPointers;
+		Object.keys(viewPointers).forEach(function (id) {
+			viewPointers[id].destroy();
+		});
 		this.remove();
 	},
 	createView: function (model) {
