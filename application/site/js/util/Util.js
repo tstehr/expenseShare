@@ -40,5 +40,15 @@ app.Util = {
 		}
 
 		return pam;
-	}
+	},
+	normalizeComparison: function(string) {
+		string = string.toLowerCase();
+		
+		this.SPECIAL_CHARS.forEach(_.bind(function(element, index, array){
+			string = string.replace(element,this.REPLACEMENT_CHARS[index]);
+		}, this));
+		return string;
+	},
+	SPECIAL_CHARS:     'äâáàöüß'.split(''),
+	REPLACEMENT_CHARS: 'aaaaous'.split('')
 };
