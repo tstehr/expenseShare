@@ -7,7 +7,7 @@ var app = app || {};
  * Child views need to implement the 'createView' method the create views for the 
  * collection's members.
  */
-app.AListView = app.AView.extend({
+app.ACollectionView = app.AView.extend({
 	initialize: function () {
 		this._viewPointers = {};
 

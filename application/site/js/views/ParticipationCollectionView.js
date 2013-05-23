@@ -1,6 +1,6 @@
 var app = app || {};
 
-app.ParticipationCollectionView = app.AListView.extend({
+app.ParticipationCollectionView = app.ACollectionView.extend({
 	createView: function (model) {
 		return new app.ParticipationView({model: model});
 	}
