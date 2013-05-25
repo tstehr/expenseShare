@@ -24,5 +24,6 @@ app.ParticipationView = app.AView.extend({
 	setAmount: function (e) {
 		var am = parseInt($(e.target).val(), 10);
 		this.model.set('amount', Number.isNaN(am) ? 0 : am);
+		console.log('amount was set', this.model, am);
 	}
 });

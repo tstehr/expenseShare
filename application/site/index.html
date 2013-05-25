@@ -53,6 +53,20 @@
 	<%= person ? person.get('name') : "NoName" %> <input type="checkbox" <%=participating ? "checked" : ""%>>  <input type="text" value="<%= amount %>">
 </script>
 
+<script type="text/template" id="month-transfers-template">
+	<% Object.keys(transfers).forEach(function (fromCid) { %>
+		<% if (transfers[fromCid] && Object.keys(transfers[fromCid]).length > 0) { %> 
+			<p>
+				<%= app.persons.get(fromCid).get('name') %> zahlt: 
+				<ul>
+				<% Object.keys(transfers[fromCid]).forEach(function (toCid) { %>
+					<li><%= transfers[fromCid][toCid] %> an <%= app.persons.get(toCid).get('name') %>
+				<% }); %>
+				</ul>
+			</p>
+		<% } %>
+	<% }); %>
+</script>
 
 <!--
 	TODO Look into minification / concatnation of scripts (buildscript!)
@@ -78,6 +92,7 @@
 <script src="/js/views/AView.js"></script>
 <script src="/js/views/AppView.js"></script>
 <script src="/js/views/MonthView.js"></script>
+<script src="/js/views/MonthTransfersView.js"></script>
 <script src="/js/views/ExpenseView.js"></script>
 <script src="/js/views/ExpenseEditView.js"></script>
 <script src="/js/views/PersonView.js"></script>

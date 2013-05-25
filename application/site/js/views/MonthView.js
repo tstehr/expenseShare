@@ -12,11 +12,16 @@ app.MonthView = app.AView.extend({
 			collection: this.model.get('expenses')
 		});
 
+		this.monthTransfersView = new app.MonthTransfersView({
+			model: this.model
+		});
+
 		this.listenTo(this.model, 'change', this.renderHeader);
 		this.listenTo(this.model.get('expenses'), 'change add remove', this.renderBody);
 	},
 	destroy: function () {
 		this.expenseCollectionView.destroy();
+		this.monthTransfersView.destroy();
 		this.remove();
 	},
 	render: function () {
@@ -50,7 +55,8 @@ app.MonthView = app.AView.extend({
 		this.expenseCollectionView.setElement(body.find('> .expenses'));
 		this.expenseCollectionView.render();
 
-		body.find('> .transfers').html(JSON.stringify(this.model.toJSONDecorated().transfers));
+		this.monthTransfersView.setElement(body.find('> .transfers'));
+		this.monthTransfersView.render();
 	}
 });
 

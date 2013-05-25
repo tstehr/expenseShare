@@ -20,6 +20,13 @@ app.Month = Backbone.RelationalModel.extend({
 		}
 	}],
 	urlRoot: '/api/months',
+	initialize: function () {
+		this.decorators = [];
+
+		this.listenTo(this.get('expenses'), 'change add remove', function () {
+			this.trigger('change');
+		});
+	},
 	getAmountAndTransfers: function () {
 		// pam := personAmountMap
 		var pam = {}, amount;

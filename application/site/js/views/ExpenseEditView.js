@@ -33,6 +33,7 @@ app.ExpenseEditView = app.AView.extend({
 		this.remove();
 	},
 	renderHeader: function () {
+		console.log('Rerendering EEV Header', this, this.model);
 		this.$('header').html(this.headerTemplate(this.model.toJSONDecorated()));
 		return this;
 	},

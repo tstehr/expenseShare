@@ -34,6 +34,7 @@ app.Expense = Backbone.RelationalModel.extend({
 
 		// trigger change on this model whenever it's participations change
 		this.listenTo(this.get('participations'), 'change add remove', function () {
+			console.log('My participations were changed...', this);
 			this.trigger('change');
 		});
 
@@ -42,8 +43,6 @@ app.Expense = Backbone.RelationalModel.extend({
 		this.listenTo(app.persons, 'reset', this.addAllParticipations);
 		this.listenTo(app.persons, 'add', this.addOneParticipation);
 		this.listenTo(app.persons, 'remove', this.removeOneParticipation);*/
-		
-		
 	},
 	addOneParticipation: function (person) {
 		var part = this.get('participations').getByPerson(person);
@@ -64,6 +63,7 @@ app.Expense = Backbone.RelationalModel.extend({
 			if (typeof part.get('amount') === 'number') {
 				return memo + part.get('amount');
 			}
+			return memo;
 		}, 0);
 	},
 	toJSONDecorated: function(){
