@@ -9,12 +9,16 @@ app.ExpenseEditView = app.AView.extend({
 	template: _.template($('#expense-edit-template').html()),
 	headerTemplate: _.template($('#expense-edit-header-template').html()),
 
+	events: {
+		'change .expense-edit-name': 'setName'
+	},
+
 	initialize: function () {
 		this.participationView = new app.ParticipationCollectionView({
 			collection: this.model.get('participations')
 		});
 
-		this.listenTo(this.model, 'change', this.renderHeader);
+		this.listenTo(this.model, 'change pseudochange', this.renderHeader);
 	},
 	render: function () {
 		this.$el.html(this.template());
@@ -33,12 +37,14 @@ app.ExpenseEditView = app.AView.extend({
 		this.remove();
 	},
 	renderHeader: function () {
-		console.log('Rerendering EEV Header', this, this.model);
 		this.$('header').html(this.headerTemplate(this.model.toJSONDecorated()));
 		return this;
 	},
 	renderParticipations: function () {
 		this.participationView.render();
 		return this;
+	},
+	setName: function (e) {
+		this.model.set('description', e.target.value);
 	}
 });

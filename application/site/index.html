@@ -8,6 +8,11 @@
 
 
 <div id="app">
+	<div class="app-activeView">
+	</div>
+	<hr>
+	<div class="app-personCollectionView">
+	</div>
 </div>
 
 
@@ -45,12 +50,12 @@
 </script>
 
 <script type="text/template" id="expense-edit-header-template">
-	<h1><%= description %> (<%= amount %>) <code>#<%= id %></code></h1>
+	<h1><input type="text" value="<%= description %>" class="expense-edit-name"> (<%= amount %>) <code>#<%= id %></code></h1>
 	<p><a href="/month/<%= month %>">back</a></p>
 </script>
 
 <script type="text/template" id="participation-template">
-	<%= person ? person.get('name') : "NoName" %> <input type="checkbox" <%=participating ? "checked" : ""%>>  <input type="text" value="<%= amount %>">
+	<%= personName %> <input type="checkbox" <%=participating ? "checked" : ""%>>  <input type="text" value="<%= amount %>">
 </script>
 
 <script type="text/template" id="month-transfers-template">

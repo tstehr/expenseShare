@@ -32,10 +32,11 @@ app.Expense = Backbone.RelationalModel.extend({
 		// 	}, this));
 		// });
 
-		// trigger change on this model whenever it's participations change
+		// trigger event on this model whenever it's participations change, since toJSONDecorated uses them
 		this.listenTo(this.get('participations'), 'change add remove', function () {
-			console.log('My participations were changed...', this);
-			this.trigger('change');
+			// can't trigger "change" event here since backbone-relational interferers with it's propagation
+			// cf. Backbone.RelationalModel.trigger
+			this.trigger('pseudochange');
 		});
 
 		// initialize participations

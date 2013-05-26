@@ -8,14 +8,18 @@ app.AppView = app.AView.extend({
 		// TODO use a template and bind the model elements to elements in the template instead of 
 		// appending to this.$el
 
+		this.personCollectionViewEl = this.$('.app-personCollectionView');
+		this.activeViewEl = this.$('.app-activeView');
+
 		this.personCollectionView = new app.PersonCollectionView({
 			collection: app.persons
 		});
+		this.personCollectionView.setElement(this.personCollectionViewEl);
 	},
 	render: function () {
-		this.$el.append(this.personCollectionView.render().el);
+		this.personCollectionView.render();
 		if (this.activeView) {
-			this.$el.append(this.activeView.render().el);
+			this.activeView.render();
 		}
 	},
 	navigate: function (e) {
@@ -28,23 +32,25 @@ app.AppView = app.AView.extend({
 			});
 		}
 	},
+	showMonthView: function (id) {
+		this.setActiveView(new app.MonthView({
+			model: app.Month.findOrCreate({id: id})
+		}));
+	},
+	showExpenseEditView: function (id) {
+		this.setActiveView(new app.ExpenseEditView({
+			model: app.Expense.findOrCreate({id: id})
+		}));
+	},
+	setActiveView: function (view) {
+		this.destroyActiveView();
+		this.activeView = view;
+		this.activeViewEl.empty();
+		this.activeViewEl.append(this.activeView.render().el);
+	},
 	destroyActiveView: function () {
 		if (this.activeView) {
 			this.activeView.destroy();
 		}
-	},
-	showMonthView: function (id) {
-		this.destroyActiveView();
-		this.activeView = new app.MonthView({
-			model: app.Month.findOrCreate({id: id})
-		});
-		this.render();
-	},
-	showExpenseEditView: function (id) {
-		this.destroyActiveView();
-		this.activeView = new app.ExpenseEditView({
-			model: app.Expense.findOrCreate({id: id})
-		});
-		this.render();
 	}
 });

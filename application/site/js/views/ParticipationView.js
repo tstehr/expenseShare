@@ -6,24 +6,22 @@ app.ParticipationView = app.AView.extend({
 	template: _.template($('#participation-template').html()),
 
 	events: {
-		'change [type=checkbox]': 'toggleParticipating',
+		'change [type=checkbox]': 'setParticipating',
 		'change [type=text]': 'setAmount'
 	},
 
 	initialize: function () {
-		this.listenTo(this.model, 'change', this.render);
-		// this.listenTo(this.model.get('person'), 'change:name', this.render);
+		this.listenTo(this.model, 'change pseudochange', this.render);
 	},
 	render: function () {
-		this.$el.html(this.template(_.clone(this.model.attributes)));
+		this.$el.html(this.template(this.model.toJSONDecorated()));
 		return this;
 	},
-	toggleParticipating: function (e) {
+	setParticipating: function (e) {
 		this.model.set('participating', e.target.checked);
 	},
 	setAmount: function (e) {
 		var am = parseInt($(e.target).val(), 10);
 		this.model.set('amount', Number.isNaN(am) ? 0 : am);
-		console.log('amount was set', this.model, am);
 	}
 });
