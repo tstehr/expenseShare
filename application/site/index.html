@@ -3,6 +3,11 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Title</title>
+	<style>
+	.invalid {
+		text-decoration: line-through;
+	}
+	</style>
 </head>
 <body>
 
@@ -29,6 +34,7 @@
 		<a href="/month/<%= prevMonth %>">prev</a>
 		<a href="/month/<%= nextMonth %>">next</a>
 	</p>
+	<a href="/month/<%= id %>/createExpense">New</a>
 </script>
 
 <script type="text/template" id="month-body-template">
@@ -47,6 +53,7 @@
 <script type="text/template" id="expense-edit-template">
 	<header></header>
 	<ul></ul>
+	<button>Save</button>
 </script>
 
 <script type="text/template" id="expense-edit-header-template">

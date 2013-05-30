@@ -16,8 +16,7 @@ app.MonthView = app.AView.extend({
 			model: this.model
 		});
 
-		this.listenTo(this.model, 'change', this.renderHeader);
-		this.listenTo(this.model.get('expenses'), 'change add remove', this.renderBody);
+		this.listenTo(this.model, 'change pseudochange', this.renderHeader)
 	},
 	destroy: function () {
 		this.expenseCollectionView.destroy();

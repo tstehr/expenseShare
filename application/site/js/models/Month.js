@@ -23,8 +23,8 @@ app.Month = Backbone.RelationalModel.extend({
 	initialize: function () {
 		this.decorators = [];
 
-		this.listenTo(this.get('expenses'), 'change add remove', function () {
-			this.trigger('change');
+		this.listenTo(this.get('expenses'), 'pseudochange change add remove', function () {
+			this.trigger('pseudochange');
 		});
 	},
 	getAmountAndTransfers: function () {
@@ -33,40 +33,43 @@ app.Month = Backbone.RelationalModel.extend({
 
 		// calculate total
 		amount = this.get('expenses').reduce(function (memo, expense) {
-			// add up per person
 			var amountPerExpense = 0, perParticipant, participants = [];
 
-			// add up all contributions by participants
-			expense.get('participations').forEach(function (part) {
-				var personCid;
-				if (part && part.get('person')) {
-					personCid = part.get('person').cid;
+			if (expense.isValid()) {
+				// add up per person
 
-					pam[personCid] = pam[personCid] || 0;
-					if (typeof part.get('amount') === 'number') {
-						amountPerExpense += part.get('amount');
-						pam[personCid] += part.get('amount');
+				// add up all contributions by participants
+				expense.get('participations').forEach(function (part) {
+					var personCid;
+					if (part && part.get('person')) {
+						personCid = part.get('person').cid;
+
+						pam[personCid] = pam[personCid] || 0;
+						if (typeof part.get('amount') === 'number') {
+							amountPerExpense += part.get('amount');
+							pam[personCid] += part.get('amount');
+						}
+
+						// remember participating persons to subtract their part
+						if (part.get('participating') == true) {
+							participants.push(personCid);
+						}
 					}
-
-					// remember participating persons to subtract their part
-					if (part.get('participating') == true) {
-						participants.push(personCid);
-					}
-				}
-			});
-
-			// TODO correctly ignore invalid expenses
-			if (participants.length > 0) {
-				perParticipant = amountPerExpense / participants.length;
-
-				participants.forEach(function (personCid) {
-					pam[personCid] = pam[personCid] || 0;
-					pam[personCid] -= perParticipant;
 				});
-			} 
 
-			// add up total
-			return memo + amountPerExpense;
+				if (amountPerExpense !== 0) {
+					perParticipant = amountPerExpense / participants.length;
+
+					participants.forEach(function (personCid) {
+						pam[personCid] = pam[personCid] || 0;
+						pam[personCid] -= perParticipant;
+					});
+
+					// add up total
+					return memo + amountPerExpense;
+				}
+			} 
+			return memo;
 		}, 0);
 
 		return {

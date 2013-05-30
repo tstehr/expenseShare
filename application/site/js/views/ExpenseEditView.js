@@ -5,6 +5,7 @@ var app = app || {};
  */
 app.ExpenseEditView = app.AView.extend({
 	tagName: 'section',
+	className: 'expense-edit',
 
 	template: _.template($('#expense-edit-template').html()),
 	headerTemplate: _.template($('#expense-edit-header-template').html()),
@@ -38,6 +39,13 @@ app.ExpenseEditView = app.AView.extend({
 	},
 	renderHeader: function () {
 		this.$('header').html(this.headerTemplate(this.model.toJSONDecorated()));
+
+		if (!this.model.isValid()) {
+			this.$el.addClass('invalid');
+		} else {
+			this.$el.removeClass('invalid');
+		} 
+
 		return this;
 	},
 	renderParticipations: function () {

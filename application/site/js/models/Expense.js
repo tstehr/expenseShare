@@ -45,6 +45,21 @@ app.Expense = Backbone.RelationalModel.extend({
 		this.listenTo(app.persons, 'add', this.addOneParticipation);
 		this.listenTo(app.persons, 'remove', this.removeOneParticipation);*/
 	},
+	validate: function () {
+		var count = 0, amount = 0;
+
+		this.get('participations').each(function (part) {
+			if (part.get('participating')) {
+				count++;
+			}
+			if (typeof part.get('amount') === 'number') {
+				amount += part.get('amount');
+			}
+		});
+		if (count === 0 && amount !== 0)  {
+			return 'An expenses needs at least one partipant!';
+		}
+	},
 	addOneParticipation: function (person) {
 		var part = this.get('participations').getByPerson(person);
 		if (!part) {
