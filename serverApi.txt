@@ -4,7 +4,7 @@ grundsätliches zum api:
 
 REST-API, das heißt der client sendet HTTP-requests an eine url, die daten sind also JSON im body enthalten. wenn notwendig antwortet der server ebenfalls mit JSON.
 
-Backbone nuzt folgende Endpoints, dh kombinationen von url und http-request-method, für jedes model: http://addyosmani.github.io/backbone-fundamentals (suche nach REST)
+Backbone nuzt folgende Endpoints, dh kombinationen von url und http-request-method, für jedes model: http://addyosmani.github.io/backbone-fundamentals/#creating-the-back-end
 
 
 Für expenseShare:
