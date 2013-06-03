@@ -18,9 +18,9 @@ app.MonthView = app.AView.extend({
 
 		this.listenTo(this.model, 'change pseudochange', this.renderHeader)
 	},
-	destroy: function () {
-		this.expenseCollectionView.destroy();
-		this.monthTransfersView.destroy();
+	dispose: function () {
+		this.expenseCollectionView.dispose();
+		this.monthTransfersView.dispose();
 		this.remove();
 	},
 	render: function () {

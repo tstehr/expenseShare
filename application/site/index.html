@@ -18,6 +18,7 @@
 	<hr>
 	<div class="app-personCollectionView">
 	</div>
+	<button onclick="app.appView.render()">Force full rerender</button>
 </div>
 
 
@@ -53,12 +54,19 @@
 <script type="text/template" id="expense-edit-template">
 	<header></header>
 	<ul></ul>
-	<button>Save</button>
 </script>
 
 <script type="text/template" id="expense-edit-header-template">
-	<h1><input type="text" value="<%= description %>" class="expense-edit-name"> (<%= amount %>) <code>#<%= id %></code></h1>
-	<p><a href="/month/<%= month %>">back</a></p>
+	<h1><input type="text" value="<%= description %>" class="expense-description"> (<%= amount %>) <code>#<%= id %></code></h1>
+	<p>
+
+	<% if (isNew) { %>
+		<button class="expense-save">Save</button>
+		<button class="expense-discard">discard</button>
+	<% } else { %>
+		<button class="expense-back">back</button>
+	<% } %>
+	</p>
 </script>
 
 <script type="text/template" id="participation-template">
@@ -125,17 +133,17 @@
 $(function () {
 	app.persons = new app.PersonCollection();
 
+	x = app.Month.findOrCreate({id: '2013-05'});
+
+
 	app.appView = new app.AppView({
 		el: '#app'
 	});
-
 	app.appView.render();
 
 	app.appRouter = new app.AppRouter();
 	Backbone.history.start({pushState: true});
-
-	x = app.Month.findOrCreate({id: '2013-05'});
-
+			
 	app.persons.fetch()
 		.then(function () {
 			return x.fetch();
@@ -148,8 +156,7 @@ $(function () {
 				return $.when.apply(this, expense.fetchRelated('participations').concat(memo));
 			}, {});
 		})
-		.then(function () {
-
+		.then(function () {	
 			console.log('finish\'d', arguments);
 		}, function () {
 			console.log('fail\'d', arguments);

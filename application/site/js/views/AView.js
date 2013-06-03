@@ -1,7 +1,7 @@
 var app = app || {};
 
 app.AView = Backbone.View.extend({
-	destroy: function () {
+	dispose: function () {
 		this.remove();
 	}
 });

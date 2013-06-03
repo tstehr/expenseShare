@@ -11,58 +11,79 @@ app.ACollectionView = app.AView.extend({
 	initialize: function () {
 		this._viewPointers = {};
 
-		// TODO // FIXME sometimes changes to collection get not reflected correctly
-		// This seems to happen when multiple "add" events for changes to a collection come in in the wrong order 
 		this.listenTo(this.collection, 'add', this.handleAdd);
-		this.listenTo(this.collection, 'remove', this.removeOne);
-		this.listenTo(this.collection, 'reset', this.reset);
+		this.listenTo(this.collection, 'remove', this.handleRemove);
+		this.listenTo(this.collection, 'reset', this.handleReset);
 	},
+
 	render: function () {
-		this.reset(this.collection);
+		this.reset();
 		return this;
 	},
-	destroy: function () {
-		var viewPointers = this._viewPointers;
-		Object.keys(viewPointers).forEach(function (id) {
-			viewPointers[id].destroy();
-		});
+	dispose: function () {
+		this.disposeAllViews();
 		this.remove();
 	},
+
 	createView: function (model) {
 		console.error('implement');
 	},
+
 	getView: function (model) {
 		if (!this._viewPointers[model.cid]) {
 			this._viewPointers[model.cid] = this.createView(model);
 		}
 		return this._viewPointers[model.cid];
 	},
-	removeView: function (model) {
-		this._viewPointers[model.cid].remove();
-		delete this._viewPointers[model.cid];
+	disposeView: function (model) {
+		this.disposeViewByCid(model.cid);
 	},
+	disposeViewByCid: function (cid) {
+		if (this._viewPointers[cid]) {
+			this._viewPointers[cid].dispose();
+		}
+		delete this._viewPointers[cid];
+	},
+	disposeAllViews: function () {
+		Object.keys(this._viewPointers).forEach((function (cid) {
+			this.disposeViewByCid(cid);
+		}.bind(this)));
+	},
+
 	handleAdd: function (model, collection, options) {
-		var index = collection.indexOf(model);
+		var index = this.collection.indexOf(model);
 		this.addOne(model, index);
 	},
-	addOne: function (model, index) {
-		var view = this.getView(model);
-		var children = this.$el.children();
+	handleReset: function (collection) {
+		this.reset();
+	},
+	handleRemove: function (model, collection, options) {
+		this.disposeView(model);
+	},
 
-		if (children.length === 0 || index === 0) {
-			this.$el.prepend(view.render().el);
+	addOne: function (model, index) {
+		var view, prevView;
+		view = this.getView(model);
+
+		for (var i = 1; i <= index && !prevView; i++) {
+			prevView = this._viewPointers[this.collection.at(index - i).cid];
+		}
+
+		if (prevView) {
+			prevView.$el.after(view.render().el);
 		} else {
-			children.filter(':eq(' + (index-1) + ')').after(view.render().el);
+			this.$el.prepend(view.render().el);
 		}
 	},
-	reset: function (collection) {
-		this.$el.empty();
-		collection.each(_.bind(function (model, index, collection) {
-			this.addOne(model, index);
-		}, this));
-	},
-	removeOne: function (model, collection, options) {
-		this.$('> :nth-child(' + (options.index+1) + ')').remove();
-		this.removeView(model);
+	reset: function () {
+		Object.keys(this._viewPointers).forEach((function (cid) {
+			this.disposeViewByCid(cid);
+		}).bind(this));
+
+		if (this.collection) {
+			this.collection.each(_.bind(function (model, index, collection) {
+				this.addOne(model, index);
+			}, this));
+		}
 	}
 });

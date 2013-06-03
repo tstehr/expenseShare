@@ -43,14 +43,14 @@ app.AppView = app.AView.extend({
 		}));
 	},
 	setActiveView: function (view) {
-		this.destroyActiveView();
+		this.disposeActiveView();
 		this.activeView = view;
 		this.activeViewEl.empty();
 		this.activeViewEl.append(this.activeView.render().el);
 	},
-	destroyActiveView: function () {
+	disposeActiveView: function () {
 		if (this.activeView) {
-			this.activeView.destroy();
+			this.activeView.dispose();
 		}
 	}
 });

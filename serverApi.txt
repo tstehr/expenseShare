@@ -1,0 +1,39 @@
+grundsätliches zum api:
+======================
+
+
+REST-API, das heißt der client sendet HTTP-requests an eine url, die daten sind also JSON im body enthalten. wenn notwendig antwortet der server ebenfalls mit JSON.
+
+Backbone nuzt folgende Endpoints, dh kombinationen von url und http-request-method, für jedes model: http://addyosmani.github.io/backbone-fundamentals (suche nach REST)
+
+
+Für expenseShare:
+================
+
+Endpoints müssen für alle unsere models (site/js/models/*.js) implementiert werden.
+
+Volles API (alle EPs) für Expense, Participation und Person (vergleiche auch MOCK-implementierung in mockserver.js). Die werden auch alle als "Zeilen" in der datenbank representiert.
+
+Beispielsweise für Expenses
+GET /api/expenses -> alle expenses
+POST /api/expenses -> expense anlegen (gibt daten des expense zurück, incl serverseitig generiertet id)
+GET /api/expenses/:id -> expense mit id ":id" zuückgeben
+PUT /api/expenses/:id -> expense ändern, gibt neue daten zurück
+DELETE /api/expenses/:id -> löscht expense
+
+
+Month wird nicht in der db gespeichert, da er nur expenses enthält und somit über den key expense.month eindeutig bestimmt ist.  es gibt also nur den EP: 
+GET /api/months/:date
+
+Rückgabe im Format (für 2013-05)
+
+{
+	id: "2013-05",
+	expenses: [
+		// alle expenses für 2013-05
+	]
+}
+
+Der Server muss das dann in i-eine db schreiben, mongoDB bietet sich an, da das auch in dem tutorial verwendet wird.
+
+Das sollte dann alles erstmal in die /application/server.js

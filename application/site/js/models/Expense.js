@@ -14,7 +14,6 @@ app.Expense = Backbone.RelationalModel.extend({
 		relatedModel: 'app.Participation',
 		includeInJSON: Backbone.Model.prototype.idAttribute,
 		collectionType: 'app.ParticipationCollection',
-		autoFetch: true,
 		reverseRelation: {
 			key: 'expense',
 			includeInJSON: Backbone.Model.prototype.idAttribute
@@ -39,11 +38,12 @@ app.Expense = Backbone.RelationalModel.extend({
 			this.trigger('pseudochange');
 		});
 
-		// initialize participations
-		/*
-		this.listenTo(app.persons, 'reset', this.addAllParticipations);
-		this.listenTo(app.persons, 'add', this.addOneParticipation);
-		this.listenTo(app.persons, 'remove', this.removeOneParticipation);*/
+		// TODO model or view?
+		this.listenTo(this, 'change', _.debounce(function () {
+			if (!this.isNew()) {
+				this.save();
+			}
+		}, 300));
 	},
 	validate: function () {
 		var count = 0, amount = 0;
@@ -60,20 +60,6 @@ app.Expense = Backbone.RelationalModel.extend({
 			return 'An expenses needs at least one partipant!';
 		}
 	},
-	addOneParticipation: function (person) {
-		var part = this.get('participations').getByPerson(person);
-		if (!part) {
-			this.get('participations').add(new app.Participation({person: person}));
-		}
-	},
-	addAllParticipations: function (collection) {
-		collection.each(_.bind(function (person) {
-			this.addOneParticipation(person);
-		}, this));
-	},
-	removeOneParticipation: function (person) {
-		this.get('participations').remove(this.get('participations').getByPerson(person));
-	},
 	getAmount: function () {
 		return this.get('participations').reduce(function (memo, part) {
 			if (typeof part.get('amount') === 'number') {
@@ -84,7 +70,8 @@ app.Expense = Backbone.RelationalModel.extend({
 	},
 	toJSONDecorated: function(){
 		return _.extend(this.toJSON(), {
-			amount: this.getAmount()
+			amount: this.getAmount(),
+			isNew: this.isNew()
 		});
 	}
 })
