@@ -6,8 +6,8 @@ app.ParticipationView = app.AView.extend({
 	template: _.template($('#participation-template').html()),
 
 	events: {
-		'change [type=checkbox]': 'setParticipating',
-		'change [type=text]': 'setAmount'
+		'change .participation-toggle': 'setParticipating',
+		'change .participation-amount': 'setAmount'
 	},
 
 	initialize: function () {
@@ -23,6 +23,6 @@ app.ParticipationView = app.AView.extend({
 	},
 	setAmount: function (e) {
 		var am = parseInt($(e.target).val(), 10);
-		this.model.set('amount', Number.isNaN(am) ? 0 : am);
+		this.model.set('amount', am || 0);
 	}
 });

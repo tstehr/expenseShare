@@ -1,0 +1,264 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+a {
+	-webkit-touch-callout: none;
+}
+* {
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+	-webkit-text-size-adjust: none;
+}
+
+.visuallyhidden {
+	border: 0;
+	clip: rect(0 0 0 0);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	width: 1px;
+}
+
+
+
+html {
+	font-size: 18px;
+	font-family: "Helvetica", "Arial", sans-serif;
+	font-weight: bold;
+	text-shadow: 0px 1px 0px white;
+	color: hsl(0, 90%, 45%);
+	background: black;
+
+	-webkit-user-select: none;
+}
+body, html, #app {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+
+/* FORMRESET */
+input, button {
+	background: none;
+	border: none;
+	font-size: inherit;
+	font-weight: inherit;
+	font-family: inherit;
+	text-shadow: inherit;
+	line-height: inherit;
+	text-decoration: inherit;
+	color: inherit;
+	text-align: inherit;
+}
+button {
+	cursor: pointer;
+}
+input {
+	line-height:1rem;
+}
+input[type=text]:focus, input[type=number]:focus {
+	outline: none;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+
+.row,
+.module-header {
+	display: block;
+	height: 3rem;
+	padding: .2rem .8rem 0;
+	border-bottom: 1px solid hsl(0, 0%, 90%);
+	background: hsl(0, 0%, 93%);
+	
+	line-height: 2.8rem;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow:hidden;
+	color: inherit;
+	text-decoration: none;
+}
+.row.emphasize {
+	background: hsl(0, 0%, 88%);
+	border-bottom: 1px solid hsl(0, 0%, 84%);
+}
+
+
+.module {
+	overflow:hidden;
+	position:relative;
+	height:100%;
+}
+
+.module-header {
+	text-align: center;
+}
+.module-header > a, .module-header > button {
+	position: absolute;
+	top: .2rem;
+	left: 0;
+	width: 3rem;	
+	text-align: center;
+	color: inherit;
+}
+.module-header > a.right, 
+.module-header > button.right { 
+	left: inherit;
+	right: 0;
+}
+.module-header > h1 {
+	font-size: 1rem;
+	margin: 0 3rem;
+	text-align: center;
+}
+
+
+.module-body {
+	position: absolute;
+	top: 3rem;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	overflow-x: hidden;
+	overflow-y: scroll;
+	-webkit-overflow-scrolling: touch;
+}
+.module-body.hasBar {
+	bottom: 3rem;
+}
+/* 
+Hack for -webkit-overflow-scrolling 
+https://github.com/joelambert/ScrollFix/issues/2
+*/
+.scroll-wrapper {
+	width: 100%;
+	height: 100%;
+	overflow-y: scroll;
+	overflow-x:hidden;
+	-webkit-overflow-scrolling: touch;
+}
+
+.module-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0, 0, 0, .5);
+}
+
+
+.module-buttonBar {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	height: 3rem;
+	width: 100%;
+}
+.module-buttonBar > button {
+	display: block;
+	float:left;
+	height: 3rem;
+	padding: .2rem .8rem 0;
+	line-height: 2.8rem;
+	background: hsl(0, 0%, 84%);
+	text-align: center;
+}
+.module-buttonBar > button.confirm,
+.module-buttonBar > button.decline {
+	text-shadow: 0 1px 1px hsl(0, 0%, 20%);
+	color: white;
+}
+.module-buttonBar > button.confirm {
+	background: hsl(135, 83%, 37%);
+}
+.module-buttonBar > button.decline {
+	background: hsl(0, 90%, 45%);
+}
+
+
+
+
+
+
+.list {
+	list-style: none;
+	display: table;
+	table-layout: fixed;
+	width: 100%;
+}
+.list > li {
+	display: table-row;
+}
+.list .row  {
+	display: table-cell;
+}
+
+
+.month-transfers, 
+.month-showExpenses {
+	display: none;
+}
+.month.transfersShown .month-transfers,
+.month.transfersShown .month-showExpenses {
+	display: block;
+}
+.month.transfersShown .month-expenses, 
+.month.transfersShown .month-showTransfers {
+	display: none;
+}
+.month-new {
+	text-align:center;
+}
+.month-toggle {
+	width: 100%;
+}
+.month-transfers {
+	background: hsl(0, 0%, 93%);
+	padding: 1.2rem .8rem;
+}
+.month-transfers p {
+	margin: 0 0 .8rem 0;
+}
+.month-transfers ul {
+	margin: 0 0 1.2rem 2rem;
+}
+
+.expense-edit .module-overlay {
+	display: none;
+}
+.expense-edit.deleteShown .module-overlay {
+	display: block;
+}
+.expense-edit .module-buttonBar .confirm {
+	width: 70%;
+}
+.expense-edit .module-buttonBar .decline {
+	width: 30%;
+}
+
+
+.expense-list a.row:nth-child(2) {
+	width: 5.5rem;
+	text-align:right;
+}
+
+
+.participation-toggle-container {
+	width: 3rem;
+}
+.participation-amount-container {
+	width: 5.5rem;
+	text-align: right;
+}
+.participation-amount {
+	width: 3.5rem;
+	text-align: right;
+}

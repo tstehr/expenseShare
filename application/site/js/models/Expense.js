@@ -44,6 +44,8 @@ app.Expense = Backbone.RelationalModel.extend({
 				this.save();
 			}
 		}, 300));
+
+		// TODO save participations
 	},
 	validate: function () {
 		var count = 0, amount = 0;

@@ -1,7 +1,8 @@
 app = app || {};
 
 app.MonthTransfersView = app.AView.extend({
-	tagName: 'div',
+	tagName: 'section',
+	className: 'month-transfers',
 
 	template: _.template($('#month-transfers-template').html()),
 

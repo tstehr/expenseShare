@@ -9,56 +9,6 @@ app.ParticipationBaseCollection = Backbone.Collection.extend({
 	comparator: function (part) {
 		return app.Util.normalizeComparison(part.get('person') ? part.get('person').get('name') : '');
 	},
-	getByPerson: function (person) {
-		if (!(person instanceof app.Person)) {
-			return null;
-		}
-		return this.filter(function (part) {
-			return !!part.get('person') && part.get('person').id == person.id;
-		});
-	}
-});
-
-/**
- * This Collection also contains Participations. Additionally, it maintains a _slaveCollection 
- * which contains participations for every person which has no participations containing it in the 
- * master collection.
- * All Participations in the master collection are not empty, that is they have either a amount or 
- * are participating, whilest participations in the slave collection are empty. 
- * If the "empty"-state of a participation changes, it is moved to the corresponding collection.
- */
-app.ParticipationCollection = app.ParticipationBaseCollection.extend({
-	model: app.Participation,
-
-	initialize: function () {
-		this._slaveCollection = new app.ParticipationBaseCollection();
-
-		app.persons.forEach(function (person) {
-			this._slaveCollection.add(new app.Participation({
-				person: person
-			}));
-		}.bind(this));
-
-		this.listenTo(app.persons, 'add', this.addToSlave);
-
-		this.listenTo(this, 'add', this.removeFromSlave);
-		this.listenTo(this, 'remove', this.addToSlave);
-
-		this.listenTo(this._slaveCollection, 'change', function (part) {
-			if (!part.isEmpty()) {
-				this._slaveCollection.remove(part);
-				this.add(part);
-			}
-		}.bind(this));
-
-		this.listenTo(this, 'change', function (part) {
-			if (part.isEmpty()) {
-				this.remove(part);
-			} else {
-				this.removeFromSlave(part);
-			}
-		}.bind(this));
-	},
 	extractPerson: function (model) {
 		if (model instanceof app.Participation) {
 			return model.get('person');
@@ -68,22 +18,44 @@ app.ParticipationCollection = app.ParticipationBaseCollection.extend({
 		} 
 		throw new TypeError('Can\'t extract person from supplied arguments!');
 	},
-	removeFromSlave: function (model) {
-		var person = this.extractPerson(model);
-
-		var slaveParts = this._slaveCollection.getByPerson(person);
-		if (slaveParts) {
-			this._slaveCollection.remove(slaveParts)
+	getByPerson: function (model) {
+		var person;
+		if (!model) {
+			return [];
 		}
-	},
-	addToSlave: function (model) {
-		var person = this.extractPerson(model);
+		person = this.extractPerson(model);
+		return this.filter(function (part) {
+			return !!part.get('person') && part.get('person').id == person.id;
+		});
+	}
+});
 
-		var slaveParts = this._slaveCollection.getByPerson(person);
-		if (!slaveParts || slaveParts.length === 0) {
-			this._slaveCollection.add(new app.Participation({
-				person: person
-			}));
+/**
+ * This Collection also contains Participations. 
+ * It makes surre that all participations in the collection are not empty, that is they have either a amount or are participating.
+ * It also pervents adding a participation with a person which is already in the collection, the data of this participation is move to the existing participation instead.
+ */
+app.ParticipationCollection = app.ParticipationBaseCollection.extend({
+	model: app.Participation,
+
+	initialize: function () {
+		this.listenTo(this, 'change', this.removeIfEmpty);
+	},
+	add: function (model) {
+		// don't add if part with person already exists in collection
+		var persons = this.getByPerson(model);
+		if (persons && persons.length > 0 && persons[0] !== model) {
+			persons[0].set({
+				participating: model.get('participating') || persons[0].get('participating'),
+				amount: (model.get('amount') || 0) + (persons[0].get('amount') || 0)
+			});
+			return persons[0];
+		} 
+		return app.ParticipationBaseCollection.prototype.add.apply(this, arguments);
+	},
+	removeIfEmpty: function (part) {
+		if (part.isEmpty()) {
+			this.remove(part);
 		}
 	}
 });

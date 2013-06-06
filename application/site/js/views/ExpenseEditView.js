@@ -5,7 +5,7 @@ var app = app || {};
  */
 app.ExpenseEditView = app.AView.extend({
 	tagName: 'section',
-	className: 'expense-edit',
+	className: 'module expense-edit',
 
 	template: _.template($('#expense-edit-template').html()),
 	headerTemplate: _.template($('#expense-edit-header-template').html()),
@@ -13,8 +13,12 @@ app.ExpenseEditView = app.AView.extend({
 	events: {
 		'change .expense-description': 'setDescription',
 		'click .expense-save': 'persistNewModel',
-		'click .expense-discard': 'discardNewModel',
+		'click .expense-discard': 'deleteModel',
 		'click .expense-back': 'closeView',
+		'click .expense-showDelete': 'showDelete',
+		'click .expense-hideDelete': 'hideDelete',
+		'click .module-overlay': 'hideDelete',
+		'click .expense-delete': 'deleteModel'
 	},
 
 	initialize: function () {
@@ -25,7 +29,7 @@ app.ExpenseEditView = app.AView.extend({
 		this.listenTo(this.model, 'change pseudochange', this.renderHeader);
 	},
 	render: function () {
-		this.$el.html(this.template());
+		this.$el.html(this.template(this.model.toJSONDecorated()));
 
 		this.participationView.setElement(this.$('ul')[0]);
 
@@ -59,18 +63,31 @@ app.ExpenseEditView = app.AView.extend({
 		this.model.set('description', e.target.value);
 	},
 	persistNewModel: function ()  {
-		// TODO save participations
-		// TODO indicate running activity to user, disable interactions
-		this.model.save().then(this.closeView.bind(this));
+		this.$el.addClass('wait');
+
+		var promises = this.model.get('participations').map(function (part) {
+			return part.save();
+		});
+
+		promises.push(this.model.save());
+
+		$.when.apply(this, promises).then(function () {
+			this.closeView();
+		}.bind(this));
 	},
-	discardNewModel: function () {
+	deleteModel: function () {
 		// TODO destroy participations
 		var month = this.model.get('month').get('id');
 		this.model.destroy();
 		this.gotoMonth(month);
 	},
+	showDelete: function () {
+		this.$el.addClass('deleteShown');
+	},
+	hideDelete: function () {
+		this.$el.removeClass('deleteShown');
+	},
 	closeView: function () {
-		console.log('ccv');
 		this.gotoMonth(this.model.get('month').get('id'));
 	},
 	gotoMonth: function (month) {

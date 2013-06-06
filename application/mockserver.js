@@ -56,7 +56,7 @@ var createMockRESTInterface = function (app, name, elements, makeId) {
 		});
 
 		if (!found) {
-			res.send('');
+			res.send('false');
 		}
 	});
 
@@ -90,12 +90,19 @@ var createMockRESTInterface = function (app, name, elements, makeId) {
 
 	// removing an element 
 	app.delete('/api/' + name + '/:id', function (req, res) {
-		elements.some(function (element, index) {
+		var sc = elements.some(function (element, index) {
 			if (element.id === parseInt(req.params.id, 10)) {
+				console.log(elements);
 				elements.splice(index, 1);
+				console.log(elements);
 				return true;
 			}
 		});
+		if (sc) {
+			res.send('true');
+		} else {
+			res.send('false');
+		}
 	});
 };
 

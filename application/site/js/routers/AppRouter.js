@@ -11,8 +11,10 @@ var app = app || {};
 app.AppRouter = Backbone.Router.extend({
 	routes: {
 		'month/:date': 'showMonth',
+		'month/:data/transfers': 'showMonthTransfers',
 		'expense/:id': 'editExpense',
 		'month/:date/createExpense': 'createExpense',
+		'persons': 'showPersons',
 		'': 'showCurrentMonth',
 		'*path': 'showError'
 	},
@@ -25,6 +27,9 @@ app.AppRouter = Backbone.Router.extend({
 	showMonth: function(date) {
 		app.appView.showMonthView(date);
 	},
+	showMonthTransfers: function (date) {
+		app.appView.showMonthView(date, true);
+	},
 	editExpense: function (id) {
 		app.appView.showExpenseEditView(id);
 	},
@@ -35,6 +40,9 @@ app.AppRouter = Backbone.Router.extend({
 		app.appView.setActiveView(new app.ExpenseEditView({
 			model: expense
 		}));
+	},
+	showPersons: function () {
+		app.appView.showPersonView();
 	},
 	showCurrentMonth: function (path) {
 		var now = new Date();

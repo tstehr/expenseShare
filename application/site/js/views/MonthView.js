@@ -2,12 +2,18 @@ var app = app || {};
 
 app.MonthView = app.AView.extend({
 	tagName: 'section',
+	className: 'module month',
 
-	structure: $('#a-module-template').html(),
+	structure: _.template($('#month-template').html()),
 	headerTemplate: _.template($('#month-header-template').html()),
-	bodyStructure: $('#month-body-template').html(),
 
-	initialize: function () {
+	events: {
+		'click .month-toggle': 'toggleTransferView'
+	},
+
+	initialize: function (params) {
+		this.transfersShown = params && !!params.transfersShown;
+
 		this.expenseCollectionView = new app.ExpenseCollectionView({
 			collection: this.model.get('expenses')
 		});
@@ -24,7 +30,9 @@ app.MonthView = app.AView.extend({
 		this.remove();
 	},
 	render: function () {
-		this.$el.html(this.structure);
+		this.$el.html(this.structure(this.model.toJSONDecorated()));
+
+		this.setElClass();
 		
 		this
 			.renderHeader()
@@ -32,6 +40,13 @@ app.MonthView = app.AView.extend({
 		;
 
 		return this;
+	},
+	setElClass: function () {
+		if (this.transfersShown) {
+			this.$el.addClass('transfersShown');
+		} else {
+			this.$el.removeClass('transfersShown');
+		}
 	},
 	renderHeader: function () {
 		// TODO decide wether to put this in model or view	
@@ -47,15 +62,21 @@ app.MonthView = app.AView.extend({
 		return this;
 	},
 	renderBody: function () {
-		var body = this.$('> .module-body');
-
-		body.html(this.bodyStructure);
-
-		this.expenseCollectionView.setElement(body.find('> .expenses'));
+		this.expenseCollectionView.setElement(this.$('.expense-list'));
 		this.expenseCollectionView.render();
 
-		this.monthTransfersView.setElement(body.find('> .transfers'));
+		this.monthTransfersView.setElement(this.$('.month-transfers'));
 		this.monthTransfersView.render();
+	},
+	toggleTransferView: function () {
+		this.transfersShown = !this.transfersShown;
+		this.setElClass();
+
+		if (this.transfersShown) {
+			app.appRouter.navigate('month/' + this.model.get('id') + '/transfers');
+		} else {
+			app.appRouter.navigate('month/' + this.model.get('id'));
+		}
 	}
 });
 
