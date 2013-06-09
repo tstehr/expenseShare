@@ -6,22 +6,34 @@ app.AppView = app.AView.extend({
 	},
 	initialize: function () {
 		FastClick.attach(document.body);
+		$(window).on('keyup', this.handleKeyup.bind(this));
 
+		this._views = {};
+		this._viewEls = {
+			'main': this.$('.mainView'),
+			'side': this.$('.sideView'),
+			'transfer': this.$('.transferView'),
+			'person': this.$('.personView')
+		};
 
-		// this.personCollectionViewEl = this.$('.app-personCollectionView');
-		this.activeViewEl = this.$el;
+		// in case we create to many danfeling views for mobile, could use this
+		// this._viewEls = {
+		// 	main: this.$el
+		// };
 
-
-		// this.personCollectionView = new app.PersonCollectionView({
-		// 	collection: app.persons
-		// });
-		// this.personCollectionView.setElement(this.personCollectionViewEl);
+		this.setView('person', new app.WrappingModuleView({
+			title: 'Persons',
+			view: new app.PersonCollectionView({
+				collection: app.persons
+			})
+		}));
 	},
 	render: function () {
-		// this.personCollectionView.render();
-		if (this.activeView) {
-			this.activeView.render();
-		}
+		Object.keys(this._viewEls).forEach(function (viewName) {
+			if (this._views[viewName]) {
+				this._views[viewName].render();
+			}
+		}.bind(this));
 	},
 	navigate: function (e) {
 		var url;
@@ -33,31 +45,86 @@ app.AppView = app.AView.extend({
 			});
 		}
 	},
-	showMonthView: function (id, transfersShown) {
-		this.setActiveView(new app.MonthView({
-			model: app.Month.findOrCreate({id: id}),
-			transfersShown: !!transfersShown
+	handleKeyup: function (e) {
+		// 'panic button'
+		if (e.altKey && e.keyCode === 81) {
+			if (this._views['main'] instanceof app.ExpenseEditView) {
+				this._views['main'].participationView.collection.sort();
+			}
+			this.render();
+		}
+	},
+	setupMonthCommon: function (month) {
+		this.setView('side', new app.MonthView({
+			model: month
+		}));
+
+		this.setView('transfer', new app.WrappingModuleView({
+			title: 'Transfers',
+			view: new app.MonthTransfersView({
+				model: month
+			})
 		}));
 	},
-	showExpenseEditView: function (id) {
-		this.setActiveView(new app.ExpenseEditView({
+	showMonthView: function (monthId, transfersShown) {
+		var month = app.Month.findOrCreate({id: monthId});
+
+		this.setupMonthCommon(month);
+
+		this.setView('main', new app.MonthView({
+			model: month,
+			transfersShown: !!transfersShown,
+			isMain: true
+		}));
+	},
+	showExpenseCreateView: function (monthId) {
+		var month = app.Month.findOrCreate({id: monthId});
+
+		this.setupMonthCommon(month);
+
+		this._views['side'].$el.addClass('blocked');
+
+		this.setView('main', new app.ExpenseEditView({
+			model: 	new app.Expense({
+				month: monthId
+			})
+		}));
+	},
+	showExpenseEditView: function (monthId, id) {
+		var month = app.Month.findOrCreate({id: monthId});
+
+		this.setupMonthCommon(month);
+
+		this.setView('main', new app.ExpenseEditView({
 			model: app.Expense.findOrCreate({id: id})
 		}));
 	},
 	showPersonView: function () {
-		this.setActiveView(new app.PersonCollectionView({
-			collection: app.persons
+		this.setView('side', null);
+		this.setView('transfer', null);
+
+		this.setView('main', new app.WrappingModuleView({
+			title: 'Persons',
+			view: new app.PersonCollectionView({
+				collection: app.persons
+			})
 		}));
 	},
-	setActiveView: function (view) {
-		this.disposeActiveView();
-		this.activeView = view;
-		this.activeViewEl.empty();
-		this.activeViewEl.append(this.activeView.render().el);
+	setView: function (name, view) {
+		if (!this._viewEls[name]) {
+			view.dispose();
+		} else {
+			this.disposeView(name);
+			this._views[name] = view;
+			this._viewEls[name].empty();
+			if (this._views[name]) {
+				this._viewEls[name].append(this._views[name].render().el);
+			}
+		}
 	},
-	disposeActiveView: function () {
-		if (this.activeView) {
-			this.activeView.dispose();
+	disposeView: function (name) {
+		if (this._views[name]) {
+			this._views[name].dispose();
 		}
 	}
 });

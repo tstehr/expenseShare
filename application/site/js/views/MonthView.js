@@ -13,6 +13,7 @@ app.MonthView = app.AView.extend({
 
 	initialize: function (params) {
 		this.transfersShown = params && !!params.transfersShown;
+		this.isMain = params && !!params.isMain;
 
 		this.expenseCollectionView = new app.ExpenseCollectionView({
 			collection: this.model.get('expenses')
@@ -22,7 +23,7 @@ app.MonthView = app.AView.extend({
 			model: this.model
 		});
 
-		this.listenTo(this.model, 'change pseudochange', this.renderHeader)
+		this.listenTo(this.model, 'change', this.renderHeader)
 	},
 	dispose: function () {
 		this.expenseCollectionView.dispose();
@@ -42,6 +43,12 @@ app.MonthView = app.AView.extend({
 		return this;
 	},
 	setElClass: function () {
+		if (this.isMain) {
+			this.$el.addClass('main');
+		} else {
+			this.$el.removeClass('main');
+		}
+
 		if (this.transfersShown) {
 			this.$el.addClass('transfersShown');
 		} else {
@@ -72,10 +79,12 @@ app.MonthView = app.AView.extend({
 		this.transfersShown = !this.transfersShown;
 		this.setElClass();
 
-		if (this.transfersShown) {
-			app.appRouter.navigate('month/' + this.model.get('id') + '/transfers');
-		} else {
-			app.appRouter.navigate('month/' + this.model.get('id'));
+		if (this.isMain) {
+			if (this.transfersShown) {
+				app.appRouter.navigate(this.model.get('id') + '/transfers');
+			} else {
+				app.appRouter.navigate(this.model.get('id'));
+			}
 		}
 	}
 });

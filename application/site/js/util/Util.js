@@ -41,6 +41,15 @@ app.Util = {
 
 		return pam;
 	},
+	parseCurrency: function (str) {
+		return Math.round(parseFloat(str, 10) * 100);
+	},
+	formatCurrency: function (amount) {
+		amount = Math.round(amount);
+		var euros = Math.floor(amount/100);
+		var cents = amount - euros*100;
+		return euros + '.' + app.Util.formatNumber(cents, 2);
+	},
 	normalizeComparison: function(string) {
 		string = string.toLowerCase();
 		

@@ -14,13 +14,21 @@
 
 
 <div id="app">
-
+	<div class="gridBox mainView"></diV>
+	<div class="gridBox sideView"></diV>
+	<div class="gridBox personView"></div>
+	<div class="gridBox transferView">
+		<section class="module">
+			<header class="module-header"><h1>Transfers</h1></header>
+			<div class="module-body"></div>
+		</section>
+	</div>
 </div>
 
 <!-- Templates start here -->
 
-<script type="text/template" id="a-module-template">
-	<header class="module-header"></header>
+<script type="text/template" id="module-template">
+	<header class="module-header"><h1><%= title %></h1></header>
 	<div class="module-body"></div>
 </script>
 
@@ -28,8 +36,8 @@
 	<header class="module-header"></header>
 
 	<h2 class="visuallyhidden">Expenses</h2>
-	<section class="module-body hasBar month-expenses">
-		<a class="month-new row" href="/month/<%= id %>/createExpense">
+	<section class="module-body month-expenses">
+		<a class="month-new row" href="/<%= id %>/createExpense">
 			<span class="visuallyhidden">Add new Expense</span>
 			<span class="icon-plus" aria-hidden="true"></span>
 		</a>
@@ -37,7 +45,7 @@
 	</section>
 
 	<h2 class="visuallyhidden">Transfers</h2>
-	<section class="module-body hasBar month-transfers"></section>
+	<section class="module-body month-transfers"></section>
 
 	<div class="module-buttonBar">
 		<button class="month-toggle">
@@ -49,12 +57,12 @@
 
 
 <script type="text/template" id="month-header-template">
-	<h1><%= title %> (<%= amount %>)</h1>
-	<a href="/month/<%= prevMonth %>">
+	<h1><%= title %></h1>
+	<a href="/<%= prevMonth %>">
 		<span class="icon-left-open" aria-hidden="true"></span>
 		<span class="visuallyhidden">Back</span>
 	</a>
-	<a href="/month/<%= nextMonth %>" class="right">
+	<a href="/<%= nextMonth %>" class="right">
 		<span class="visuallyhidden">Next</span>
 		<span class="icon-right-open" aria-hidden="true"></span>
 	</a>
@@ -63,13 +71,13 @@
 
 
 <script type="text/template" id="person-template">
-	<input type="text" value="<%= name %>"> <code>#<%= id %></code>
+	<label class="row"><input type="text" value="<%= name %>"></label>
 </script>
 
 
 <script type="text/template" id="expense-template">
-	<a href="/expense/<%= id %>" class="row emphasize"><%= description %></a>
-	<a href="/expense/<%= id %>" class="row"><%= amount %></a>
+	<a href="/<%= month %>/expense/<%= id %>" class="row emphasize"><%= description %></a>
+	<a href="/<%= month %>/expense/<%= id %>" class="row"><%= app.Util.formatCurrency(amount) %>&thinsp;€</a>
 </script>
 
 
@@ -82,7 +90,11 @@
 
 	<% if (isNew) { %>
 		<div class="module-buttonBar">
-			<button class="confirm expense-save">
+			<button class="confirm expense-persistAndClose">
+				<span class="visuallyhidden">Save</span>
+				<span aria-hidden="true" class="icon-ok"></span>
+			</button>
+			<button class="confirm expense-persistAndEdit">
 				<span class="visuallyhidden">Save</span>
 				<span aria-hidden="true" class="icon-ok"></span>
 			</button>
@@ -113,12 +125,12 @@
 	<h1><input type="text" value="<%= description %>" class="expense-description" placeholder="Enter description"></h1>
 
 	<% if (!isNew) { %>
-		<button class="expense-back">
+		<a href="/<%= month %>" class="expense-back">
 			<span class="visuallyhidden">Back to month</span>
 			<span aria-hidden="true" class="icon-left-open"></span>
-		</button>
+		</a>
 		<button class="expense-showDelete right">
-			<span class="visuallyhidden">DeleteExpense</span>
+			<span class="visuallyhidden">Delete Expense</span>
 			<span class="icon-trash" aria-hidden="true"></span>
 		</button>
 	<% } %>
@@ -126,26 +138,30 @@
 
 <script type="text/template" id="participation-template">
 	<label class="row participation-toggle-container">
-		<span class="visuallyhidden">Teilname: </span>
+		<span class="visuallyhidden">Participating: </span>
 		<input type="checkbox" <%=participating ? "checked" : ""%> class="participation-toggle">
-		
+		<span class="icon-ok" aria-hidden="true"></span>
 	</label>
 	<span class="row emphasize"><%= personName %></span>
 	<label class="row participation-amount-container">
-		<span class="visuallyhidden">Betrag: </span>
-		<input type="number" value="<%= amount %>" class="participation-amount">
+		<span class="visuallyhidden">Amount: </span>
+		<input type="number" value="<%= app.Util.formatCurrency(amount) %>" class="participation-amount">&thinsp;€
 	</label>
 </script>
 
 
 <script type="text/template" id="month-transfers-template">
+	<p> Gesamt: <%= app.Util.formatCurrency(amount) %>&thinsp;€</p>
 	<% Object.keys(transfers).forEach(function (fromCid) { %>
 		<% if (transfers[fromCid] && Object.keys(transfers[fromCid]).length > 0) { %> 
 			<p>
 				<%= app.persons.get(fromCid).get('name') %> zahlt: 
 				<ul>
 				<% Object.keys(transfers[fromCid]).forEach(function (toCid) { %>
-					<li><%= transfers[fromCid][toCid] %> an <%= app.persons.get(toCid).get('name') %>
+					<li>
+						<%= app.Util.formatCurrency(transfers[fromCid][toCid]) %>&thinsp;€
+						an <%= app.persons.get(toCid).get('name') %>
+					</li>
 				<% }); %>
 				</ul>
 			</p>
@@ -176,6 +192,7 @@
 <script src="/js/collections/ParticipationCollection.js"></script>
 
 <script src="/js/views/AView.js"></script>
+<script src="/js/views/WrappingModuleView.js"></script>
 <script src="/js/views/AppView.js"></script>
 <script src="/js/views/MonthView.js"></script>
 <script src="/js/views/MonthTransfersView.js"></script>

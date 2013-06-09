@@ -21,16 +21,6 @@ app.Expense = Backbone.RelationalModel.extend({
 	}],
 	urlRoot: '/api/expenses', 
 	initialize: function () {
-		// TODO refactor into own methods
-		// this.listenTo(this, 'sync', function () {
-		// 	console.log('Sync done... #' + this.get('id'), this);
-		// 	$.when.apply(this, this.fetchRelated('participations')).done(_.bind(function () {
-		// 		console.log('Fetch related done #' + this.get('id'), this);
-		// 		this.addAllParticipations(app.persons);
-		// 		this.calculateAmount();
-		// 	}, this));
-		// });
-
 		// trigger event on this model whenever it's participations change, since toJSONDecorated uses them
 		this.listenTo(this.get('participations'), 'change add remove', function () {
 			// can't trigger "change" event here since backbone-relational interferers with it's propagation

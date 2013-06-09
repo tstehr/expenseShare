@@ -3,18 +3,13 @@ var app = app || {};
 // TODO implement this. should interact with AppView
 // Idea: http://addyosmani.github.io/backbone-fundamentals/#routers
 
-// Routen
-// /month/[YYYY]-[dd]  app.appView.showMonth
-// /expense/[id]
-// /persons/
-
 app.AppRouter = Backbone.Router.extend({
 	routes: {
-		'month/:date': 'showMonth',
-		'month/:data/transfers': 'showMonthTransfers',
-		'expense/:id': 'editExpense',
-		'month/:date/createExpense': 'createExpense',
 		'persons': 'showPersons',
+		':data/transfers': 'showMonthTransfers',
+		':date/createExpense': 'createExpense',
+		':date/expense/:id': 'editExpense',
+		':date': 'showMonth',
 		'': 'showCurrentMonth',
 		'*path': 'showError'
 	},
@@ -30,16 +25,11 @@ app.AppRouter = Backbone.Router.extend({
 	showMonthTransfers: function (date) {
 		app.appView.showMonthView(date, true);
 	},
-	editExpense: function (id) {
-		app.appView.showExpenseEditView(id);
+	editExpense: function (date, id) {
+		app.appView.showExpenseEditView(date, id);
 	},
 	createExpense: function (date) {
-		var expense = new app.Expense({
-			month: date
-		});
-		app.appView.setActiveView(new app.ExpenseEditView({
-			model: expense
-		}));
+		app.appView.showExpenseCreateView(date);
 	},
 	showPersons: function () {
 		app.appView.showPersonView();
@@ -47,7 +37,7 @@ app.AppRouter = Backbone.Router.extend({
 	showCurrentMonth: function (path) {
 		var now = new Date();
 		var currentMonth = app.Util.formatNumber(now.getFullYear(), 4) + '-' + app.Util.formatNumber(now.getMonth() + 1, 2); 
-		this.navigate('month/' + currentMonth, true);
+		this.navigate(currentMonth, true);
 	},
 	showError: function (path) {
 		// TODO add proper error handeling

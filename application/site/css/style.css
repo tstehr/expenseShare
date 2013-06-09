@@ -4,6 +4,7 @@
 	box-sizing: border-box;
 }
 a {
+
 	-webkit-touch-callout: none;
 }
 * {
@@ -28,18 +29,31 @@ html {
 	font-size: 18px;
 	font-family: "Helvetica", "Arial", sans-serif;
 	font-weight: bold;
-	text-shadow: 0px 1px 0px white;
+	text-shadow: 0 1px 0 white;
 	color: hsl(0, 90%, 45%);
 	background: black;
 
 	-webkit-user-select: none;
 }
 body, html, #app {
+	position: relative;
 	width: 100%;
 	height: 100%;
 	overflow: hidden;
 }
 
+.gridBox {
+	position: absolute;
+	overflow: hidden;
+	display: none;
+}
+.mainView {
+	display: block;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+}
 
 /* FORMRESET */
 input, button {
@@ -54,7 +68,7 @@ input, button {
 	color: inherit;
 	text-align: inherit;
 }
-button {
+button, label {
 	cursor: pointer;
 }
 input {
@@ -89,12 +103,19 @@ input::-webkit-inner-spin-button {
 	background: hsl(0, 0%, 88%);
 	border-bottom: 1px solid hsl(0, 0%, 84%);
 }
-
+.invalid > .row {
+	text-decoration: line-through;
+}
 
 .module {
 	overflow:hidden;
 	position:relative;
 	height:100%;
+	background: black;
+}
+.module.blocked {
+	opacity: .5;
+	pointer-events: none;
 }
 
 .module-header {
@@ -115,8 +136,10 @@ input::-webkit-inner-spin-button {
 }
 .module-header > h1 {
 	font-size: 1rem;
-	margin: 0 3rem;
 	text-align: center;
+}
+.module.invalid .module-header > h1 {
+	text-decoration: line-through;
 }
 
 
@@ -152,6 +175,10 @@ https://github.com/joelambert/ScrollFix/issues/2
 	right: 0;
 	bottom: 0;
 	background: rgba(0, 0, 0, .5);
+	color: white;
+	text-shadow: 0 1px 1px hsl(0, 0%, 20%);
+	text-align: center;
+	padding: 2rem;
 }
 
 
@@ -168,16 +195,18 @@ https://github.com/joelambert/ScrollFix/issues/2
 	height: 3rem;
 	padding: .2rem .8rem 0;
 	line-height: 2.8rem;
-	background: hsl(0, 0%, 84%);
+	border-top: 1px solid hsl(0, 0%, 90%);
+	background: hsl(0, 0%, 93%);
 	text-align: center;
 }
 .module-buttonBar > button.confirm,
 .module-buttonBar > button.decline {
+	border: 0;
 	text-shadow: 0 1px 1px hsl(0, 0%, 20%);
 	color: white;
 }
 .module-buttonBar > button.confirm {
-	background: hsl(135, 83%, 37%);
+	background: hsl(135, 90%, 41%);
 }
 .module-buttonBar > button.decline {
 	background: hsl(0, 90%, 45%);
@@ -202,8 +231,13 @@ https://github.com/joelambert/ScrollFix/issues/2
 }
 
 
-.month-transfers, 
-.month-showExpenses {
+
+
+.month .module-body {
+	bottom: 3rem;
+}
+.month .month-transfers, 
+.month .month-showExpenses {
 	display: none;
 }
 .month.transfersShown .month-transfers,
@@ -222,7 +256,7 @@ https://github.com/joelambert/ScrollFix/issues/2
 }
 .month-transfers {
 	background: hsl(0, 0%, 93%);
-	padding: 1.2rem .8rem;
+	padding: 1rem;
 }
 .month-transfers p {
 	margin: 0 0 .8rem 0;
@@ -230,6 +264,8 @@ https://github.com/joelambert/ScrollFix/issues/2
 .month-transfers ul {
 	margin: 0 0 1.2rem 2rem;
 }
+
+
 
 .expense-edit .module-overlay {
 	display: none;
@@ -242,6 +278,9 @@ https://github.com/joelambert/ScrollFix/issues/2
 }
 .expense-edit .module-buttonBar .decline {
 	width: 30%;
+}
+.expense-edit .expense-persistAndEdit {
+	display: none;
 }
 
 
@@ -261,4 +300,111 @@ https://github.com/joelambert/ScrollFix/issues/2
 .participation-amount {
 	width: 3.5rem;
 	text-align: right;
+}
+.participation-toggle {
+	display: none;
+}
+.participation-toggle + .icon-ok {
+	text-shadow: 0 1px 0 hsl(0, 0%, 20%);
+	color: hsl(0, 0%, 70%);
+}
+.participation-toggle:checked + .icon-ok {
+	color: hsl(135, 90%, 41%);
+}
+
+
+
+
+
+
+
+@media screen and (min-width: 30rem) {
+	body {
+		padding: 1rem;
+	}
+	.module {
+		background: hsl(0, 0%, 93%);
+		border-radius: .3rem;
+	}
+}
+
+@media screen and (min-width: 40rem) {
+	.sideView {
+		display: block;
+		left: 0;
+		right: 60%;
+		top: 0;
+		bottom: 0;
+		padding-right: 1rem;
+	}
+	.mainView {
+		left: 40%;
+		right: 0;
+		top: 0;
+		bottom: 0;
+	}
+
+
+	.month.main {
+		display: none;
+	}
+
+	.expense-back {
+		display: none;
+	}
+
+
+	.expense-edit .expense-persistAndEdit {
+		display: inherit;
+	}
+	.expense-edit .expense-persistAndClose {
+		display: none;
+	}
+}
+
+@media screen and (min-width: 60rem) {
+	.sideView {
+		top: 0;
+		right: 80%;
+		bottom: 0;
+		left: 0;
+		padding-right: 1rem;
+	}
+	.mainView {
+		top: 0;
+		right: 20%;
+		bottom: 0;
+		left: 20%;
+	}
+	.personView {
+		display: block;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 80%;
+		padding-left: 1rem;
+	}
+}
+
+@media screen and (min-width: 60rem) and (min-height: 25rem) {
+	.personView {
+		bottom: 50%;
+		padding-bottom: .5rem;
+	}
+	.transferView {
+		display: block;
+		top: 50%;
+		right: 0;
+		bottom: 0;
+		left: 80%;
+		padding-top: .5rem;
+		padding-left: 1rem;
+	}
+
+	.month .module-body {
+		bottom: 0rem;
+	}
+	.month .module-buttonBar {
+		display: none;
+	}
 }

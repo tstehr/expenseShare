@@ -12,9 +12,9 @@ app.ExpenseEditView = app.AView.extend({
 
 	events: {
 		'change .expense-description': 'setDescription',
-		'click .expense-save': 'persistNewModel',
+		'click .expense-persistAndClose': 'persistAndClose',
+		'click .expense-persistAndEdit': 'persistAndEdit',
 		'click .expense-discard': 'deleteModel',
-		'click .expense-back': 'closeView',
 		'click .expense-showDelete': 'showDelete',
 		'click .expense-hideDelete': 'hideDelete',
 		'click .module-overlay': 'hideDelete',
@@ -62,8 +62,23 @@ app.ExpenseEditView = app.AView.extend({
 	setDescription: function (e) {
 		this.model.set('description', e.target.value);
 	},
-	persistNewModel: function ()  {
-		this.$el.addClass('wait');
+	persistAndClose: function () {
+		this.persistNewModel(function () {
+			app.appRouter.navigate(this.model.get('month').get('id'), {
+				trigger: true
+			});
+		}.bind(this));
+	},
+	persistAndEdit: function () {
+		this.persistNewModel(function () {
+			app.appRouter.navigate(this.model.get('month').get('id') + '/expense/' + this.model.get('id'), {
+				trigger: true,
+				replace: true
+			});
+		}.bind(this));
+	},
+	persistNewModel: function (callback)  {
+		this.$el.addClass('blocked');
 
 		var promises = this.model.get('participations').map(function (part) {
 			return part.save();
@@ -72,27 +87,24 @@ app.ExpenseEditView = app.AView.extend({
 		promises.push(this.model.save());
 
 		$.when.apply(this, promises).then(function () {
-			this.closeView();
+			this.$el.removeClass('blocked');
+			if (callback) {
+				callback();
+			}
 		}.bind(this));
 	},
 	deleteModel: function () {
 		// TODO destroy participations
 		var month = this.model.get('month').get('id');
 		this.model.destroy();
-		this.gotoMonth(month);
+		app.appRouter.navigate(month, {
+			trigger: true
+		});
 	},
 	showDelete: function () {
 		this.$el.addClass('deleteShown');
 	},
 	hideDelete: function () {
 		this.$el.removeClass('deleteShown');
-	},
-	closeView: function () {
-		this.gotoMonth(this.model.get('month').get('id'));
-	},
-	gotoMonth: function (month) {
-		app.appRouter.navigate('month/' + month  , {
-			trigger: true
-		});
 	}
 });
