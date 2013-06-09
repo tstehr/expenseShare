@@ -4,6 +4,8 @@
 	"description": "An application for sharing expenses",
 	"dependencies": {
 		"express": "~3.1.0",
-		"path": "~0.4.9"
+		"path": "~0.4.9",
+		"mysql" : "",
+		"sys" : ""
 	}
 }
