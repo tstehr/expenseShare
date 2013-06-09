@@ -62,9 +62,9 @@ app.listen(port, function() {
 
 
 
-var createRestInterface = function(app, name, querry){
-	console.log("Createing RI with querry " + querry + " for " + name);
-		var data = app.connection.query(querry);
+var createRestInterface = function(app, name, query){
+	console.log("Createing RI with query " + query + " for " + name);
+		var data = app.connection.query(query);
 	app.get('/api/' + name, function(res, req){
 		
 		res.set('Content-type', 'application/json; charset=utf8');
