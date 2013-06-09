@@ -34,28 +34,44 @@ var connect = function(app){
 		user : 'expense',
 		password : 'share'
 	});
-	return connection;
-//	console.log('Connecting to Server');
-//	connection.connect();
-//	connection.query('insert into test.hallo values("Ulli",2)',function(err,rows,fields){
+	console.log('Connecting to SQL - Server');
+	connection.connect();
+//	connection.query('select * from test.hallo as result', function(err,rows,fields){
 //		if(err) throw err;
 //		console.log(rows);
 //	});
-//	connection.query('select * from test.hallo as result', function(err,rows,fields){
+	return connection;
+//	connection.query('insert into test.hallo values("Ulli",2)',function(err,rows,fields){
 //		if(err) throw err;
 //		console.log(rows);
 //	});
 //	connection.end();
 //	console.log('Connection terminatet');
 };
+
+var connection = connect(this);
+
+app.get('/month/:id', function (res, req) {
+	console.log('Data asked');
+	var monId = res.params.id;
+	connection.query('select * from expense_share.expenses where mon = ?',monId,function(err,results){
+		if(err) throw err;
+		var data = {
+			id: monId,
+			expenses: results
+		};
+//		res.set('Content-type', 'application/json; charset=utf8');
+		req.set('Content-type', 'application/json; charset=utf8');
+		req.send(JSON.stringify(data));
+//		res.app.set('Content-type', 'application/json; charset=utf8');
+//		res.app.send(JSON.stringify(data));
+	});
+});
+
 //Start server
 var port = 4242;
 
 app.listen(port, function() {
-	app.connection = connect(this);
-	connection.connect();
-//	var app.connection = connection;
-//	connection.end();
 	console.log('Express server listening on port %d in %s mode', port, app.settings.env );
 	
 });
@@ -64,19 +80,18 @@ app.listen(port, function() {
 
 var createRestInterface = function(app, name, query){
 	console.log("Createing RI with query " + query + " for " + name);
-		var data = app.connection.query(query);
-	app.get('/api/' + name, function(res, req){
-		
-		res.set('Content-type', 'application/json; charset=utf8');
-		res.send(JSON.stringify(data));
-	});
+	connection.query(query, function(err,data,fiedls){
+		if(err) throw err;
 		console.log(data);
+		app.get('/api/' + name, function(res, req){
+			res.set('Content-type', 'application/json; charset=utf8');
+			res.send(JSON.stringify(data));
+		});
+	});
 };
 
 
 
-createRestInterface(app,"persons","select * from expense_share.persons");
-createRestInterface(app,"expenses","select * from expense_share.expenses");
 
 
 
