@@ -80,7 +80,14 @@ app.get('/api/persons',function(req, res){
 	});
 });
 app.post('/api/persons',function(req,res){
-	console.log('/api/persons');
+	connection.query(
+		'insert into persons(name) values(?)',
+		[req.body.name],
+		function(err,results){
+		req.body.id = results.insertId;
+		res.set('Content-type', 'application/json; charset=utf8');
+		res.send(JSON.stringify(req.body));
+	});
 });
 app.get('/api/persons/:id',function(req,res){
 	console.log('/api/persons/:id');
