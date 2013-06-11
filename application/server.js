@@ -33,6 +33,8 @@ var connect = function(app){
 	});
 	console.log('Connecting to SQL - Server');
 	connection.connect();
+	connection.query('use expense_share',function(err,res){});
+	connection.query('set names utf8',function(err,res){});
 	return connection;
 };
 
