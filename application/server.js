@@ -12,6 +12,8 @@ var app = express();
 //parses request body and populates request.body
 app.use(express.bodyParser());
 
+app.use(express.basicAuth('expense', 'share'));
+
 //Where to serve static content
 app.use(express.static(path.join(application_root, 'site')));
 
