@@ -173,9 +173,6 @@ app.delete('/api/expenses/:id',function(req,res){
 });
 
 //participations
-app.get('/api/participations',function(req,res){
-	console.log('participations get');
-});
 app.post('/api/participations',function(req,res){
 	connection.query(
 		'insert into expense_share.participations (person,expense,amount,participating) values(?,?,?,?)',
@@ -207,7 +204,13 @@ app.put('/api/participations/:id',function(req,res){
 	res.send(JSON.stringify(req.body));
 });
 app.delete('/api/participations/:id',function(req,res){
-	console.log('participations delete:id');
+	connection.query(
+		'delete from expense_share.participations where id = ?',
+		[req.params.id],
+		function(err, res){}
+	);
+	res.set('Content-type', 'application/json; charset=utf8');
+	res.send('');
 });
 
 //default
