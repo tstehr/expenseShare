@@ -61,6 +61,7 @@ app.ParticipationCollection = app.ParticipationBaseCollection.extend({
 	removeIfEmpty: function (part) {
 		if (part.isEmpty()) {
 			this.remove(part);
+			// part.destroy();
 		}
 	}
 });

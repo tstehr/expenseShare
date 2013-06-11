@@ -21,13 +21,13 @@ app.Participation = Backbone.RelationalModel.extend({
 
 		// wait until person is availible. can do this since person is meant to be immutable
 		if (this.get('person')) {
-			this.listenTo(this.get('person'), 'change:name', (function () {
+			this.listenTo(this.get('person'), 'change:name destroy', (function () {
 				this.trigger('pseudochange');
 			}.bind(this)));
 		} else {
 			this.listenToOnce(this, 'change:person', (function () {
 				// trigger pseudochange event when person changes, since its value is used in toJSONDecorated
-				this.listenTo(this.get('person'), 'change:name', (function () {
+				this.listenTo(this.get('person'), 'change:name destroy', (function () {
 					this.trigger('pseudochange');
 				}.bind(this)));
 			}.bind(this)));
