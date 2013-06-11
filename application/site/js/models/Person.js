@@ -6,7 +6,15 @@ var app = app || {};
 app.Person = Backbone.RelationalModel.extend({
 	defaults: {
 		id: null,
-		name: null
+		name: ''
+	},
+	initialize: function () {
+		this.listenTo(this, 'change', _.debounce(function () {
+			console.log(this, this.isNew());
+			if (!this.isNew()) {
+				this.save();
+			}
+		}, 300));
 	},
 	urlRoot: '/api/persons'
 });
