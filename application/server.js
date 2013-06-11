@@ -49,8 +49,9 @@ app.put(':id',function(req,res){});
 app.delete(':id',function(req,res){});
 */
 //months
-//app.get('/api/months/',function(req,res){});
-//app.post('/api/months/',function(req,res){});
+
+//TODO - ERROR Handling
+
 app.get('/api/months/:id', function (req, res) {
 	var monId = req.params.id;
 	connection.query('select id from expense_share.expenses where month = ?',monId,function(err,results){
@@ -68,8 +69,6 @@ app.get('/api/months/:id', function (req, res) {
 		res.send(JSON.stringify(data));
 	});
 });
-//app.put('/api/months/:id',function(req,res){});
-//app.delete('/api/months/:id',function(req,res){});
 
 //persons
 app.get('/api/persons',function(req, res){
@@ -90,20 +89,30 @@ app.post('/api/persons',function(req,res){
 	});
 });
 app.get('/api/persons/:id',function(req,res){
-	console.log('/api/persons/:id');
+	console.log('/api/persons/:id get');
 });
 app.put('/api/persons/:id',function(req,res){
-	console.log('/api/persons/:id');
+	connection.query(
+		'update expense_share.persons set name = ? where id = ?',
+		[req.body.name,req.body.id],
+		function(err,result){}
+	);
+	res.set('Content-type', 'application/json; charset=utf8');
+	res.send(JSON.stringify(req.body));
 });
 app.delete('/api/persons/:id',function(req,res){
-	console.log('/api/persons/:id');
+//TODO: Sinvolles delete, da die personen aus dem System nicht wieder entfernt werden können
+
+	//connection.query(
+		//'delete from expense_share.persons where id = ?',
+		//[req.params.id],
+		//function(err,result){console.log(err);}
+	//);
+	res.set('Content-type', 'application/json; charset=utf8');
+	res.send(JSON.stringify(''));
 });
 
 //expenses
-app.get('/api/expenses',function(req,res){
-	console.log('expenses get');
-	
-});
 app.post('/api/expenses',function(req,res){
 	connection.query(
 				'insert into expense_share.expenses (description,expenses.month) values (?,?)',
