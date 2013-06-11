@@ -26,9 +26,6 @@ app.use(express.errorHandler({
 
 //Connect to mySQL Server
 var connect = function(app){
-	
-	
-//	console.log(mysql);
 	var connection = mysql.createConnection({
 		host : 'localhost',
 		user : 'expense',
@@ -40,11 +37,19 @@ var connect = function(app){
 };
 
 var connection = connect(this);
-
+/*
+app.get('',function(req,res){});
+app.post('',function(req,res){});
+app.get(':id',function(req,res){});
+app.put(':id',function(req,res){});
+app.delete(':id',function(req,res){});
+*/
+//months
+//app.get('/api/months/',function(req,res){});
+//app.post('/api/months/',function(req,res){});
 app.get('/api/months/:id', function (req, res) {
-	console.log('Data asked');
 	var monId = req.params.id;
-	connection.query('select * from expense_share.expenses where mon = ?',monId,function(err,results){
+	connection.query('select * from expense_share.expenses where month = ?',monId,function(err,results){
 		if(err) throw err;
 		var data = {
 			id: monId,
@@ -54,12 +59,85 @@ app.get('/api/months/:id', function (req, res) {
 		res.send(JSON.stringify(data));
 	});
 });
+//app.put('/api/months/:id',function(req,res){});
+//app.delete('/api/months/:id',function(req,res){});
 
+//persons
+app.get('/api/persons',function(req, res){
+	console.log('persons');
+	connection.query('select * from expense_share.persons',function(err,results){
+		if(err) throw err;
+		res.set('Content-type', 'application/json; charset=utf8');
+		res.send(JSON.stringify(results));
+	});
+});
+app.post('/api/months/',function(req,res){});
+app.get('/api/months/:id',function(req,res){});
+app.put('/api/months/:id',function(req,res){});
+app.delete('/api/months/:id',function(req,res){});
 
+//expenses
+app.get('/api/expenses/',function(req,res){
+	console.log('expenses');
+});
+app.post('/api/expenses/',function(req,res){
+	console.log('expenses');
+});
+app.get('/api/expenses/:id',function(req, res){
+	console.log("/////////////");
+	var exId = req.params.id;
+	connection.query('select * from expense_share.expenses where id=?',exId,function(err,results){
+		if(err) throw err;
+		console.log('*************');
+		connection.query('select * from expense_share.participations where expense=?',exId,function(err,data){
+			if(err) throw err;
+			console.log('------');
+			console.log(data);
+			console.log('------');
+		});
+		res.set('Content-type', 'application/json; charset=utf8');
+		res.send(JSON.stringify(results[0]));
+	});
+});
+app.put('/api/expenses/:id',function(req,res){
+	connection.query(
+		'update expense_share.expenses set description=?, expenses.month=? where id=?',
+		[req.body.description, req.body.month, req.body.id],
+		function(err,results){
+				if(err) {
+					throw err;
+				}
+				res.set('Content-type', 'application/json; charset=utf8');
+				res.send(JSON.stringify(req.body));
+		}
+	);
+});
+app.delete('/api/expenses/:id',function(req,res){
+	console.log('expenses');
+});
 
+//participations
+app.get('/api/participations/',function(req,res){
+	console.log('participations');
+});
+app.post('/api/participations/',function(req,res){
+	console.log('participations');
+});
+app.get('/api/participations/:id',function(req,res){
+	console.log('participations');
+});
+app.put('/api/participations:/id',function(req,res){
+	console.log('participations');
+});
+app.delete('/api/participations/:id',function(req,res){
+	console.log('participations');
+});
+
+//default
 app.get('*', function (req, res) {
 	res.sendfile(path.join(application_root, 'site/index.html'));
 });
+
 //Start server
 var port = 4242;
 

@@ -2,7 +2,7 @@ drop database expense_share;
 create database expense_share;
 use expense_share
 create table persons(id int not null auto_increment primary key, name varchar(50) not null);
-create table expenses(id int not null auto_increment primary key, description varchar(50) not null, mon char(7) not null);
+create table expenses(id int not null auto_increment primary key, description varchar(50) not null, expenses.month char(7) not null);
 create table participations(id int not null auto_increment primary key, person int not null, expense int not null, amount int not null);
 
 -- Test Beginnt hier
