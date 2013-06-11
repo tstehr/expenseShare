@@ -398,7 +398,7 @@ https://github.com/joelambert/ScrollFix/issues/2
 	}
 }
 
-@media screen and (min-width: 60rem) and (min-height: 25rem) {
+@media screen and (min-width: 60rem) and (min-height: 30rem) {
 	.personView {
 		bottom: 50%;
 		padding-bottom: .5rem;

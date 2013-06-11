@@ -17,6 +17,7 @@ app.Participation = Backbone.RelationalModel.extend({
 	}],
 	urlRoot: '/api/participations',
 	initialize: function () {
+		// TODO remove participation-id
 		// TODO respond to "destroy" of this.person
 
 		// wait until person is availible. can do this since person is meant to be immutable
