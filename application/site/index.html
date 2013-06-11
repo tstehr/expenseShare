@@ -221,9 +221,6 @@
 $(function () {
 	app.persons = new app.PersonCollection();
 
-	x = app.Month.findOrCreate({id: '2013-05'});
-
-
 	app.appView = new app.AppView({
 		el: '#app'
 	});
@@ -233,25 +230,6 @@ $(function () {
 	Backbone.history.start({pushState: true});
 			
 	app.persons.fetch();
-		//.then(function () {
-			//return x.fetch();
-		//})
-		//.then(function () {
-			//return $.when.apply(this, x.fetchRelated('expenses'));
-		//})
-		//.then(function () {
-			//return x.get('expenses').reduce(function (memo, expense) {
-				//return $.when.apply(this, expense.fetchRelated('participations').concat(memo));
-			//}, {});
-		//})
-		//.then(function () {	
-			//console.log('finish\'d', arguments);
-		//}, function () {
-			//console.log('fail\'d', arguments);
-			//throw arguments[2];
-		//})
-	//;
-		
 });
 </script>
 

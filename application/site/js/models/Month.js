@@ -173,3 +173,26 @@ app.Month = Backbone.RelationalModel.extend({
 		);
 	}
 });
+
+app.Month.findOrCreateAndFetch = function (monthId) {
+	var month = app.Month.findOrCreate({id: monthId});
+	
+
+	return month.fetch()
+		.then(function () {
+			return $.when.apply(this, month.fetchRelated('expenses'));
+		})
+		.then(function () {
+			var promises = [];
+			month.get('expenses').forEach(function (expense) {
+				promises = promises.concat(expense.fetchRelated('participations'));
+			})
+			return $.when.apply(null, promises);
+		})
+		.then(function () {
+			var def = $.Deferred();
+			def.resolveWith(null, [month]);
+			return def;
+		});
+	;
+}

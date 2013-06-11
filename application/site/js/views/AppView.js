@@ -70,54 +70,37 @@ app.AppView = app.AView.extend({
 		}));
 	},
 	showMonthView: function (monthId, transfersShown) {
-		var month = app.Month.findOrCreate({id: monthId});
-		
-		month.fetch()
-			.then(function () {
-				return $.when.apply(this, month.fetchRelated('expenses'));
-			})
-			.then(function () {
-				return month.get('expenses').reduce(function (memo, expense) {
-					return $.when.apply(this, expense.fetchRelated('participations').concat(memo));
-				}, {});
-			})
-			.then(function () {	
-				console.log('finish\'d', arguments);
-			}, function () {
-				console.log('fail\'d', arguments);
-				throw arguments[2];
-			})
-		;
+		app.Month.findOrCreateAndFetch(monthId).then(function (month) {
+			this.setupMonthCommon(month);
 
-		this.setupMonthCommon(month);
-
-		this.setView('main', new app.MonthView({
-			model: month,
-			transfersShown: !!transfersShown,
-			isMain: true
-		}));
+			this.setView('main', new app.MonthView({
+				model: month,
+				transfersShown: !!transfersShown,
+				isMain: true
+			}));
+		}.bind(this));
 	},
 	showExpenseCreateView: function (monthId) {
-		var month = app.Month.findOrCreate({id: monthId});
+		app.Month.findOrCreateAndFetch(monthId).then(function (month) {
+			this.setupMonthCommon(month);
 
-		this.setupMonthCommon(month);
+			this._views['side'].$el.addClass('blocked');
 
-		this._views['side'].$el.addClass('blocked');
-
-		this.setView('main', new app.ExpenseEditView({
-			model: 	new app.Expense({
-				month: monthId
-			})
-		}));
+			this.setView('main', new app.ExpenseEditView({
+				model: 	new app.Expense({
+					month: monthId
+				})
+			}));
+		}.bind(this));
 	},
 	showExpenseEditView: function (monthId, id) {
-		var month = app.Month.findOrCreate({id: monthId});
+		app.Month.findOrCreateAndFetch(monthId).then(function (month) {
+			this.setupMonthCommon(month);
 
-		this.setupMonthCommon(month);
-
-		this.setView('main', new app.ExpenseEditView({
-			model: app.Expense.findOrCreate({id: id})
-		}));
+			this.setView('main', new app.ExpenseEditView({
+				model: app.Expense.findOrCreate({id: id})
+			}));
+		}.bind(this));
 	},
 	showPersonView: function () {
 		this.setView('side', null);
