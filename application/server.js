@@ -132,12 +132,10 @@ app.post('/api/participations/',function(req,res){
 	console.log('participations post');
 });
 app.get('/api/participations/:id',function(req,res){
-	//TODO
-	console.log(req);
-	connection.query('select * from expense_share.participations where id=?', [req.body.id], function(err, results){
+	connection.query('select * from expense_share.participations where id=?', [req.params.id], function(err, results){
 		if(err) throw err;
 		res.set('Content-type', 'application/json; charset=utf8');
-		res.send(JSON.stringify(results));
+		res.send(JSON.stringify(results[0]));
 	});
 });
 app.put('/api/participations:/id',function(req,res){
