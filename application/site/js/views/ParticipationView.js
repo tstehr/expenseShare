@@ -15,7 +15,9 @@ app.ParticipationView = app.AView.extend({
 		this.listenTo(this.model, 'destroy', this.dispose);
 	},
 	render: function () {
-		this.$el.html(this.template(this.model.toJSONDecorated()));
+		var data = this.model.toJSONDecorated();
+		data.cid = this.model.cid;
+		this.$el.html(this.template(data));
 		return this;
 	},
 	setParticipating: function (e) {

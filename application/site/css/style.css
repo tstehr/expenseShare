@@ -334,7 +334,7 @@ https://github.com/joelambert/ScrollFix/issues/2
 	body {
 		padding: 1rem;
 	}
-	.module, .mainView {
+	.module, .mainView:empty {
 		background: hsl(0, 0%, 93%);
 		border-radius: .3rem;
 	}
