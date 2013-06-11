@@ -76,17 +76,26 @@ app.get('/api/persons',function(req, res){
 		res.send(JSON.stringify(results));
 	});
 });
-app.post('/api/months/',function(req,res){});
+app.post('/api/months',function(req,res){});
 app.get('/api/months/:id',function(req,res){});
 app.put('/api/months/:id',function(req,res){});
 app.delete('/api/months/:id',function(req,res){});
 
 //expenses
-app.get('/api/expenses/',function(req,res){
-	console.log('expenses');
+app.get('/api/expenses',function(req,res){
+	console.log('expenses get');
+	
 });
-app.post('/api/expenses/',function(req,res){
-	console.log('expenses');
+app.post('/api/expenses',function(req,res){
+	connection.query(
+				'insert into expense_share.expenses (description,expenses.month) values (?,?)',
+				[req.body.description,req.body.month],
+				function(err,result){
+		req.body.id = result.insertId;
+		delete req.body.participations;
+		res.set('Content-type', 'application/json; charset=utf8');
+		res.send(JSON.stringify(req.body));
+	});
 });
 app.get('/api/expenses/:id',function(req, res){
 	var exId = req.params.id;
@@ -121,15 +130,25 @@ app.put('/api/expenses/:id',function(req,res){
 	);
 });
 app.delete('/api/expenses/:id',function(req,res){
-	console.log('expenses');
+	console.log('delete expenses/:id');
+	console.log(req.params);
 });
 
 //participations
-app.get('/api/participations/',function(req,res){
+app.get('/api/participations',function(req,res){
 	console.log('participations get');
 });
-app.post('/api/participations/',function(req,res){
-	console.log('participations post');
+app.post('/api/participations',function(req,res){
+	connection.query(
+		'insert into expense_share.participations (person,expense,amount,participating) values(?,?,?,?)',
+		[req.body.person,req.body.expense,req.body.amount,req.body.participating],
+		function(err,result){
+			if(err) throw err;
+			req.body.id = result.insertId;
+			res.set('Content-type', 'application/json; charset=utf8');
+			res.send(JSON.stringify(req.body));
+		}
+	);
 });
 app.get('/api/participations/:id',function(req,res){
 	connection.query('select * from expense_share.participations where id=?', [req.params.id], function(err, results){
@@ -157,26 +176,3 @@ app.listen(port, function() {
 	console.log('Express server listening on port %d in %s mode', port, app.settings.env );
 	
 });
-
-
-
-var createRestInterface = function(app, name, query){
-	console.log("Createing RI with query " + query + " for " + name);
-	connection.query(query, function(err,data,fiedls){
-		if(err) throw err;
-		console.log(data);
-		app.get('/api/' + name, function(res, req){
-			res.set('Content-type', 'application/json; charset=utf8');
-			res.send(JSON.stringify(data));
-		});
-	});
-};
-
-
-
-
-
-
-
-
-
