@@ -34,8 +34,6 @@ app.Expense = Backbone.RelationalModel.extend({
 				this.save();
 			}
 		}, 300));
-
-		// TODO save participations
 	},
 	validate: function () {
 		var count = 0, amount = 0;
@@ -51,6 +49,13 @@ app.Expense = Backbone.RelationalModel.extend({
 		if (count === 0 && amount !== 0)  {
 			return 'An expenses needs at least one partipant!';
 		}
+	},
+	saveExpenseAndParticipations: function () {
+		return this.save().then(function () {
+			return $.when.apply(null, this.get('participations').map(function (part) {
+				return part.save();
+			}));
+		}.bind(this));
 	},
 	getAmount: function () {
 		return this.get('participations').reduce(function (memo, part) {

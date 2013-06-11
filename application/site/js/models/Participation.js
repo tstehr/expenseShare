@@ -32,6 +32,12 @@ app.Participation = Backbone.RelationalModel.extend({
 				}.bind(this)));
 			}.bind(this)));
 		}
+
+		this.listenTo(this, 'change', _.debounce(function () {
+			if (this.get('expense') && !this.get('expense').isNew()) {
+				this.save();
+			}
+		}, 300));
 	},
 	toJSONDecorated: function () {
 		return _.extend(this.toJSON(), {

@@ -80,21 +80,17 @@ app.ExpenseEditView = app.AView.extend({
 	persistNewModel: function (callback)  {
 		this.$el.addClass('blocked');
 
-		this.model.save()
-			.then(function () {
-				return $.when.apply(null, this.model.get('participations').map(function (part) {
-					return part.save();
-				}));
-			}.bind(this))
-			.then(function () {
+		this.model.saveExpenseAndParticipations().then(
+			function () {
 				this.$el.removeClass('blocked');
 				if (callback) {
 					callback();
 				}
-			}.bind(this), function () {
+			}.bind(this), 
+			function () {
 				// TODO do something more useful than just failing silently
-			})
-		;
+			}
+		);
 	},
 	deleteModel: function () {
 		// TODO destroy participations
