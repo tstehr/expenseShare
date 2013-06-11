@@ -49,11 +49,16 @@ app.delete(':id',function(req,res){});
 //app.post('/api/months/',function(req,res){});
 app.get('/api/months/:id', function (req, res) {
 	var monId = req.params.id;
-	connection.query('select * from expense_share.expenses where month = ?',monId,function(err,results){
+	connection.query('select id from expense_share.expenses where month = ?',monId,function(err,results){
 		if(err) throw err;
+		//split results to an array of int
+		var exp = [];
+		results.forEach(function(element, index, array){
+			exp[index] = element.id;
+		});
 		var data = {
 			id: monId,
-			expenses: results
+			expenses: exp
 		};
 		res.set('Content-type', 'application/json; charset=utf8');
 		res.send(JSON.stringify(data));
@@ -84,19 +89,22 @@ app.post('/api/expenses/',function(req,res){
 	console.log('expenses');
 });
 app.get('/api/expenses/:id',function(req, res){
-	console.log("/////////////");
 	var exId = req.params.id;
-	connection.query('select * from expense_share.expenses where id=?',exId,function(err,results){
+	connection.query('select id,description from expense_share.expenses where id=?',exId,function(err,exp){
 		if(err) throw err;
-		console.log('*************');
-		connection.query('select * from expense_share.participations where expense=?',exId,function(err,data){
+		var data = {
+			id : exp[0].id,
+			description : exp[0].description,
+			participations : []
+		};
+		connection.query('select id from expense_share.participations where expense=?',exId,function(err,part){
 			if(err) throw err;
-			console.log('------');
-			console.log(data);
-			console.log('------');
+			part.forEach(function(element, index){
+				data.participations[index] = element.id;
+			});
+			res.set('Content-type', 'application/json; charset=utf8');
+			res.send(JSON.stringify(data));
 		});
-		res.set('Content-type', 'application/json; charset=utf8');
-		res.send(JSON.stringify(results[0]));
 	});
 });
 app.put('/api/expenses/:id',function(req,res){
@@ -118,19 +126,25 @@ app.delete('/api/expenses/:id',function(req,res){
 
 //participations
 app.get('/api/participations/',function(req,res){
-	console.log('participations');
+	console.log('participations get');
 });
 app.post('/api/participations/',function(req,res){
-	console.log('participations');
+	console.log('participations post');
 });
 app.get('/api/participations/:id',function(req,res){
-	console.log('participations');
+	//TODO
+	console.log(req);
+	connection.query('select * from expense_share.participations where id=?', [req.body.id], function(err, results){
+		if(err) throw err;
+		res.set('Content-type', 'application/json; charset=utf8');
+		res.send(JSON.stringify(results));
+	});
 });
 app.put('/api/participations:/id',function(req,res){
-	console.log('participations');
+	console.log('participations put:id');
 });
 app.delete('/api/participations/:id',function(req,res){
-	console.log('participations');
+	console.log('participations delete:id');
 });
 
 //default
