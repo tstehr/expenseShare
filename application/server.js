@@ -69,7 +69,6 @@ app.get('/api/months/:id', function (req, res) {
 
 //persons
 app.get('/api/persons',function(req, res){
-	console.log('persons');
 	connection.query('select * from expense_share.persons',function(err,results){
 		if(err) throw err;
 		res.set('Content-type', 'application/json; charset=utf8');
@@ -130,8 +129,19 @@ app.put('/api/expenses/:id',function(req,res){
 	);
 });
 app.delete('/api/expenses/:id',function(req,res){
-	console.log('delete expenses/:id');
-	console.log(req.params);
+	var delId = req.params.id;
+	connection.query(
+		'delete from expense_share.expenses where id = ?',
+		[req.params.id],
+		function(err,result){if(err) throw err;}
+	);
+	connection.query(
+		'delete from expense_share.participations where expense = ?',
+		[req.params.id],
+		function(err,result){if(err) throw err;}
+	);
+	res.set('Content-type', 'application/json; charset=utf8');
+	res.send('');
 });
 
 //participations
