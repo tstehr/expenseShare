@@ -28,15 +28,13 @@ app.Expense = Backbone.RelationalModel.extend({
 			this.trigger('pseudochange');
 		});
 
-		// TODO model or view?
 		this.listenTo(this, 'change', _.debounce(function () {
 			var changed;
 			if (!this.isNew()) {
 				changed = Object.keys(this.changedAttributes());
-				console.log(changed);
-				// if (changed.length !== 1 || changed[0] !== 'id') {
+				if (changed.length !== 1 || changed[0] !== 'id') {
 					this.save();
-				// }
+				}
 			}
 		}, 300));
 	},
