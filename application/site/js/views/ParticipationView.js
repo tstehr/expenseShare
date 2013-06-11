@@ -25,7 +25,6 @@ app.ParticipationView = app.AView.extend({
 	},
 	setAmount: function (e) {
 		var am = app.Util.parseCurrency(e.target.value);
-		console.log(e.target.value, am, this.model.get('amount'));
 		if (Number.isNaN(am) || this.model.get('amount') === am) {
 			this.render();
 		} else {
