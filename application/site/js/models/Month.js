@@ -175,24 +175,32 @@ app.Month = Backbone.RelationalModel.extend({
 });
 
 app.Month.findOrCreateAndFetch = function (monthId) {
-	var month = app.Month.findOrCreate({id: monthId});
-	
+	var alreadyExists, month, def;
 
-	return month.fetch()
-		.then(function () {
-			return $.when.apply(this, month.fetchRelated('expenses'));
-		})
-		.then(function () {
-			var promises = [];
-			month.get('expenses').forEach(function (expense) {
-				promises = promises.concat(expense.fetchRelated('participations'));
+	alreadyExists = !!app.Month.findOrCreate({id: monthId}, {
+		create: false
+	}); 
+	month = app.Month.findOrCreate({id: monthId});
+	def = $.Deferred();
+	def.resolveWith(null, [month]);
+
+	if (alreadyExists) {
+		return def;
+	} else {
+		return month.fetch()
+			.then(function () {
+				return $.when.apply(this, month.fetchRelated('expenses'));
 			})
-			return $.when.apply(null, promises);
-		})
-		.then(function () {
-			var def = $.Deferred();
-			def.resolveWith(null, [month]);
-			return def;
-		});
-	;
+			.then(function () {
+				var promises = [];
+				month.get('expenses').forEach(function (expense) {
+					promises = promises.concat(expense.fetchRelated('participations'));
+				})
+				return $.when.apply(null, promises);
+			})
+			.then(function () {
+				return def;
+			});
+		;
+	}
 }

@@ -10,20 +10,25 @@ app.ParticipationBaseCollection = Backbone.Collection.extend({
 		return app.Util.normalizeComparison(part.get('person') ? part.get('person').get('name') : '');
 	},
 	extractPerson: function (model) {
-		if (model instanceof app.Participation) {
-			return model.get('person');
+		var person;
+		if (model instanceof app.Participation && model.get('person')) {
+			person = model.get('person');
 		} 
 		if (model instanceof app.Person) {
-			return model;
+			person = model;
 		} 
-		throw new TypeError('Can\'t extract person from supplied arguments!');
+
+		if (person instanceof app.Person) {
+			return person;
+		} else {
+			return null;
+		}
 	},
 	getByPerson: function (model) {
-		var person;
-		if (!model) {
+		var person = this.extractPerson(model);
+		if (!person) {
 			return [];
 		}
-		person = this.extractPerson(model);
 		return this.filter(function (part) {
 			return !!part.get('person') && part.get('person').id == person.id;
 		});
