@@ -68,6 +68,8 @@ var createMockRESTInterface = function (app, name, elements, makeId) {
 		});
 		element.id = makeId();
 
+		console.log(element);
+
 		elements.push(element);
 
 		res.set('Content-type', 'application/json; charset=utf8');
