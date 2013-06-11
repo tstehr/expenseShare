@@ -75,10 +75,18 @@ app.get('/api/persons',function(req, res){
 		res.send(JSON.stringify(results));
 	});
 });
-app.post('/api/months',function(req,res){});
-app.get('/api/months/:id',function(req,res){});
-app.put('/api/months/:id',function(req,res){});
-app.delete('/api/months/:id',function(req,res){});
+app.post('/api/persons',function(req,res){
+	console.log('/api/persons');
+});
+app.get('/api/persons/:id',function(req,res){
+	console.log('/api/persons/:id');
+});
+app.put('/api/persons/:id',function(req,res){
+	console.log('/api/persons/:id');
+});
+app.delete('/api/persons/:id',function(req,res){
+	console.log('/api/persons/:id');
+});
 
 //expenses
 app.get('/api/expenses',function(req,res){
@@ -167,8 +175,16 @@ app.get('/api/participations/:id',function(req,res){
 		res.send(JSON.stringify(results[0]));
 	});
 });
-app.put('/api/participations:/id',function(req,res){
-	console.log('participations put:id');
+app.put('/api/participations/:id',function(req,res){
+	connection.query(
+		'update expense_share.participations set participating = ?, amount = ?, person = ?, expense = ? where id = ?',
+		[req.body.participating,req.body.amount,req.body.person,req.body.expense,req.body.id],
+		function(err, res){
+			if(err) throw err;
+		}
+	);
+	res.set('Content-type', 'application/json; charset=utf8');
+	res.send(JSON.stringify(req.body));
 });
 app.delete('/api/participations/:id',function(req,res){
 	console.log('participations delete:id');

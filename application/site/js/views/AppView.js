@@ -71,6 +71,23 @@ app.AppView = app.AView.extend({
 	},
 	showMonthView: function (monthId, transfersShown) {
 		var month = app.Month.findOrCreate({id: monthId});
+		
+		month.fetch()
+			.then(function () {
+				return $.when.apply(this, month.fetchRelated('expenses'));
+			})
+			.then(function () {
+				return month.get('expenses').reduce(function (memo, expense) {
+					return $.when.apply(this, expense.fetchRelated('participations').concat(memo));
+				}, {});
+			})
+			.then(function () {	
+				console.log('finish\'d', arguments);
+			}, function () {
+				console.log('fail\'d', arguments);
+				throw arguments[2];
+			})
+		;
 
 		this.setupMonthCommon(month);
 
