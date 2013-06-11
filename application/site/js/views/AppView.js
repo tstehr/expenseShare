@@ -8,6 +8,9 @@ app.AppView = app.AView.extend({
 		FastClick.attach(document.body);
 		$(window).on('keyup', this.handleKeyup.bind(this));
 
+		$(document).on('touchmove', function (e) {
+			console.log(e);
+		});
 		this._views = {};
 		this._viewEls = {
 			'main': this.$('.mainView'),

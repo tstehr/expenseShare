@@ -36,16 +36,19 @@
 	<header class="module-header"></header>
 
 	<h2 class="visuallyhidden">Expenses</h2>
-	<section class="module-body month-expenses">
-		<a class="month-new row" href="/<%= id %>/createExpense">
-			<span class="visuallyhidden">Add new Expense</span>
-			<span class="icon-plus" aria-hidden="true"></span>
-		</a>
-		<ul class="month-expense-list list expense-list"></ul>
-	</section>
+	<div class="scroll-wrapper">
+		<section class="module-body month-expenses">
+			<a class="month-new row" href="/<%= id %>/createExpense">
+				<span class="visuallyhidden">Add new Expense</span>
+				<span class="icon-plus" aria-hidden="true"></span>
+			</a>
+			<ul class="month-expense-list list expense-list"></ul>
+		</section>
+	</div>
 
 	<h2 class="visuallyhidden">Transfers</h2>
 	<section class="module-body month-transfers"></section>
+	
 
 	<div class="module-buttonBar">
 		<button class="month-toggle">
@@ -84,8 +87,10 @@
 <script type="text/template" id="expense-edit-template">
 	<header class="module-header"></header>
 
-	<div class="module-body <%= isNew ? 'hasBar' : '' %>">
-		<ul class="list participation-list"></ul>
+	<div class="scroll-wrapper">
+		<div class="module-body <%= isNew ? 'hasBar' : '' %>">
+			<ul class="list participation-list"></ul>
+		</div>
 	</div>
 
 	<% if (isNew) { %>
