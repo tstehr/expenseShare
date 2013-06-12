@@ -158,7 +158,7 @@ app.get('/api/expenses/:id',function(req, res){
 		'select id,description from expense_share.expenses where id=?',
 		[exId],
 		function(err,exp){
-			if(err) {
+			if (err || exp.length == 0) {
 				sendError(res);
 				return;
 			}
