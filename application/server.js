@@ -1,13 +1,37 @@
 // Module dependencies.
 var application_root = __dirname,
-	express = require('express'), //Web framework
-	path = require('path'), //Utilities for dealing with file paths
-	mysql = require('mysql'); //Database access
+	express = require('express'), // Web framework
+	path = require('path'), // Utilities for dealing with file paths
+	mysql = require('mysql'), // Database
+	read = require('read'); 
+
+
+//Connect to mySQL Server
+var connect = function(host, user, password){
+	var connection = mysql.createConnection({
+		host: host,
+		user: user,
+		password: password
+	});
+	connection.connect();
+	connection.query('use expense_share', function(err,res) {
+		if (err) {
+			throw err;
+		}
+	});
+	connection.query('set names utf8', function(err,res) {});
+	return connection;
+};
+var sendError = function(res){
+	res.set('Content-type', 'application/json; charset=utf8');
+	res.send('');
+};
+
 
 //Create server
-var app = express();
+var app, connection;
 
-// Configure server
+app = express();
 
 //parses request body and populates request.body
 app.use(express.bodyParser());
@@ -26,29 +50,8 @@ app.use(express.errorHandler({
 	showStack: true 
 }));
 
-//Connect to mySQL Server
-var connect = function(app){
-	var connection = mysql.createConnection({
-		host : 'localhost',
-		user : 'expense',
-		password : 'share'
-	});
-	console.log('Connecting to SQL - Server');
-	connection.connect();
-	connection.query('use expense_share',function(err,res){});
-	connection.query('set names utf8',function(err,res){});
-	return connection;
-};
-var sendError = function(res){
-		res.set('Content-type', 'application/json; charset=utf8');
-		res.send('');
-};
 
-var connection = connect(this);
 //months
-
-//TODO - ERROR Handling
-
 app.get('/api/months/:id', function (req, res) {
 	var monId = req.params.id;
 	connection.query(
@@ -285,10 +288,18 @@ app.all('*', function (req, res) {
 	res.sendfile(path.join(application_root, 'site/index.html'));
 });
 
-//Start server
-var port = 4242;
 
-app.listen(port, function() {
-	console.log('Express server listening on port %d in %s mode', port, app.settings.env );
-	
+
+read({prompt: 'Username: '}, function (err, user) {
+	read({prompt: 'Password: ', silent: true}, function (err, password) {	
+		try {
+			connection = connect('localhost', user, password);
+
+			app.listen(4242, function() {
+				console.log('Express server listening on port %d in %s mode', 4242, app.settings.env);
+			});
+		} catch (e) {
+			console.log('Failed to connect!');
+		}
+	});
 });
