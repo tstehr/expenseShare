@@ -11,7 +11,7 @@ app.ParticipationView = app.AView.extend({
 	},
 
 	initialize: function () {
-		this.listenTo(this.model, 'change pseudochange', this.render);
+		this.listenTo(this.model, 'pseudochange', this.render);
 		this.listenTo(this.model, 'destroy', this.dispose);
 	},
 	render: function () {
@@ -24,11 +24,13 @@ app.ParticipationView = app.AView.extend({
 		this.model.set('participating', e.target.checked);
 	},
 	setAmount: function (e) {
-		var am = app.Util.parseCurrency(e.target.value);
-		if (Number.isNaN(am) || this.model.get('amount') === am) {
-			this.render();
+		var am = app.Util.parseCurrency(e.target.value) || 0;
+		if (this.model.get('amount') === am) {
+			this.$('.participation-amount').val(app.Util.formatCurrency(am));
 		} else {
-			this.model.set('amount', am || 0);
+			console.log('böahadsf');
+			this.model.set('amount', am);
+			this.$('.participation-amount').val(app.Util.formatCurrency(am));
 		}
 	}
 });
