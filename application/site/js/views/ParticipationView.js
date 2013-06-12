@@ -7,11 +7,11 @@ app.ParticipationView = app.AView.extend({
 
 	events: {
 		'change .participation-toggle': 'setParticipating',
-		'change .participation-amount': 'setAmount'
+		'blur .participation-amount': 'setAmount'
 	},
 
 	initialize: function () {
-		this.listenTo(this.model, 'pseudochange', this.render);
+		this.listenTo(this.model, 'change pseudochange', this.render);
 		this.listenTo(this.model, 'destroy', this.dispose);
 	},
 	render: function () {
@@ -26,11 +26,9 @@ app.ParticipationView = app.AView.extend({
 	setAmount: function (e) {
 		var am = app.Util.parseCurrency(e.target.value) || 0;
 		if (this.model.get('amount') === am) {
-			this.$('.participation-amount').val(app.Util.formatCurrency(am));
+			this.render();
 		} else {
-			console.log('böahadsf');
 			this.model.set('amount', am);
-			this.$('.participation-amount').val(app.Util.formatCurrency(am));
 		}
 	}
 });
