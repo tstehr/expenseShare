@@ -344,13 +344,13 @@ https://github.com/joelambert/ScrollFix/issues/2
 	.sideView {
 		display: block;
 		left: 0;
-		right: 60%;
+		right: 50%;
 		top: 0;
 		bottom: 0;
 		padding-right: 1rem;
 	}
 	.mainView {
-		left: 40%;
+		left: 50%;
 		right: 0;
 		top: 0;
 		bottom: 0;
@@ -377,23 +377,23 @@ https://github.com/joelambert/ScrollFix/issues/2
 @media screen and (min-width: 60rem) {
 	.sideView {
 		top: 0;
-		right: 80%;
+		right: 70%;
 		bottom: 0;
 		left: 0;
 		padding-right: 1rem;
 	}
 	.mainView {
 		top: 0;
-		right: 20%;
+		right: 25%;
 		bottom: 0;
-		left: 20%;
+		left: 30%;
 	}
 	.personView {
 		display: block;
 		top: 0;
 		right: 0;
 		bottom: 0;
-		left: 80%;
+		left: 75%;
 		padding-left: 1rem;
 	}
 }
@@ -408,7 +408,7 @@ https://github.com/joelambert/ScrollFix/issues/2
 		top: 50%;
 		right: 0;
 		bottom: 0;
-		left: 80%;
+		left: 75%;
 		padding-top: .5rem;
 		padding-left: 1rem;
 	}

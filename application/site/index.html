@@ -156,16 +156,16 @@
 
 
 <script type="text/template" id="month-transfers-template">
-	<p> Gesamt: <%= app.Util.formatCurrency(amount) %>&thinsp;€</p>
+	<p> Total: <%= app.Util.formatCurrency(amount) %>&thinsp;€</p>
 	<% Object.keys(transfers).forEach(function (fromCid) { %>
 		<% if (transfers[fromCid] && Object.keys(transfers[fromCid]).length > 0) { %> 
 			<p>
-				<%= app.persons.get(fromCid).get('name') %> zahlt: 
+				<%= app.persons.get(fromCid).get('name') %>: 
 				<ul>
 				<% Object.keys(transfers[fromCid]).forEach(function (toCid) { %>
 					<li>
 						<%= app.Util.formatCurrency(transfers[fromCid][toCid]) %>&thinsp;€
-						an <%= app.persons.get(toCid).get('name') %>
+						to <%= app.persons.get(toCid).get('name') %>
 					</li>
 				<% }); %>
 				</ul>

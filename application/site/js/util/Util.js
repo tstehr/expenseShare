@@ -45,10 +45,10 @@ app.Util = {
 		return Math.round(parseFloat(str, 10) * 100);
 	},
 	formatCurrency: function (amount) {
-		amount = Math.round(amount);
-		var euros = Math.floor(amount/100);
-		var cents = amount - euros*100;
-		return euros + '.' + app.Util.formatNumber(cents, 2);
+		var absAmount = Math.round(Math.abs(amount));
+		var euros = Math.floor(absAmount/100);
+		var cents = absAmount - euros*100;
+		return (amount < 0 ? '-' : '') + euros + '.' + app.Util.formatNumber(cents, 2);
 	},
 	normalizeComparison: function(string) {
 		string = string.toLowerCase();

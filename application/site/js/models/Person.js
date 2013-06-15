@@ -10,7 +10,6 @@ app.Person = Backbone.RelationalModel.extend({
 	},
 	initialize: function () {
 		this.listenTo(this, 'change', _.debounce(function () {
-			console.log(this, this.isNew());
 			if (!this.isNew()) {
 				this.save();
 			}

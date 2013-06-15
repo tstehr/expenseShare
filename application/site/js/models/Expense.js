@@ -22,7 +22,7 @@ app.Expense = Backbone.RelationalModel.extend({
 	urlRoot: '/api/expenses', 
 	initialize: function () {
 		// trigger event on this model whenever it's participations change, since toJSONDecorated uses them
-		this.listenTo(this.get('participations'), 'change add remove', function () {
+		this.listenTo(this.get('participations'), 'pseudochange change add remove', function () {
 			// can't trigger "change" event here since backbone-relational interferers with it's propagation
 			// cf. Backbone.RelationalModel.trigger
 			this.trigger('pseudochange');
