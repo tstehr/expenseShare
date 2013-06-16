@@ -3,7 +3,8 @@ var application_root = __dirname,
 	express = require('express'), // Web framework
 	path = require('path'), // Utilities for dealing with file paths
 	mysql = require('mysql'), // Database
-	read = require('read'); 
+	argv = require('optimist').argv; // arguments
+	read = require('read'); // user input 
 
 
 //Connect to mySQL Server
@@ -288,18 +289,15 @@ app.all('*', function (req, res) {
 	res.sendfile(path.join(application_root, 'site/index.html'));
 });
 
+try {
+	if (!argv.sqlUser && !argv.sqlPassword) {
+		throw new Error('Please supply mysql username and password. Options: --sqlUser --sqlPassword');
+	}
+	connection = connect(argv.sqlServer || 'localhost', argv.sqlUser, argv.sqlPassword);
 
-
-read({prompt: 'Username: '}, function (err, user) {
-	read({prompt: 'Password: ', silent: true}, function (err, password) {	
-		try {
-			connection = connect('localhost', user, password);
-
-			app.listen(4242, function() {
-				console.log('Express server listening on port %d in %s mode', 4242, app.settings.env);
-			});
-		} catch (e) {
-			console.log('Failed to connect!');
-		}
+	app.listen(4242, function() {
+		console.log('Express server listening on port %d in %s mode', 4242, app.settings.env);
 	});
-});
+} catch (e) {
+	console.log(e);
+}
