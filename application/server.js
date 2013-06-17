@@ -4,7 +4,6 @@ var application_root = __dirname,
 	path = require('path'), // Utilities for dealing with file paths
 	mysql = require('mysql'), // Database
 	argv = require('optimist').argv; // arguments
-	read = require('read'); // user input 
 
 
 //Connect to mySQL Server
