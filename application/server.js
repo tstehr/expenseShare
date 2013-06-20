@@ -4,7 +4,8 @@ var application_root = __dirname,
 	path = require('path'), // Utilities for dealing with file paths
 	mysql = require('mysql'), // Database
 	argv = require('optimist').argv; // arguments
-
+var database = 'expense_share';
+var port = 4242;
 
 //Connect to mySQL Server
 var connect = function(host, user, password){
@@ -14,7 +15,7 @@ var connect = function(host, user, password){
 		password: password
 	});
 	connection.connect();
-	connection.query('use expense_share', function(err,res) {
+	connection.query('use ' + expense_share, function(err,res) {
 		if (err) {
 			throw err;
 		}
@@ -71,7 +72,7 @@ app.use(express.errorHandler({
 app.get('/api/months/:id', function (req, res) {
 	var monId = req.params.id;
 	connection().query(
-		'select id from expense_share.expenses where month = ?',
+		'select id from ' + expense_share + '.expenses where month = ?',
 		[monId],
 		function(err,results){
 			if(err) {
@@ -97,7 +98,7 @@ app.get('/api/months/:id', function (req, res) {
 //persons
 app.get('/api/persons',function(req, res){
 	connection().query(
-		'select * from expense_share.persons',
+		'select * from ' + expense_share + '.persons',
 		function(err,results){
 			if(err) {
 				sendError(res);
@@ -130,7 +131,7 @@ app.get('/api/persons/:id',function(req,res){
 });
 app.put('/api/persons/:id',function(req,res){
 	connection().query(
-		'update expense_share.persons set name = ? where id = ?',
+		'update ' + expense_share + '.persons set name = ? where id = ?',
 		[req.body.name,req.body.id],
 		function(err,result){
 			if(err){
@@ -147,7 +148,7 @@ app.delete('/api/persons/:id',function(req,res){
 //TODO: Sinvolles delete, da die personen aus dem System nicht wieder entfernt werden können
 
 	//connection().query(
-		//'delete from expense_share.persons where id = ?',
+		//'delete from ' + expense_share + '.persons where id = ?',
 		//[req.params.id],
 		//function(err,result){console.log(err);}
 	//);
@@ -158,7 +159,7 @@ app.delete('/api/persons/:id',function(req,res){
 //expenses
 app.post('/api/expenses',function(req,res){
 	connection().query(
-		'insert into expense_share.expenses (description,expenses.month) values (?,?)',
+		'insert into ' + expense_share + '.expenses (description,expenses.month) values (?,?)',
 		[req.body.description,req.body.month],
 		function(err,result){
 			if(err){
@@ -176,7 +177,7 @@ app.post('/api/expenses',function(req,res){
 app.get('/api/expenses/:id',function(req, res){
 	var exId = req.params.id;
 	connection().query(
-		'select id,description from expense_share.expenses where id=?',
+		'select id,description from ' + expense_share + '.expenses where id=?',
 		[exId],
 		function(err,exp){
 			if (err || exp.length == 0) {
@@ -189,7 +190,7 @@ app.get('/api/expenses/:id',function(req, res){
 				participations : []
 			};
 			connection().query(
-				'select id from expense_share.participations where expense=?',
+				'select id from ' + expense_share + '.participations where expense=?',
 				[exId],
 				function(err,part){
 					if(err) {
@@ -208,7 +209,7 @@ app.get('/api/expenses/:id',function(req, res){
 });
 app.put('/api/expenses/:id',function(req,res){
 	connection().query(
-		'update expense_share.expenses set description=?, expenses.month=? where id=?',
+		'update ' + expense_share + '.expenses set description=?, expenses.month=? where id=?',
 		[req.body.description, req.body.month, req.body.id],
 		function(err,results){
 			if(err) {
@@ -224,7 +225,7 @@ app.put('/api/expenses/:id',function(req,res){
 app.delete('/api/expenses/:id',function(req,res){
 	var delId = req.params.id;
 	connection().query(
-		'delete from expense_share.expenses where id = ?',
+		'delete from ' + expense_share + '.expenses where id = ?',
 		[req.params.id],
 		function(err,result){
 			if(err){
@@ -234,7 +235,7 @@ app.delete('/api/expenses/:id',function(req,res){
 		}
 	);
 	connection().query(
-		'delete from expense_share.participations where expense = ?',
+		'delete from ' + expense_share + '.participations where expense = ?',
 		[req.params.id],
 		function(err,result){
 			if(err){
@@ -251,7 +252,7 @@ app.delete('/api/expenses/:id',function(req,res){
 //participations
 app.post('/api/participations',function(req,res){
 	connection().query(
-		'insert into expense_share.participations (person,expense,amount,participating) values(?,?,?,?)',
+		'insert into ' + expense_share + '.participations (person,expense,amount,participating) values(?,?,?,?)',
 		[req.body.person,req.body.expense,req.body.amount,req.body.participating],
 		function(err,result){
 			if(err) {
@@ -266,7 +267,7 @@ app.post('/api/participations',function(req,res){
 	connection().end(function(err){});
 });
 app.get('/api/participations/:id',function(req,res){
-	connection().query('select * from expense_share.participations where id=?', [req.params.id], function(err, results){
+	connection().query('select * from ' + expense_share + '.participations where id=?', [req.params.id], function(err, results){
 		if(err) {
 			sendError(res);
 			return;
@@ -278,7 +279,7 @@ app.get('/api/participations/:id',function(req,res){
 });
 app.put('/api/participations/:id',function(req,res){
 	connection().query(
-		'update expense_share.participations set participating = ?, amount = ?, person = ?, expense = ? where id = ?',
+		'update ' + expense_share + '.participations set participating = ?, amount = ?, person = ?, expense = ? where id = ?',
 		[req.body.participating,req.body.amount,req.body.person,req.body.expense,req.body.id],
 		function(err, result){
 			if(err){
@@ -293,7 +294,7 @@ app.put('/api/participations/:id',function(req,res){
 });
 app.delete('/api/participations/:id',function(req,res){
 	connection().query(
-		'delete from expense_share.participations where id = ?',
+		'delete from ' + expense_share + '.participations where id = ?',
 		[req.params.id],
 		function(err, result){
 			if(err){
@@ -317,13 +318,21 @@ app.all('*', function (req, res) {
 });
 
 try {
+	//Check for Default DB and Port config 
+	if(argv.sqlDB){
+		database = argv.sqlDB;
+	}
+	if(argv.port){
+		port = argv.port;
+	}
+	console.log('test ' + database+ ' ' + port);
 	if (!argv.sqlUser && !argv.sqlPassword) {
-		throw new Error('Please supply mysql username and password. Options: --sqlUser --sqlPassword');
+		throw new Error('Please supply mysql username and password. Options: --sqlUser --sqlPassword Optional Parameter:--sqlDB --port');
 	}
 	connection = connectionWrapper(argv.sqlServer || 'localhost', argv.sqlUser, argv.sqlPassword);
 
-	app.listen(4242, function() {
-		console.log('Express server listening on port %d in %s mode', 4242, app.settings.env);
+	app.listen(port, function() {
+		console.log('Express server listening on port %d in %s mode', port, app.settings.env);
 	});
 } catch (e) {
 	console.log(e);
