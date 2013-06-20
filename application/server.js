@@ -91,6 +91,7 @@ app.get('/api/months/:id', function (req, res) {
 			res.send(JSON.stringify(data));
 		}
 	);
+	connection().end(function(err){});
 });
 
 //persons
@@ -106,6 +107,7 @@ app.get('/api/persons',function(req, res){
 			res.send(JSON.stringify(results));
 		}
 	);
+	connection().end(function(err){});
 });
 app.post('/api/persons',function(req,res){
 	connection().query(
@@ -121,6 +123,7 @@ app.post('/api/persons',function(req,res){
 			res.send(JSON.stringify(req.body));
 		}
 	);
+	connection().end(function(err){});
 });
 app.get('/api/persons/:id',function(req,res){
 	console.log('/api/persons/:id get');
@@ -136,6 +139,7 @@ app.put('/api/persons/:id',function(req,res){
 			}
 		}
 	);
+	connection().end(function(err){});
 	res.set('Content-type', 'application/json; charset=utf8');
 	res.send(JSON.stringify(req.body));
 });
@@ -167,6 +171,7 @@ app.post('/api/expenses',function(req,res){
 			res.send(JSON.stringify(req.body));
 		}
 	);
+	connection().end(function(err){});
 });
 app.get('/api/expenses/:id',function(req, res){
 	var exId = req.params.id;
@@ -199,6 +204,7 @@ app.get('/api/expenses/:id',function(req, res){
 			res.send(JSON.stringify(data));
 		});
 	});
+	connection().end(function(err){});
 });
 app.put('/api/expenses/:id',function(req,res){
 	connection().query(
@@ -213,6 +219,7 @@ app.put('/api/expenses/:id',function(req,res){
 			res.send(JSON.stringify(req.body));
 		}
 	);
+	connection().end(function(err){});
 });
 app.delete('/api/expenses/:id',function(req,res){
 	var delId = req.params.id;
@@ -236,6 +243,7 @@ app.delete('/api/expenses/:id',function(req,res){
 			}
 		}
 	);
+	connection().end(function(err){});
 	res.set('Content-type', 'application/json; charset=utf8');
 	res.send('');
 });
@@ -255,6 +263,7 @@ app.post('/api/participations',function(req,res){
 			res.send(JSON.stringify(req.body));
 		}
 	);
+	connection().end(function(err){});
 });
 app.get('/api/participations/:id',function(req,res){
 	connection().query('select * from expense_share.participations where id=?', [req.params.id], function(err, results){
@@ -265,6 +274,7 @@ app.get('/api/participations/:id',function(req,res){
 		res.set('Content-type', 'application/json; charset=utf8');
 		res.send(JSON.stringify(results[0]));
 	});
+	connection().end(function(err){});
 });
 app.put('/api/participations/:id',function(req,res){
 	connection().query(
@@ -279,6 +289,7 @@ app.put('/api/participations/:id',function(req,res){
 			res.send(JSON.stringify(req.body));
 		}
 	);
+	connection().end(function(err){});
 });
 app.delete('/api/participations/:id',function(req,res){
 	connection().query(
@@ -293,6 +304,7 @@ app.delete('/api/participations/:id',function(req,res){
 			res.send('');
 		}
 	);
+	connection().end(function(err){}); 	
 });
 
 app.all('/api/*', function(req,res){
