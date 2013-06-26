@@ -32,7 +32,7 @@ var createPerson = function (req, res) {
 				.then(function (data) {
 					res.set('Content-type', 'application/json; charset=utf8');
 					res.send(JSON.stringify({
-						id: data.insertId,
+						id: data[0].insertId,
 						name: req.body.name
 					}));
 				})
