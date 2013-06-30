@@ -28,7 +28,7 @@ a {
 
 html {
 	font-size: 18px;
-	font-family: "Helvetica", "Arial", sans-serif;
+	font-family: "Helvetica Neue", "Helvtica", "Arial", sans-serif;
 	font-weight: bold;
 	text-shadow: 0 .1rem 0 white;
 	color: hsl(0, 90%, 45%);
@@ -43,18 +43,9 @@ body, html, #app {
 	overflow: hidden;
 }
 
-.gridBox {
-	position: absolute;
-	overflow: hidden;
-	display: none;
-}
-.mainView {
-	display: block;
-	left: 0;
-	right: 0;
-	top: 0;
-	bottom: 0;
-}
+
+
+
 
 /* FORMRESET */
 input, button {
@@ -85,6 +76,24 @@ input::-webkit-inner-spin-button {
 }
 
 
+
+
+.gridBox {
+	position: absolute;
+	overflow: hidden;
+	display: none;
+}
+.mainView {
+	display: block;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+}
+
+
+
+
 .row,
 .module-header {
 	display: block;
@@ -101,8 +110,8 @@ input::-webkit-inner-spin-button {
 	text-decoration: none;
 }
 .row.emphasize {
-	background: hsl(0, 0%, 88%);
-	border-bottom: .1rem solid hsl(0, 0%, 84%);
+	background: hsl(0, 0%, 90%);
+	border-bottom: .1rem solid hsl(0, 0%, 87%);
 }
 .invalid > .row {
 	text-decoration: line-through;
@@ -198,6 +207,7 @@ https://github.com/joelambert/ScrollFix/issues/2
 	padding: .2rem .8rem 0;
 	line-height: 2.8rem;
 	background: hsl(0, 0%, 93%);
+	border-top: .1rem solid hsl(0, 0%, 90%);
 	text-align: center;
 }
 .module-buttonBar > button.confirm,
@@ -205,6 +215,7 @@ https://github.com/joelambert/ScrollFix/issues/2
 	font-size: 1.2rem;
 	text-shadow: 0 .1rem 0 hsl(0, 0%, 20%);
 	color: white;
+	border: 0;
 }
 .module-buttonBar > button.confirm {
 	background: hsl(135, 90%, 41%);
@@ -268,11 +279,21 @@ https://github.com/joelambert/ScrollFix/issues/2
 }
 
 
+.expense-description {
+	width: 100%;
+	padding: 0 3rem;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.expense-list a.row:nth-child(2) {
+	width: 5.5rem;
+	text-align:right;
+}
 
-.expense-edit .module-overlay {
+.expense-edit .module-buttonBar {
 	display: none;
 }
-.expense-edit.deleteShown .module-overlay {
+.expense-edit.isNew .module-buttonBar {
 	display: block;
 }
 .expense-edit .module-buttonBar .confirm {
@@ -281,21 +302,30 @@ https://github.com/joelambert/ScrollFix/issues/2
 .expense-edit .module-buttonBar .decline {
 	width: 30%;
 }
+
+.expense-edit .module-overlay {
+	display: none;
+}
+.expense-edit.deleteShown .module-overlay {
+	display: block;
+}
+.expense-edit .module-overlay .module-buttonBar {
+	display: block;
+}
+
+
+
+.expense-edit.isNew .expense-back, .expense-edit.isNew .expense-showDelete {
+	display: none;
+}
+.expense-edit.isNew .module-body {
+	bottom: 3rem;
+}
+
 .expense-edit .expense-persistAndEdit {
 	display: none;
 }
-.expense-description {
-	width: 100%;
-	padding: 0 3rem;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
 
-
-.expense-list a.row:nth-child(2) {
-	width: 5.5rem;
-	text-align:right;
-}
 
 
 
@@ -367,14 +397,20 @@ https://github.com/joelambert/ScrollFix/issues/2
 
 
 	.expense-edit .expense-persistAndClose {
-		display: block;
+		display: none;
 	}
 	.expense-edit .expense-persistAndEdit {
-		display: none;
+		display: block;
 	}
 }
 
 @media screen and (min-width: 60rem) {
+	.mainView {
+		top: 0;
+		right: 25%;
+		bottom: 0;
+		left: 30%;
+	}
 	.sideView {
 		top: 0;
 		right: 70%;
@@ -382,34 +418,13 @@ https://github.com/joelambert/ScrollFix/issues/2
 		left: 0;
 		padding-right: 1rem;
 	}
-	.mainView {
-		top: 0;
-		right: 25%;
-		bottom: 0;
-		left: 30%;
-	}
-	.personView {
-		display: block;
-		top: 0;
-		right: 0;
-		bottom: 0;
-		left: 75%;
-		padding-left: 1rem;
-	}
-}
 
-@media screen and (min-width: 60rem) and (min-height: 30rem) {
-	.personView {
-		bottom: 50%;
-		padding-bottom: .5rem;
-	}
 	.transferView {
 		display: block;
-		top: 50%;
+		top: 0;
 		right: 0;
 		bottom: 0;
 		left: 75%;
-		padding-top: .5rem;
 		padding-left: 1rem;
 	}
 

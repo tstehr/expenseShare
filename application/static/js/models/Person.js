@@ -8,12 +8,21 @@ app.Person = Backbone.RelationalModel.extend({
 		id: null,
 		name: ''
 	},
+	urlRoot: 'person',
 	initialize: function () {
-		this.listenTo(this, 'change', _.debounce(function () {
-			if (!this.isNew()) {
-				this.save();
-			}
-		}, 300));
+		if (this.isNew()) {
+			this.listenToOnce(this, 'sync', this.doIoBind.bind(this));
+		} else {
+			this.doIoBind();
+		}
 	},
-	urlRoot: '/api/persons'
+	doIoBind: function () {
+		this.ioBind('update', function (data) {
+			this.set(data);
+		});
+	},
+	save: function () {
+		console.log('saving...', this);
+		return Backbone.RelationalModel.prototype.save.apply(this, arguments);
+	}
 });

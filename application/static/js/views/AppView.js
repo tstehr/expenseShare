@@ -9,27 +9,26 @@ app.AppView = app.AView.extend({
 		$(window).on('keyup', this.handleKeyup.bind(this));
 
 		$(document).on('touchmove', function (e) {
-			console.log(e);
+			var inScrolling = $('.module-body').find(e.target);
+			if (inScrolling.length > 0) {
+				console.log('STOP');
+				e.stopPropagation();
+			} else {
+				e.preventDefault();
+			}
 		});
+
 		this._views = {};
 		this._viewEls = {
 			'main': this.$('.mainView'),
 			'side': this.$('.sideView'),
-			'transfer': this.$('.transferView'),
-			'person': this.$('.personView')
+			'transfer': this.$('.transferView')
 		};
 
-		// in case we create to many danfeling views for mobile, could use this
+		// in case we create to many dangeling views for mobile, could use this
 		// this._viewEls = {
 		// 	main: this.$el
 		// };
-
-		this.setView('person', new app.WrappingModuleView({
-			title: 'Persons',
-			view: new app.PersonCollectionView({
-				collection: app.persons
-			})
-		}));
 	},
 	render: function () {
 		Object.keys(this._viewEls).forEach(function (viewName) {
@@ -64,9 +63,8 @@ app.AppView = app.AView.extend({
 
 		this.setView('transfer', new app.WrappingModuleView({
 			title: 'Transfers',
-			view: new app.MonthTransfersView({
-				model: month
-			})
+			view: app.MonthTransfersView,
+			model: month
 		}));
 	},
 	showMonthView: function (monthId, transfersShown) {
@@ -84,7 +82,7 @@ app.AppView = app.AView.extend({
 		app.Month.findOrCreateAndFetch(monthId).then(function (month) {
 			this.setupMonthCommon(month);
 
-			this._views['side'].$el.addClass('blocked');
+			this._views['side'].setBlocked(true);
 
 			this.setView('main', new app.ExpenseEditView({
 				model: 	new app.Expense({
@@ -102,32 +100,69 @@ app.AppView = app.AView.extend({
 			}));
 		}.bind(this));
 	},
-	showPersonView: function () {
-		this.setView('side', null);
+	showPersonsView: function () {
+		this.setView('side', new app.WrappingModuleView({
+			title: 'Persons',
+			view: app.PersonCollectionView,
+			collection: app.persons
+		}));
 		this.setView('transfer', null);
 
 		this.setView('main', new app.WrappingModuleView({
 			title: 'Persons',
-			view: new app.PersonCollectionView({
-				collection: app.persons
-			})
+			view: app.PersonCollectionView,
+			collection: app.persons
 		}));
+	},
+	showPersonView: function (id) {
+		this.setView('side', new app.WrappingModuleView({
+			title: 'Persons',
+			view: app.PersonCollectionView,
+			collection: app.persons
+		}));
+		this.setView('transfer', null);
+
+		this.setView('main', new app.PersonEditView({
+			model: app.Person.findOrCreate({id: id})
+		}));
+	},
+	getView: function (name) {
+		return this._views[name];
 	},
 	setView: function (name, view) {
 		if (!this._viewEls[name]) {
+			// can't put view anywhere, ignore it
 			view.dispose();
+		} else if (view && view === this._views[name]) {
+			// if trying to set to already set view, ask it to reset itself
+			view.resetState();
 		} else {
-			this.disposeView(name);
-			this._views[name] = view;
-			this._viewEls[name].empty();
-			if (this._views[name]) {
-				this._viewEls[name].append(this._views[name].render().el);
-			}
+			// try to reuse model view if possible
+			if (
+				view && this._views[name]  &&
+				view.constructor === this._views[name].constructor && 
+				(
+					(view.model && view.model === this._views[name].model) ||
+					(view.collection && view.collection === this._views[name].collection)
+				)
+			) {
+				view.dispose();
+				this._views[name].resetState();
+			} else {
+				this.disposeView(name);
+				this._views[name] = view;
+				this._viewEls[name].empty();
+				if (this._views[name]) {
+					this._viewEls[name].append(this._views[name].render().el);
+				}
+			}				
 		}
+		
 	},
 	disposeView: function (name) {
 		if (this._views[name]) {
 			this._views[name].dispose();
+			delete this._views[name];
 		}
 	}
 });

@@ -19,7 +19,7 @@ app.Expense = Backbone.RelationalModel.extend({
 			includeInJSON: Backbone.Model.prototype.idAttribute
 		}
 	}],
-	urlRoot: '/api/expenses', 
+	urlRoot: 'expense', 
 	initialize: function () {
 		// trigger event on this model whenever it's participations change, since toJSONDecorated uses them
 		this.listenTo(this.get('participations'), 'pseudochange change add remove', function () {
@@ -28,15 +28,25 @@ app.Expense = Backbone.RelationalModel.extend({
 			this.trigger('pseudochange');
 		});
 
-		this.listenTo(this, 'change', _.debounce(function () {
-			var changed;
-			if (!this.isNew()) {
-				changed = Object.keys(this.changedAttributes());
-				if (changed.length !== 1 || changed[0] !== 'id') {
-					this.save();
-				}
+		if (this.isNew()) {
+			this.listenToOnce(this, 'sync', this.doIoBind.bind(this));
+		} else {
+			this.doIoBind();
+		}
+	},
+	doIoBind: function () {
+		this.ioBind('createParticipation', function (data) {
+			this.get('participations').add(data);
+		});
+		this.ioBind('update', function (data) {
+			this.set(data);
+		});
+		this.ioBind('delete', function (data) {
+			if (this.collection) {
+				this.collection.remove(this);
 			}
-		}, 300));
+			this.set('id', null);
+		});
 	},
 	validate: function () {
 		var count = 0, amount = 0;
@@ -50,7 +60,7 @@ app.Expense = Backbone.RelationalModel.extend({
 			}
 		});
 		if (count === 0 && amount !== 0)  {
-			return 'An expenses needs at least one partipant!';
+			return 'An expense needs at least one participant!';
 		}
 	},
 	saveExpenseAndParticipations: function () {
@@ -59,6 +69,15 @@ app.Expense = Backbone.RelationalModel.extend({
 				return part.save();
 			}));
 		}.bind(this));
+	},
+	saveIfNotNew: function () {
+		var changed;
+		if (!this.isNew()) {
+			changed = Object.keys(this.changedAttributes());
+			if (changed.length !== 1 || changed[0] !== 'id') {
+				this.save();
+			}
+		}
 	},
 	getAmount: function () {
 		return this.get('participations').reduce(function (memo, part) {

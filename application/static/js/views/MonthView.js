@@ -33,7 +33,7 @@ app.MonthView = app.AView.extend({
 	render: function () {
 		this.$el.html(this.structure(this.model.toJSONDecorated()));
 
-		this.setElClass();
+		this.setElClasses();
 		
 		this
 			.renderHeader()
@@ -42,7 +42,7 @@ app.MonthView = app.AView.extend({
 
 		return this;
 	},
-	setElClass: function () {
+	setElClasses: function () {
 		if (this.isMain) {
 			this.$el.addClass('main');
 		} else {
@@ -77,7 +77,7 @@ app.MonthView = app.AView.extend({
 	},
 	toggleTransferView: function () {
 		this.transfersShown = !this.transfersShown;
-		this.setElClass();
+		this.setElClasses();
 
 		if (this.isMain) {
 			if (this.transfersShown) {
@@ -86,6 +86,9 @@ app.MonthView = app.AView.extend({
 				app.appRouter.navigate(this.model.get('id'));
 			}
 		}
+	},
+	resetState: function () {
+		this.setBlocked(false);
 	}
 });
 

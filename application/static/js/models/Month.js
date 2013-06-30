@@ -18,12 +18,16 @@ app.Month = Backbone.RelationalModel.extend({
 			includeInJSON: Backbone.Model.prototype.idAttribute
 		}
 	}],
-	urlRoot: '/api/months',
+	urlRoot: 'month',
 	initialize: function () {
 		this.decorators = [];
 
 		this.listenTo(this.get('expenses'), 'pseudochange change add remove', function () {
 			this.trigger('pseudochange');
+		});
+
+		this.ioBind('createExpense', function (data) {
+			this.get('expenses').add(data);
 		});
 	},
 	getAmountAndTransfers: function () {

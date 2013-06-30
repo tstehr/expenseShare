@@ -15,7 +15,7 @@ app.Participation = Backbone.RelationalModel.extend({
 		relatedModel: 'app.Person',
 		includeInJSON: Backbone.Model.prototype.idAttribute
 	}],
-	urlRoot: '/api/participations',
+	urlRoot: 'participation',
 	initialize: function () {
 		// TODO make participation.person a possible null
 		// TODO respond to "destroy" of this.person
@@ -34,18 +34,33 @@ app.Participation = Backbone.RelationalModel.extend({
 			}.bind(this)));
 		}
 
-		this.listenTo(this, 'change', _.debounce(function () {
-			if (this.get('expense') && !this.get('expense').isNew()) {
-				this.save();
-			}
-		}, 300));
+		if (this.isNew()) {
+			this.listenToOnce(this, 'sync', this.doIoBind.bind(this));
+		} else {
+			this.doIoBind();
+		}
 	},
 	toJSONDecorated: function () {
 		return _.extend(this.toJSON(), {
 			personName: this.get('person') instanceof app.Person ? this.get('person').get('name') : 'Anonymus'
 		});
 	},
+	doIoBind: function () {
+		this.ioBind('update', function (data) {
+			this.set(data);
+		});
+		this.ioBind('delete', function () {
+			if (this.collection) {
+				this.collection.remove(this);
+			}
+		});
+	},
 	isEmpty: function () {
 		return this.get('amount') === 0 && !this.get('participating');
+	},
+	saveIfNotNew: function () {
+		if (this.get('expense') && !this.get('expense').isNew()) {
+			this.save();
+		}
 	}
 })

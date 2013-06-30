@@ -37,7 +37,7 @@ app.ParticipationBaseCollection = Backbone.Collection.extend({
 
 /**
  * This Collection also contains Participations. 
- * It makes surre that all participations in the collection are not empty, that is they have either a amount or are participating.
+ * It makes sure that all participations in the collection are not empty, that is they have either a amount or are participating.
  * It also pervents adding a participation with a person which is already in the collection, the data of this participation is move to the existing participation instead.
  */
 app.ParticipationCollection = app.ParticipationBaseCollection.extend({

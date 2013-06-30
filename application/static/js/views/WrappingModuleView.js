@@ -7,7 +7,7 @@ app.WrappingModuleView = app.AView.extend({
 	template: _.template($('#module-template').html()),
 
 	initialize: function (params) {
-		this.wrappedView = params.view;
+		this.wrappedView = new params.view(params);
 		this.title = params.title;
 	},
 

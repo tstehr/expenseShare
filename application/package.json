@@ -8,6 +8,7 @@
 		"optimist": "",
 		"q": "",
 		"underscore": "",
-		"mysql": "git://github.com/felixge/node-mysql.git"
+		"mysql": "git://github.com/felixge/node-mysql.git",
+    	"socket.io": "0.9.x"
 	}
 }

@@ -6,9 +6,10 @@ var app = app || {};
 app.AppRouter = Backbone.Router.extend({
 	routes: {
 		'persons': 'showPersons',
-		':data/transfers': 'showMonthTransfers',
-		':date/createExpense': 'createExpense',
-		':date/expense/:id': 'editExpense',
+		'persons/:id': 'showPerson',
+		':date/transfers': 'showMonthTransfers',
+		':date/expenses/new': 'createExpense',
+		':date/expenses/:id': 'editExpense',
 		':date': 'showMonth',
 		'': 'showCurrentMonth',
 		'*path': 'showError'
@@ -32,15 +33,19 @@ app.AppRouter = Backbone.Router.extend({
 		app.appView.showExpenseCreateView(date);
 	},
 	showPersons: function () {
-		app.appView.showPersonView();
+		app.appView.showPersonsView();
+	},
+	showPerson: function (id) {
+		app.appView.showPersonView(id);
 	},
 	showCurrentMonth: function (path) {
 		var now = new Date();
-		var currentMonth = app.Util.formatNumber(now.getFullYear(), 4) + '-' + app.Util.formatNumber(now.getMonth() + 1, 2); 
-		this.navigate(currentMonth, true);
+		var date = app.Util.formatNumber(now.getFullYear(), 4) + '-' + app.Util.formatNumber(now.getMonth() + 1, 2); 
+		app.appView.showMonthView(date);
 	},
 	showError: function (path) {
 		// TODO add proper error handeling
-		alert('The destination you\'ve called is not availible: "' + path + '"')
+		alert('The destination you\'ve called is not availible: "' + path + '"');
+		this.navigate('/', {trigger: true});
 	}
 });

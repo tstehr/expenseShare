@@ -22,6 +22,7 @@ app.ParticipationView = app.AView.extend({
 	},
 	setParticipating: function (e) {
 		this.model.set('participating', e.target.checked);
+		this.model.saveIfNotNew();
 	},
 	setAmount: function (e) {
 		var am = app.Util.parseCurrency(e.target.value) || 0;
@@ -29,6 +30,7 @@ app.ParticipationView = app.AView.extend({
 			this.render();
 		} else {
 			this.model.set('amount', am);
+			this.model.saveIfNotNew();
 		}
 	}
 });

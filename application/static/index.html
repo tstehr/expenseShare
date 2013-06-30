@@ -12,17 +12,15 @@
 </head>
 <body>
 
+<noscript>
+	Please enable Javascript!
+</noscript>
+
 
 <div id="app">
 	<div class="gridBox mainView"></diV>
+	<div class="gridBox transferView"></div>
 	<div class="gridBox sideView"></diV>
-	<div class="gridBox personView"></div>
-	<div class="gridBox transferView">
-		<section class="module">
-			<header class="module-header"><h1>Transfers</h1></header>
-			<div class="module-body"></div>
-		</section>
-	</div>
 </div>
 
 <!-- Templates start here -->
@@ -38,7 +36,7 @@
 	<h2 class="visuallyhidden">Expenses</h2>
 	<div class="scroll-wrapper">
 		<section class="module-body month-expenses">
-			<a class="month-new row" href="/<%= id %>/createExpense">
+			<a class="month-new row" href="/<%= id %>/expenses/new">
 				<span class="visuallyhidden">Add new Expense</span>
 				<span class="icon-plus" aria-hidden="true"></span>
 			</a>
@@ -58,7 +56,6 @@
 	</div>
 </script>
 
-
 <script type="text/template" id="month-header-template">
 	<h1><%= title %></h1>
 	<a href="/<%= prevMonth %>">
@@ -74,13 +71,18 @@
 
 
 <script type="text/template" id="person-template">
-	<label class="row"><input type="text" value="<%= name %>"></label>
+	<a href="/persons/<%= id %>" class="row"><%= name %></a>
+</script>
+
+<script type="text/template" id="person-edit-template">
+	<input type="text" class="person-name" value="<%= name %>" placeholder="Enter name...">
+	<button class="person-delete">DEL</button>
 </script>
 
 
 <script type="text/template" id="expense-template">
-	<a href="/<%= month %>/expense/<%= id %>" class="row emphasize"><%= description %></a>
-	<a href="/<%= month %>/expense/<%= id %>" class="row"><%= app.Util.formatCurrency(amount) %>&thinsp;€</a>
+	<a href="/<%= month %>/expenses/<%= id %>" class="row emphasize"><%= description %></a>
+	<a href="/<%= month %>/expenses/<%= id %>" class="row"><%= app.Util.formatCurrency(amount) %>&thinsp;€</a>
 </script>
 
 
@@ -88,57 +90,53 @@
 	<header class="module-header"></header>
 
 	<div class="scroll-wrapper">
-		<div class="module-body <%= isNew ? 'hasBar' : '' %>">
+		<div class="module-body">
 			<ul class="list participation-list"></ul>
 		</div>
 	</div>
 
-	<% if (isNew) { %>
+	<div class="module-buttonBar">
+		<button class="confirm expense-persistAndClose">
+			<span class="visuallyhidden">Save</span>
+			<span aria-hidden="true" class="icon-ok"></span>
+		</button>
+		<button class="confirm expense-persistAndEdit">
+			<span class="visuallyhidden">Save</span>
+			<span aria-hidden="true" class="icon-ok"></span>
+		</button>
+		<button class="decline expense-discard">
+			<span class="visuallyhidden">Discard</span>
+			<span aria-hidden="true" class="icon-cancel"></span>
+		</button>
+	</div>
+
+	<div class="module-overlay">
+		Sure?
 		<div class="module-buttonBar">
-			<button class="confirm expense-persistAndClose">
-				<span class="visuallyhidden">Save</span>
+			<button class="confirm expense-delete">
+				<span class="visuallyhidden">Delete</span>
 				<span aria-hidden="true" class="icon-ok"></span>
 			</button>
-			<button class="confirm expense-persistAndEdit">
-				<span class="visuallyhidden">Save</span>
-				<span aria-hidden="true" class="icon-ok"></span>
-			</button>
-			<button class="decline expense-discard">
-				<span class="visuallyhidden">Discard</span>
+			<button class="decline expense-hideDelete">
+				<span class="visuallyhidden">Cancel</span>
 				<span aria-hidden="true" class="icon-cancel"></span>
 			</button>
 		</div>
-	<% } else { %>
-		<div class="module-overlay">
-			Sure?
-			<div class="module-buttonBar">
-				<button class="confirm expense-delete">
-					<span class="visuallyhidden">Delete</span>
-					<span aria-hidden="true" class="icon-ok"></span>
-				</button>
-				<button class="decline expense-hideDelete">
-					<span class="visuallyhidden">Cancel</span>
-					<span aria-hidden="true" class="icon-cancel"></span>
-				</button>
-			</div>
-		</div>
-	<% } %>
+	</div>
 </script>
 
 
 <script type="text/template" id="expense-edit-header-template">
 	<h1><input type="text" value="<%= description %>" class="expense-description" placeholder="Enter description"></h1>
 
-	<% if (!isNew) { %>
-		<a href="/<%= month %>" class="expense-back">
-			<span class="visuallyhidden">Back to month</span>
-			<span aria-hidden="true" class="icon-left-open"></span>
-		</a>
-		<button class="expense-showDelete right">
-			<span class="visuallyhidden">Delete Expense</span>
-			<span class="icon-trash" aria-hidden="true"></span>
-		</button>
-	<% } %>
+	<a href="/<%= month %>" class="expense-back">
+		<span class="visuallyhidden">Back to month</span>
+		<span aria-hidden="true" class="icon-left-open"></span>
+	</a>
+	<button class="expense-showDelete right">
+		<span class="visuallyhidden">Delete Expense</span>
+		<span class="icon-trash" aria-hidden="true"></span>
+	</button>
 </script>
 
 <script type="text/template" id="participation-template">
@@ -179,11 +177,14 @@
 	https://github.com/h5bp/node-build-script
 -->
 
+<script src="/socket.io/socket.io.js"></script>
 <script src="/js/libs/fastclick.js"></script>
 <script src="/js/libs/jquery-1.9.1.js"></script>
 <script src="/js/libs/underscore.js"></script>
 <script src="/js/libs/backbone.js"></script>
 <script src="/js/libs/backbone-relational.js"></script>
+<script src="/js/libs/backbone.iosync.js"></script>
+<script src="/js/libs/backbone.iobind.js"></script>
 
 <script src="/js/util/Util.js"></script>
 
@@ -204,6 +205,7 @@
 <script src="/js/views/ExpenseView.js"></script>
 <script src="/js/views/ExpenseEditView.js"></script>
 <script src="/js/views/PersonView.js"></script>
+<script src="/js/views/PersonEditView.js"></script>
 <script src="/js/views/ParticipationView.js"></script>
 
 <script src="/js/views/ACollectionView.js"></script>
@@ -218,7 +220,12 @@
 // http://addyosmani.github.io/backbone-fundamentals
 
 
-$(function () {
+$(function () {	
+	var socketUrl = window.location.protocol + '//' + window.location.hostname;
+	console.log(socketUrl);
+
+	window.socket = io.connect(socketUrl);
+
 	app.persons = new app.PersonCollection();
 
 	app.appView = new app.AppView({

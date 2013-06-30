@@ -22,6 +22,8 @@ app.ExpenseEditView = app.AView.extend({
 	},
 
 	initialize: function () {
+		this.modelMonthId = this.model.get('month').id;
+
 		this.participationView = new app.ParticipationCollectionView({
 			collection: this.model.get('participations')
 		});
@@ -51,7 +53,13 @@ app.ExpenseEditView = app.AView.extend({
 			this.$el.addClass('invalid');
 		} else {
 			this.$el.removeClass('invalid');
-		} 
+		}
+
+		if (this.model.isNew()) {
+			this.$el.addClass('isNew');
+		} else {
+			this.$el.removeClass('isNew');
+		}
 
 		return this;
 	},
@@ -61,6 +69,7 @@ app.ExpenseEditView = app.AView.extend({
 	},
 	setDescription: function (e) {
 		this.model.set('description', e.target.value);
+		this.model.saveIfNotNew();
 	},
 	persistAndClose: function () {
 		this.persistNewModel(function () {
@@ -71,18 +80,24 @@ app.ExpenseEditView = app.AView.extend({
 	},
 	persistAndEdit: function () {
 		this.persistNewModel(function () {
-			app.appRouter.navigate(this.model.get('month').get('id') + '/expense/' + this.model.get('id'), {
-				trigger: true,
-				replace: true
+			app.appRouter.navigate(this.model.get('month').get('id') + '/expenses/' + this.model.get('id'), {
+				replace: true,
+				trigger: true
 			});
 		}.bind(this));
 	},
 	persistNewModel: function (callback)  {
-		this.$el.addClass('blocked');
+		this.setBlocked(true);
+
+		// if a delete was issued by the server the model is removed from its month
+		// in this case we need to restore it here before saving
+		if (!this.model.get('month') && this.modelMonthId) {
+			this.model.set('month', this.modelMonthId);
+		}
 
 		this.model.saveExpenseAndParticipations().then(
 			function () {
-				this.$el.removeClass('blocked');
+				this.setBlocked(false);
 				if (callback) {
 					callback();
 				}
@@ -93,10 +108,8 @@ app.ExpenseEditView = app.AView.extend({
 		);
 	},
 	deleteModel: function () {
-		// TODO destroy participations
-		var month = this.model.get('month').get('id');
 		this.model.destroy();
-		app.appRouter.navigate(month, {
+		app.appRouter.navigate(this.modelMonthId, {
 			trigger: true
 		});
 	},
