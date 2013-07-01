@@ -56,6 +56,20 @@ app.AppView = app.AView.extend({
 			this.render();
 		}
 	},
+	showLoginView: function () {
+		this.disposeAllViews();
+
+		var lw = new app.LoginView();
+		this.setView('main', lw);
+		return lw;
+	},
+	showErrorView: function (message) {
+		this.disposeAllViews();
+
+		this.setView('main', new app.ErrorView({
+			message: message
+		}));
+	},
 	setupMonthCommon: function (month) {
 		this.setView('side', new app.MonthView({
 			model: month
@@ -114,7 +128,19 @@ app.AppView = app.AView.extend({
 			collection: app.persons
 		}));
 	},
-	showPersonView: function (id) {
+	showPersonCreateView: function () {
+		this.setView('side', new app.WrappingModuleView({
+			title: 'Persons',
+			view: app.PersonCollectionView,
+			collection: app.persons
+		}));
+		this.setView('transfer', null);
+
+		this.setView('main', new app.PersonEditView({
+			model: app.persons.create({})
+		}));
+	},
+	showPersonEditView: function (id) {
 		this.setView('side', new app.WrappingModuleView({
 			title: 'Persons',
 			view: app.PersonCollectionView,
@@ -137,7 +163,7 @@ app.AppView = app.AView.extend({
 			// if trying to set to already set view, ask it to reset itself
 			view.resetState();
 		} else {
-			// try to reuse model view if possible
+			// try to reuse model or collection view if possible
 			if (
 				view && this._views[name]  &&
 				view.constructor === this._views[name].constructor && 
@@ -164,5 +190,10 @@ app.AppView = app.AView.extend({
 			this._views[name].dispose();
 			delete this._views[name];
 		}
+	},
+	disposeAllViews: function () {
+		Object.keys(this._viewEls).forEach(function (name) {
+			this.disposeView(name);
+		}.bind(this));
 	}
 });

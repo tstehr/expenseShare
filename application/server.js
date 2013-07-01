@@ -2,7 +2,9 @@ var application_root = __dirname;
 
 var http = require('http');
 var express = require('express');
+var connect = require('connect');
 var socketIo = require('socket.io');
+var SessionSockets = require('session.socket.io');
 var path = require('path');
 var mysql = require('mysql');
 var _ = require('underscore');
@@ -17,7 +19,7 @@ var participationsHandler = require('./socketHandlers/ParticipationsHandler');
 
 
 
-var server, app, io, pool;
+var server, app, io, pool, sessionStore, cookieParser;
 
 var defaults = {
 	sqlHost: 'localhost',
@@ -28,8 +30,8 @@ var defaults = {
 var config = _.extend(defaults, argv);
 
 
-if (!config.sqlUser && !config.sqlPassword) {
-	throw new Error('Please supply mysql username and password. Options: --sqlUser --sqlPassword');
+if (!config.sqlUser && !config.sqlPassword && !config.sessionSecret) {
+	throw new Error('Please supply mysql username, mysql password and session secret. Options: --sqlUser --sqlPassword --sessionSecret');
 }
 
 pool = mysql.createPool({
@@ -56,10 +58,17 @@ pool.on('connection', function (connection) {
 	;
 });
 
-// TODO authentication
-
 // create express server
 app = express();
+
+cookieParser = express.cookieParser(config.sessionSecret);
+sessionStore = new connect.middleware.session.MemoryStore();
+
+app.use(cookieParser);
+app.use(express.session({
+	store: sessionStore
+}));
+
 app.use(express.bodyParser());
 app.use(express.static(path.join(application_root, 'static')));
 app.use(app.router);
@@ -70,8 +79,24 @@ app.use(express.errorHandler({
 	showStack: true 
 }));
 
+// respond to login requests
+app.get('/auth', function (req, res) {
+	res.send(!!req.session.loggedIn);
+});
+app.post('/auth', function (req, res) {
+	if (
+		req.session.loggedIn || 
+		(req.body.username === 'expense' && req.body.password === 'share')
+	) {
+		req.session.loggedIn = true;
+		res.send(true);
+	} else {
+		res.send(false);
+	}
+});
+
 // serve index file to all requests
-app.all('*', function (req, res) {
+app.get('*', function (req, res) {
 	res.sendfile(path.join(application_root, 'static/index.html'));
 });
 
@@ -81,11 +106,14 @@ server = http.createServer(app);
 // create socket
 io = socketIo.listen(server);
 
-io.sockets.on('connection', function (socket) {
-	monthsHandler(socket, pool);
-	personsHandler(socket, pool);
-	expensesHandler(socket, pool);
-	participationsHandler(socket, pool);
+(new SessionSockets(io, sessionStore, cookieParser)).on('connection', function (err, socket, session) {
+	console.log(session);
+	if (session && session.loggedIn) {
+		monthsHandler(socket, pool);
+		personsHandler(socket, pool);
+		expensesHandler(socket, pool);
+		participationsHandler(socket, pool);
+	}
 });
 
 server.listen(config.port, function() {

@@ -20,9 +20,17 @@ app.Person = Backbone.RelationalModel.extend({
 		this.ioBind('update', function (data) {
 			this.set(data);
 		});
+
+		this.ioBind('delete', function (data) {
+			if (this.collection) {
+				this.collection.remove(this);
+			}
+			this.set('id', null);
+		});
 	},
-	save: function () {
-		console.log('saving...', this);
-		return Backbone.RelationalModel.prototype.save.apply(this, arguments);
+	saveIfNotNew: function () {
+		if (!this.isNew()) {
+			this.save();
+		}
 	}
 });

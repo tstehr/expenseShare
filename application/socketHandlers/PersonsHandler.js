@@ -9,7 +9,7 @@ var PersonsHandler = function(socket, pool) {
 	this.socket.on('person:read', this.readPerson.bind(this));
 	this.socket.on('person:create', this.createPerson.bind(this));
 	this.socket.on('person:update', this.updatePerson.bind(this));
-	// TODO this.socket.on('person:delete')
+	this.socket.on('person:delete', this.deletePerson.bind(this));
 };
 
 PersonsHandler.prototype.readPersons = function (socketData, callback) {
@@ -94,6 +94,31 @@ PersonsHandler.prototype.updatePerson = function (socketData, callback) {
 					};
 					callback(null, json);
     				socket.broadcast.emit('person/' + socketData.id + ':update', json);
+				})
+				.fin(function () {
+					connection.end();
+				})
+			;
+		})
+		.fail(function () {
+			console.log('Error in updatePerson',  arguments);
+			callback(null);
+		})
+	;
+}
+
+PersonsHandler.prototype.deletePerson = function (socketData, callback) {
+	var socket = this.socket;
+
+	Q.nmcall(this.pool, 'getConnection')
+		.then(function (connection) {
+			return Q.nmcall(
+					connection, 'query', 'delete from persons where id = ?', 
+					[socketData.id]
+				)
+				.then(function (dbData) {
+					callback(null, true);
+    				socket.broadcast.emit('person/' + socketData.id + ':delete');
 				})
 				.fin(function () {
 					connection.end();

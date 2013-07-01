@@ -4,11 +4,13 @@
 	"description": "An application for sharing expenses",
 	"dependencies": {
 		"express": "~3.1.0",
+    	"connect": "",
 		"path": "~0.4.9",
 		"optimist": "",
 		"q": "",
 		"underscore": "",
 		"mysql": "git://github.com/felixge/node-mysql.git",
-    	"socket.io": "0.9.x"
+    	"socket.io": "0.9.x",
+    	"session.socket.io": ""
 	}
 }

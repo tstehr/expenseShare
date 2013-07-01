@@ -5,20 +5,20 @@ var app = app || {};
  */
 app.ExpenseEditView = app.AView.extend({
 	tagName: 'section',
-	className: 'module expense-edit',
+	className: 'module edit-module',
 
 	template: _.template($('#expense-edit-template').html()),
 	headerTemplate: _.template($('#expense-edit-header-template').html()),
 
 	events: {
 		'change .expense-description': 'setDescription',
-		'click .expense-persistAndClose': 'persistAndClose',
-		'click .expense-persistAndEdit': 'persistAndEdit',
-		'click .expense-discard': 'deleteModel',
-		'click .expense-showDelete': 'showDelete',
-		'click .expense-hideDelete': 'hideDelete',
-		'click .module-overlay': 'hideDelete',
-		'click .expense-delete': 'deleteModel'
+		'click .edit-module-persistAndClose': 'persistAndClose',
+		'click .edit-module-persistAndEdit': 'persistAndEdit',
+		'click .edit-module-discard': 'deleteModel',
+		'click .edit-module-delete': 'deleteModel',
+		'click .edit-module-showDelete': 'showDelete',
+		'click .edit-module-hideDelete': 'hideDelete',
+		'click .module-overlay': 'hideDelete'
 	},
 
 	initialize: function () {

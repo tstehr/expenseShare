@@ -66,7 +66,7 @@ button, label {
 input {
 	line-height:1rem;
 }
-input[type=text]:focus, input[type=number]:focus {
+input[type=text]:focus, input[type=password]:focus, input[type=number]:focus {
 	outline: none;
 }
 input::-webkit-outer-spin-button,
@@ -117,6 +117,14 @@ input::-webkit-inner-spin-button {
 	text-decoration: line-through;
 }
 
+
+
+
+
+
+/**
+ * Module
+ */
 .module {
 	overflow:hidden;
 	position:relative;
@@ -224,11 +232,9 @@ https://github.com/joelambert/ScrollFix/issues/2
 	background: hsl(0, 90%, 45%);
 }
 
-
-
-
-
-
+/**
+ * List
+ */
 .list {
 	list-style: none;
 	display: table;
@@ -244,7 +250,69 @@ https://github.com/joelambert/ScrollFix/issues/2
 
 
 
+/**
+ * Login module
+ */
+.login .confirm {
+	width: 100%;
+}
 
+
+
+/**
+ * Edit module
+ */
+.edit-module .module-header input {
+	width: 100%;
+	padding: 0 3rem;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+
+.edit-module .module-buttonBar {
+	display: none;
+}
+.edit-module.isNew .module-buttonBar {
+	display: block;
+}
+.edit-module .module-buttonBar .confirm {
+	width: 70%;
+}
+.edit-module .module-buttonBar .decline {
+	width: 30%;
+}
+
+.edit-module .module-overlay {
+	display: none;
+}
+.edit-module.deleteShown .module-overlay {
+	display: block;
+}
+.edit-module .module-overlay .module-buttonBar {
+	display: block;
+}
+
+
+.edit-module.isNew .edit-module-back, .edit-module.isNew .edit-module-showDelete {
+	display: none;
+}
+.edit-module.isNew .module-body {
+	bottom: 3rem;
+}
+
+.edit-module .edit-module-persistAndEdit {
+	display: none;
+}
+
+
+
+
+
+
+/**
+ * Month module
+ */
 .month .module-body {
 	bottom: 3rem;
 }
@@ -279,52 +347,17 @@ https://github.com/joelambert/ScrollFix/issues/2
 }
 
 
-.expense-description {
-	width: 100%;
-	padding: 0 3rem;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
+
+/**
+ * Expense modules
+ */
 .expense-list a.row:nth-child(2) {
 	width: 5.5rem;
 	text-align:right;
 }
 
-.expense-edit .module-buttonBar {
-	display: none;
-}
-.expense-edit.isNew .module-buttonBar {
-	display: block;
-}
-.expense-edit .module-buttonBar .confirm {
-	width: 70%;
-}
-.expense-edit .module-buttonBar .decline {
-	width: 30%;
-}
-
-.expense-edit .module-overlay {
-	display: none;
-}
-.expense-edit.deleteShown .module-overlay {
-	display: block;
-}
-.expense-edit .module-overlay .module-buttonBar {
-	display: block;
-}
 
 
-
-.expense-edit.isNew .expense-back, .expense-edit.isNew .expense-showDelete {
-	display: none;
-}
-.expense-edit.isNew .module-body {
-	bottom: 3rem;
-}
-
-.expense-edit .expense-persistAndEdit {
-	display: none;
-}
 
 
 
@@ -387,19 +420,19 @@ https://github.com/joelambert/ScrollFix/issues/2
 	}
 
 
-	.month.main {
+	.mainView .month {
 		display: none;
 	}
 
-	.expense-back {
+	.edit-module-back {
 		display: none;
 	}
 
 
-	.expense-edit .expense-persistAndClose {
+	.edit-module .edit-module-persistAndClose {
 		display: none;
 	}
-	.expense-edit .expense-persistAndEdit {
+	.edit-module .edit-module-persistAndEdit {
 		display: block;
 	}
 }
@@ -437,7 +470,7 @@ https://github.com/joelambert/ScrollFix/issues/2
 	.month.transfersShown .month-transfers {
 		display: none;
 	}
-	.month.transfersShown .month-expenses {
+	.month.transfersShown .month-edit-modules {
 		display: block;
 	}
 }

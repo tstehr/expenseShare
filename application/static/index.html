@@ -27,7 +27,26 @@
 
 <script type="text/template" id="module-template">
 	<header class="module-header"><h1><%= title %></h1></header>
-	<div class="module-body"></div>
+	<div class="module-body"><%= typeof body !== 'undefined' ? body : '' %></div>
+</script>
+
+<script type="text/template" id="login-template">
+	<form>
+		<header class="module-header"><h1>Login</h1></header>
+		<div class="module-body hasBar">
+			<label class="row">
+				<span class="visuallyhidden">Username: </span>
+				<input type="text" class="login-username" placeholder="Username">
+			</label>
+			<label class="row">
+				<span class="visuallyhidden">Password: </span>
+				<input type="password" class="login-password" placeholder="Password">
+			</label>
+		</div>
+		<div class="module-buttonBar">
+			<button class="confirm">Login</button>
+		</div>
+	</form>
 </script>
 
 <script type="text/template" id="month-template">
@@ -75,8 +94,32 @@
 </script>
 
 <script type="text/template" id="person-edit-template">
-	<input type="text" class="person-name" value="<%= name %>" placeholder="Enter name...">
-	<button class="person-delete">DEL</button>
+	<header class="module-header">
+		<h1><input type="text" class="person-name" value="<%= name %>" placeholder="Enter name"></h1>
+		<a href="/persons" class="edit-module-back">
+			<span class="visuallyhidden">Back to persons</span>
+			<span aria-hidden="true" class="icon-left-open"></span>
+		</a>
+		<button class="edit-module-showDelete right">
+			<span class="visuallyhidden">Delete <%= name %></span>
+			<span class="icon-trash" aria-hidden="true"></span>
+		</button>
+	</header>
+
+
+	<div class="module-overlay">
+		Sure?
+		<div class="module-buttonBar">
+			<button class="confirm edit-module-delete">
+				<span class="visuallyhidden">Delete</span>
+				<span aria-hidden="true" class="icon-ok"></span>
+			</button>
+			<button class="decline edit-module-hideDelete">
+				<span class="visuallyhidden">Cancel</span>
+				<span aria-hidden="true" class="icon-cancel"></span>
+			</button>
+		</div>
+	</div>
 </script>
 
 
@@ -96,15 +139,15 @@
 	</div>
 
 	<div class="module-buttonBar">
-		<button class="confirm expense-persistAndClose">
+		<button class="confirm edit-module-persistAndClose">
 			<span class="visuallyhidden">Save</span>
 			<span aria-hidden="true" class="icon-ok"></span>
 		</button>
-		<button class="confirm expense-persistAndEdit">
+		<button class="confirm edit-module-persistAndEdit">
 			<span class="visuallyhidden">Save</span>
 			<span aria-hidden="true" class="icon-ok"></span>
 		</button>
-		<button class="decline expense-discard">
+		<button class="decline edit-module-discard">
 			<span class="visuallyhidden">Discard</span>
 			<span aria-hidden="true" class="icon-cancel"></span>
 		</button>
@@ -113,11 +156,11 @@
 	<div class="module-overlay">
 		Sure?
 		<div class="module-buttonBar">
-			<button class="confirm expense-delete">
+			<button class="confirm edit-module-delete">
 				<span class="visuallyhidden">Delete</span>
 				<span aria-hidden="true" class="icon-ok"></span>
 			</button>
-			<button class="decline expense-hideDelete">
+			<button class="decline edit-module-hideDelete">
 				<span class="visuallyhidden">Cancel</span>
 				<span aria-hidden="true" class="icon-cancel"></span>
 			</button>
@@ -129,11 +172,11 @@
 <script type="text/template" id="expense-edit-header-template">
 	<h1><input type="text" value="<%= description %>" class="expense-description" placeholder="Enter description"></h1>
 
-	<a href="/<%= month %>" class="expense-back">
+	<a href="/<%= month %>" class="edit-module-back">
 		<span class="visuallyhidden">Back to month</span>
 		<span aria-hidden="true" class="icon-left-open"></span>
 	</a>
-	<button class="expense-showDelete right">
+	<button class="edit-module-showDelete right">
 		<span class="visuallyhidden">Delete Expense</span>
 		<span class="icon-trash" aria-hidden="true"></span>
 	</button>
@@ -200,6 +243,8 @@
 <script src="/js/views/AView.js"></script>
 <script src="/js/views/WrappingModuleView.js"></script>
 <script src="/js/views/AppView.js"></script>
+<script src="/js/views/ErrorView.js"></script>
+<script src="/js/views/LoginView.js"></script>
 <script src="/js/views/MonthView.js"></script>
 <script src="/js/views/MonthTransfersView.js"></script>
 <script src="/js/views/ExpenseView.js"></script>
@@ -221,22 +266,34 @@
 
 
 $(function () {	
-	var socketUrl = window.location.protocol + '//' + window.location.hostname;
-	console.log(socketUrl);
-
-	window.socket = io.connect(socketUrl);
-
-	app.persons = new app.PersonCollection();
-
 	app.appView = new app.AppView({
 		el: '#app'
 	});
 	app.appView.render();
 
-	app.appRouter = new app.AppRouter();
-	Backbone.history.start({pushState: true});
-			
-	app.persons.fetch();
+	$.get('/auth')
+	.then(function (loggedIn) {
+		if (!loggedIn) {
+			return app.appView.showLoginView().getLoginPromise();
+		} else {
+			return true;
+		}
+	})
+	.then(function (state) {
+		if (state) {
+			window.socket = io.connect(window.location.protocol + '//' + window.location.hostname);
+
+			app.persons = new app.PersonCollection();
+
+			app.appRouter = new app.AppRouter();
+			Backbone.history.start({pushState: true});
+					
+			app.persons.fetch();
+		} else {
+			app.appView.showErrorView('Could not authenticate!');
+		}
+	});
+
 });
 </script>
 

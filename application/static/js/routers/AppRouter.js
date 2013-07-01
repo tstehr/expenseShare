@@ -6,7 +6,8 @@ var app = app || {};
 app.AppRouter = Backbone.Router.extend({
 	routes: {
 		'persons': 'showPersons',
-		'persons/:id': 'showPerson',
+		'persons/new': 'createPerson',
+		'persons/:id': 'editPerson',
 		':date/transfers': 'showMonthTransfers',
 		':date/expenses/new': 'createExpense',
 		':date/expenses/:id': 'editExpense',
@@ -35,8 +36,11 @@ app.AppRouter = Backbone.Router.extend({
 	showPersons: function () {
 		app.appView.showPersonsView();
 	},
-	showPerson: function (id) {
-		app.appView.showPersonView(id);
+	editPerson: function (id) {
+		app.appView.showPersonEditView(id);
+	},
+	createPerson: function () {
+		app.appView.showPersonCreateView();
 	},
 	showCurrentMonth: function (path) {
 		var now = new Date();
@@ -44,8 +48,8 @@ app.AppRouter = Backbone.Router.extend({
 		app.appView.showMonthView(date);
 	},
 	showError: function (path) {
-		// TODO add proper error handeling
-		alert('The destination you\'ve called is not availible: "' + path + '"');
-		this.navigate('/', {trigger: true});
+		app.appView.showErrorView({
+			message: 'The URL you entered is invalid'
+		});
 	}
 });
