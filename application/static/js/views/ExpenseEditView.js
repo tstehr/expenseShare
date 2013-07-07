@@ -44,6 +44,9 @@ app.ExpenseEditView = app.AView.extend({
 	},
 	dispose: function () {
 		this.participationView.dispose();
+		if (this.model.isNew()) {
+			this.model.destroy();
+		}
 		this.remove();
 	},
 	renderHeader: function () {

@@ -117,6 +117,22 @@ input::-webkit-inner-spin-button {
 	text-decoration: line-through;
 }
 
+.row-checkbox {
+	width: 3rem;
+	padding: .2rem 0;
+	text-align:center;
+}
+.row-checkbox input {
+	display: none;
+}
+.row-checkbox input + .icon-ok {
+	text-shadow: 0 .1rem 0 hsl(0, 0%, 20%);
+	color: hsl(0, 0%, 70%);
+	font-size: 1.2rem;
+}
+.row-checkbox input:checked + .icon-ok {
+	color: hsl(135, 90%, 41%);
+}
 
 
 
@@ -307,6 +323,14 @@ https://github.com/joelambert/ScrollFix/issues/2
 
 
 
+/**
+ * Person modules
+ */
+.person.isHidden, .person-edit.isHidden .person-name {http://localhost:4242/persons/newtalic;
+}
+.person-edit .row-checkbox {
+	float: left;
+}
 
 
 
@@ -360,8 +384,6 @@ https://github.com/joelambert/ScrollFix/issues/2
 
 
 
-
-
 .participation-amount-container {
 	width: 6rem;
 	text-align: right;
@@ -369,22 +391,6 @@ https://github.com/joelambert/ScrollFix/issues/2
 .participation-amount {
 	width: 3.5rem;
 	text-align: right;
-}
-.participation-toggle-container {
-	width: 3rem;
-	padding: .2rem 0;
-	text-align:center;
-}
-.participation-toggle {
-	display: none;
-}
-.participation-toggle + .icon-ok {
-	text-shadow: 0 .1rem 0 hsl(0, 0%, 20%);
-	color: hsl(0, 0%, 70%);
-	font-size: 1.2rem;
-}
-.participation-toggle:checked + .icon-ok {
-	color: hsl(135, 90%, 41%);
 }
 
 
@@ -420,15 +426,13 @@ https://github.com/joelambert/ScrollFix/issues/2
 	}
 
 
-	.mainView .month {
+	.mainView .month, .mainView .persons {
 		display: none;
 	}
 
 	.edit-module-back {
 		display: none;
 	}
-
-
 	.edit-module .edit-module-persistAndClose {
 		display: none;
 	}

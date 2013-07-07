@@ -8,6 +8,7 @@
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0">
 
 	<link rel="stylesheet" href="/css/icons-embedded.css">
+	<link rel="stylesheet" href="/css/animate-custom.css">
 	<link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
@@ -89,6 +90,20 @@
 
 
 
+<script type="text/template" id="person-collection-template">
+	<header class="module-header"><h1>Persons</h1></header>
+
+	<div class="scroll-wrapper">
+		<section class="module-body">
+			<a class="month-new row" href="/persons/new">
+				<span class="visuallyhidden">Create new Person</span>
+				<span class="icon-user-add" aria-hidden="true"></span>
+			</a>
+			<ul class="list"></ul>
+		</section>
+	</div>
+</script>
+
 <script type="text/template" id="person-template">
 	<a href="/persons/<%= id %>" class="row"><%= name %></a>
 </script>
@@ -100,25 +115,31 @@
 			<span class="visuallyhidden">Back to persons</span>
 			<span aria-hidden="true" class="icon-left-open"></span>
 		</a>
-		<button class="edit-module-showDelete right">
-			<span class="visuallyhidden">Delete <%= name %></span>
-			<span class="icon-trash" aria-hidden="true"></span>
-		</button>
 	</header>
 
+	<div class="module-body">
+		<label>
+			<span class="row row-checkbox">
+				<input type="checkbox" <%=hidden ? "checked" : ""%> class="person-hidden">
+				<span class="icon-ok" aria-hidden="true"></span>
+			</span>
+			<span class="row emphasize">Hidden</span>
+		</label>
+	</div>
 
-	<div class="module-overlay">
-		Sure?
-		<div class="module-buttonBar">
-			<button class="confirm edit-module-delete">
-				<span class="visuallyhidden">Delete</span>
-				<span aria-hidden="true" class="icon-ok"></span>
-			</button>
-			<button class="decline edit-module-hideDelete">
-				<span class="visuallyhidden">Cancel</span>
-				<span aria-hidden="true" class="icon-cancel"></span>
-			</button>
-		</div>
+	<div class="module-buttonBar">
+		<button class="confirm edit-module-persistAndClose">
+			<span class="visuallyhidden">Save</span>
+			<span aria-hidden="true" class="icon-ok"></span>
+		</button>
+		<button class="confirm edit-module-persistAndEdit">
+			<span class="visuallyhidden">Save</span>
+			<span aria-hidden="true" class="icon-ok"></span>
+		</button>
+		<button class="decline edit-module-discard">
+			<span class="visuallyhidden">Discard</span>
+			<span aria-hidden="true" class="icon-cancel"></span>
+		</button>
 	</div>
 </script>
 
@@ -183,11 +204,12 @@
 </script>
 
 <script type="text/template" id="participation-template">
-	<label class="row participation-toggle-container">
+	<label class="row row-checkbox">
 		<span class="visuallyhidden">Participating: </span>
-		<input type="checkbox" <%=participating ? "checked" : ""%> class="participation-toggle" id="participation-toggle-<%= cid %>">
+		<input type="checkbox" <%=participating ? "checked" : ""%> id="participation-toggle-<%= cid %>">
 		<span class="icon-ok" aria-hidden="true"></span>
 	</label>
+
 	<label class="row emphasize" for="participation-toggle-<%= cid %>"><%= personName %></label>
 	<label class="row participation-amount-container">
 		<span class="visuallyhidden">Amount: </span>
@@ -201,12 +223,12 @@
 	<% Object.keys(transfers).forEach(function (fromCid) { %>
 		<% if (transfers[fromCid] && Object.keys(transfers[fromCid]).length > 0) { %> 
 			<p>
-				<%= app.persons.get(fromCid).get('name') %>: 
+				<%= app.persons.get(fromCid)/*.get('name')*/ %>: 
 				<ul>
 				<% Object.keys(transfers[fromCid]).forEach(function (toCid) { %>
 					<li>
 						<%= app.Util.formatCurrency(transfers[fromCid][toCid]) %>&thinsp;€
-						to <%= app.persons.get(toCid).get('name') %>
+						to <%= app.persons.get(toCid)/*.get('name')*/ %>
 					</li>
 				<% }); %>
 				</ul>
@@ -282,13 +304,12 @@ $(function () {
 	.then(function (state) {
 		if (state) {
 			window.socket = io.connect(window.location.protocol + '//' + window.location.hostname);
-
 			app.persons = new app.PersonCollection();
 
-			app.appRouter = new app.AppRouter();
-			Backbone.history.start({pushState: true});
-					
-			app.persons.fetch();
+			app.persons.fetch().then(function () {
+				app.appRouter = new app.AppRouter();
+				Backbone.history.start({pushState: true});
+			})
 		} else {
 			app.appView.showErrorView('Could not authenticate!');
 		}

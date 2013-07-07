@@ -2,7 +2,7 @@ var app = app || {};
 
 app.LoginView = app.AView.extend({
 	tagName: 'section',
-	className: 'module login',
+	className: 'module login animated',
 
 	template: $('#login-template').html(),
 
@@ -26,6 +26,7 @@ app.LoginView = app.AView.extend({
 	handleLogin: function (e) {
 		e.preventDefault();
 		this.setBlocked(true);
+		this.$el.removeClass('shake');
 		
 		$.post('/auth', {
 			username: this.$('.login-username').val(),
@@ -35,7 +36,7 @@ app.LoginView = app.AView.extend({
 			if (state) {
 				this._deferred.resolve(true);
 			} else {
-				alert('WRONG!!!');
+				this.$el.addClass('shake');
 			}
 		}.bind(this));
 	}

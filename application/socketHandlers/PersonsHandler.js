@@ -57,11 +57,12 @@ PersonsHandler.prototype.createPerson = function (socketData, callback) {
 
 	Q.nmcall(this.pool, 'getConnection')
 		.then(function (connection) {
-			return Q.nmcall(connection, 'query', 'insert into persons(name) values(?)', [socketData.name])
+			return Q.nmcall(connection, 'query', 'insert into persons (name, hidden) values(?, ?)', [socketData.name, socketData.hidden])
 				.then(function (dbData) {
 					var json = {
 						id: dbData[0].insertId,
-						name: socketData.name
+						name: socketData.name,
+						hidden: socketData.hidden
 					};
 					socket.broadcast.emit('persons:create', json);
 					callback(null, json);
@@ -84,13 +85,14 @@ PersonsHandler.prototype.updatePerson = function (socketData, callback) {
 	Q.nmcall(this.pool, 'getConnection')
 		.then(function (connection) {
 			return Q.nmcall(
-					connection, 'query', 'update persons set name = ? where id = ?', 
-					[socketData.name, socketData.id]
+					connection, 'query', 'update persons set name = ?, hidden = ? where id = ?', 
+					[socketData.name, socketData.hidden, socketData.id]
 				)
 				.then(function (dbData) {
 					var json = {
 						id: socketData.id,
-						name: socketData.name
+						name: socketData.name,
+						hidden: socketData.hidden
 					};
 					callback(null, json);
     				socket.broadcast.emit('person/' + socketData.id + ':update', json);
@@ -112,12 +114,19 @@ PersonsHandler.prototype.deletePerson = function (socketData, callback) {
 
 	Q.nmcall(this.pool, 'getConnection')
 		.then(function (connection) {
-			return Q.nmcall(
-					connection, 'query', 'delete from persons where id = ?', 
-					[socketData.id]
-				)
+			return Q.nmcall(connection, 'query', 'select id from participations where person = ?', [socketData.id])
 				.then(function (dbData) {
+					return [
+						dbData,
+						Q.nmcall(connection, 'query', 'delete from persons where id = ?', [socketData.id]),
+						Q.nmcall(connection, 'query', 'delete from participations where person = ?', [socketData.id])
+					]
+				})
+				.spread(function (dbData) {
 					callback(null, true);
+					dbData[0].forEach(function (part) {
+    					socket.broadcast.emit('participation/' + part.id + ':delete');
+					});
     				socket.broadcast.emit('person/' + socketData.id + ':delete');
 				})
 				.fin(function () {
@@ -126,7 +135,7 @@ PersonsHandler.prototype.deletePerson = function (socketData, callback) {
 			;
 		})
 		.fail(function () {
-			console.log('Error in updatePerson',  arguments);
+			console.log('Error in deletePerson',  arguments);
 			callback(null);
 		})
 	;

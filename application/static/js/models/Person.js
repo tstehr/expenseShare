@@ -6,7 +6,8 @@ var app = app || {};
 app.Person = Backbone.RelationalModel.extend({
 	defaults: {
 		id: null,
-		name: ''
+		name: '',
+		hidden: false
 	},
 	urlRoot: 'person',
 	initialize: function () {

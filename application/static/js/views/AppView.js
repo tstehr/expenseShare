@@ -115,35 +115,30 @@ app.AppView = app.AView.extend({
 		}.bind(this));
 	},
 	showPersonsView: function () {
-		this.setView('side', new app.WrappingModuleView({
-			title: 'Persons',
-			view: app.PersonCollectionView,
+		this.setView('side', new app.PersonCollectionView({
 			collection: app.persons
 		}));
 		this.setView('transfer', null);
 
-		this.setView('main', new app.WrappingModuleView({
-			title: 'Persons',
-			view: app.PersonCollectionView,
+		this.setView('main', new app.PersonCollectionView({
 			collection: app.persons
 		}));
 	},
 	showPersonCreateView: function () {
-		this.setView('side', new app.WrappingModuleView({
-			title: 'Persons',
-			view: app.PersonCollectionView,
+		var np = new app.Person();
+		app.persons.add(np);
+
+		this.setView('side', new app.PersonCollectionView({
 			collection: app.persons
 		}));
 		this.setView('transfer', null);
 
 		this.setView('main', new app.PersonEditView({
-			model: app.persons.create({})
+			model: np
 		}));
 	},
 	showPersonEditView: function (id) {
-		this.setView('side', new app.WrappingModuleView({
-			title: 'Persons',
-			view: app.PersonCollectionView,
+		this.setView('side', new app.PersonCollectionView({
 			collection: app.persons
 		}));
 		this.setView('transfer', null);

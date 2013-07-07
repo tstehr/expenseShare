@@ -30,15 +30,16 @@ app.ParticipationCollectionView = app.ACollectionView.extend({
 		this.listenTo(this._masterCollection, 'add', this.removeFromSlave);
 		this.listenTo(this._masterCollection, 'remove', this.addToSlave);
 
-		this.listenTo(this._slaveCollection, 'change', this.handleSlaveParticipationChange);
-		this.listenTo(this._masterCollection, 'change', this.handleMasterParticipationChange);
+		this.listenTo(this._slaveCollection, 'change pseudochange', this.handleSlaveParticipationChange);
 	},
 
 	initializeJoined: function () {
 		this.collection = new app.ParticipationBaseCollection();
 
 		this.collection.add(this._masterCollection.toArray());
-		this.collection.add(this._slaveCollection.toArray());
+		this.collection.add(this._slaveCollection.filter(function (part) {
+			return !part.get('person').get('hidden')
+		}));
 
 		this.collection.sort();
 
@@ -61,15 +62,13 @@ app.ParticipationCollectionView = app.ACollectionView.extend({
 	},
 
 
-	handleMasterParticipationChange: function (part) {
-		if (!part.isEmpty()) {
-			this.removeFromSlave(part);
-		}
-	},
 	handleSlaveParticipationChange: function (part) {
 		if (!part.isEmpty()) {
 			this._slaveCollection.remove(part);
 			this._masterCollection.add(part);
+		}
+		if (!part.get('person') || !part.get('person').collection || part.get('person').get('hidden')) {
+			this._slaveCollection.remove(part);
 		}
 	},
 	removeFromSlave: function (model) {
@@ -83,16 +82,18 @@ app.ParticipationCollectionView = app.ACollectionView.extend({
 	addToSlave: function (model) {
 		var person = this.collection.extractPerson(model);
 
-		var slaveParts = this._slaveCollection.getByPerson(person);
-		if (!slaveParts || slaveParts.length === 0) {
-			this._slaveCollection.add(new app.Participation({
-				person: person
-			}));
+		if (person && person.collection && !person.get('hidden')) {
+			var slaveParts = this._slaveCollection.getByPerson(person);
+			if (!slaveParts || slaveParts.length === 0) {
+				this._slaveCollection.add(new app.Participation({
+					person: person
+				}));
+			}
 		}
 	},
 
 	addToJoinedCollection: function (model) {
-		this.collection.add(model);
+		this.collection.add(model);	
 	},
 	removeFromJoinedCollection: function (model) {
 		this.collection.remove(model);

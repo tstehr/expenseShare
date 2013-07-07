@@ -17,20 +17,9 @@ app.Participation = Backbone.RelationalModel.extend({
 	}],
 	urlRoot: 'participation',
 	initialize: function () {
-		// TODO make participation.person a possible null
-		// TODO respond to "destroy" of this.person
-
-		// wait until person is availible. can do this since person is meant to be immutable
 		if (this.get('person')) {
 			this.listenTo(this.get('person'), 'change destroy', (function () {
-				this.trigger('pseudochange');
-			}.bind(this)));
-		} else {
-			this.listenToOnce(this, 'change:person', (function () {
-				// trigger pseudochange event when person changes, since its value is used in toJSONDecorated
-				this.listenTo(this.get('person'), 'change destroy', (function () {
-					this.trigger('pseudochange');
-				}.bind(this)));
+				this.trigger('pseudochange', this);
 			}.bind(this)));
 		}
 
@@ -42,7 +31,7 @@ app.Participation = Backbone.RelationalModel.extend({
 	},
 	toJSONDecorated: function () {
 		return _.extend(this.toJSON(), {
-			personName: this.get('person') instanceof app.Person ? this.get('person').get('name') : 'Anonymus'
+			personName: this.get('person').get('name')
 		});
 	},
 	doIoBind: function () {
@@ -50,9 +39,11 @@ app.Participation = Backbone.RelationalModel.extend({
 			this.set(data);
 		});
 		this.ioBind('delete', function () {
+			console.log(this, this.collection);
 			if (this.collection) {
 				this.collection.remove(this);
 			}
+			this.set('id', null);
 		});
 	},
 	isEmpty: function () {

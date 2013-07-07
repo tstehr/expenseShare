@@ -14,6 +14,7 @@ app.ACollectionView = app.AView.extend({
 		this.listenTo(this.collection, 'add', this.handleAdd);
 		this.listenTo(this.collection, 'remove', this.handleRemove);
 		this.listenTo(this.collection, 'reset', this.handleReset);
+		this.listenTo(this.collection, 'sort', this.handleSort);
 	},
 
 	render: function () {
@@ -54,11 +55,15 @@ app.ACollectionView = app.AView.extend({
 		var index = this.collection.indexOf(model);
 		this.addOne(model, index);
 	},
+	handleRemove: function (model, collection, options) {
+		this.disposeView(model);
+	},
 	handleReset: function (collection) {
 		this.reset();
 	},
-	handleRemove: function (model, collection, options) {
-		this.disposeView(model);
+	handleSort: function () {
+		this.getCollectionEl().empty();
+		this.addAll();
 	},
 
 	addOne: function (model, index) {
@@ -72,18 +77,22 @@ app.ACollectionView = app.AView.extend({
 		if (prevView) {
 			prevView.$el.after(view.render().el);
 		} else {
-			this.$el.prepend(view.render().el);
+			this.getCollectionEl().prepend(view.render().el);
 		}
 	},
 	reset: function () {
-		Object.keys(this._viewPointers).forEach((function (cid) {
-			this.disposeViewByCid(cid);
-		}).bind(this));
+		this.disposeAllViews();
 
 		if (this.collection) {
-			this.collection.each(_.bind(function (model, index, collection) {
-				this.addOne(model, index);
-			}, this));
+			this.addAll();
 		}
+	},
+	addAll: function () {
+		this.collection.each(_.bind(function (model, index, collection) {
+			this.addOne(model, index);
+		}, this));
+	},
+	getCollectionEl: function () {
+		return this.$collectionEl || this.$el;
 	}
 });

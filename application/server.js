@@ -24,14 +24,15 @@ var server, app, io, pool, sessionStore, cookieParser;
 var defaults = {
 	sqlHost: 'localhost',
 	sqlDB: 'expense_share',
-	port: 4242
+	port: 4242,
+	sessionSecret: Math.round(Math.random() * 1e200).toString(36)
 };
 
 var config = _.extend(defaults, argv);
 
 
-if (!config.sqlUser && !config.sqlPassword && !config.sessionSecret) {
-	throw new Error('Please supply mysql username, mysql password and session secret. Options: --sqlUser --sqlPassword --sessionSecret');
+if (!config.sqlUser && !config.sqlPassword) {
+	throw new Error('Please supply mysql username and mysql password. Options: --sqlUser --sqlPassword');
 }
 
 pool = mysql.createPool({
