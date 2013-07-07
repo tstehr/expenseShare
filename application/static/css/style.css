@@ -326,7 +326,8 @@ https://github.com/joelambert/ScrollFix/issues/2
 /**
  * Person modules
  */
-.person.isHidden, .person-edit.isHidden .person-name {http://localhost:4242/persons/newtalic;
+.person.isHidden, .person-edit.isHidden .person-name {
+	font-style: italic;
 }
 .person-edit .row-checkbox {
 	float: left;
