@@ -90,7 +90,7 @@ app.Month = Backbone.RelationalModel.extend({
 			return memo + x;
 		}, 0);
 		if (Math.abs(sum) > INSIGNIFICANCE_CUTOFF) {
-			throw new TypeError('Input not balanced!');
+			throw new Error('Input not balanced!');
 		}
 
 		personCids = Object.keys(pam);
@@ -181,30 +181,34 @@ app.Month = Backbone.RelationalModel.extend({
 app.Month.findOrCreateAndFetch = function (monthId) {
 	var alreadyExists, month, def;
 
+	def = Q.defer();
+
 	alreadyExists = !!app.Month.findOrCreate({id: monthId}, {
 		create: false
 	}); 
 	month = app.Month.findOrCreate({id: monthId});
-	def = $.Deferred();
-	def.resolveWith(null, [month]);
 
 	if (alreadyExists) {
-		return def;
+		def.resolve(month);
 	} else {
-		return month.fetch()
+		Q.when(month.fetch())
 			.then(function () {
-				return $.when.apply(this, month.fetchRelated('expenses'));
+				return Q.all(month.fetchRelated('expenses'));
 			})
 			.then(function () {
 				var promises = [];
 				month.get('expenses').forEach(function (expense) {
 					promises = promises.concat(expense.fetchRelated('participations'));
 				})
-				return $.when.apply(null, promises);
+				return Q.all(promises);
 			})
 			.then(function () {
-				return def;
+				def.resolve(month);
+			}, function (err) {
+				def.reject(err);
 			});
 		;
 	}
+
+	return def.promise;
 }

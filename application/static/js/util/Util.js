@@ -15,7 +15,7 @@ app.Util = {
 	parseMonthId: function (mid) {
 		var sp;
 		if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(mid)) {
-			throw new TypeError('Not correctly formatted!');
+			throw new Error('Month is not correctly formatted!');
 		}
 		sp = mid.split('-');
 

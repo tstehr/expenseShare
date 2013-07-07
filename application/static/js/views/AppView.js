@@ -56,20 +56,6 @@ app.AppView = app.AView.extend({
 			this.render();
 		}
 	},
-	showLoginView: function () {
-		this.disposeAllViews();
-
-		var lw = new app.LoginView();
-		this.setView('main', lw);
-		return lw;
-	},
-	showErrorView: function (message) {
-		this.disposeAllViews();
-
-		this.setView('main', new app.ErrorView({
-			message: message
-		}));
-	},
 	setupMonthCommon: function (month) {
 		this.setView('side', new app.MonthView({
 			model: month
@@ -81,71 +67,118 @@ app.AppView = app.AView.extend({
 			model: month
 		}));
 	},
-	showMonthView: function (monthId, transfersShown) {
-		app.Month.findOrCreateAndFetch(monthId).then(function (month) {
-			this.setupMonthCommon(month);
+	showErrorView: function (error) {
+		this.disposeAllViews();
 
-			this.setView('main', new app.MonthView({
-				model: month,
-				transfersShown: !!transfersShown,
-				isMain: true
-			}));
-		}.bind(this));
+		this.setView('main', new app.ErrorView({
+			error: error
+		}));
+	},
+	showLoginView: function () {
+		this.disposeAllViews();
+
+		var lw = new app.LoginView();
+		this.setView('main', lw);
+		return lw;
+	},
+	showMonthView: function (monthId, transfersShown) {
+		app.Month.findOrCreateAndFetch(monthId)
+			.then(function (month) {
+				this.setupMonthCommon(month);
+
+				this.setView('main', new app.MonthView({
+					model: month,
+					transfersShown: !!transfersShown,
+					isMain: true
+				}));
+			}.bind(this))
+			.fail(this.showErrorView.bind(this))
+			.done()
+		;
 	},
 	showExpenseCreateView: function (monthId) {
-		app.Month.findOrCreateAndFetch(monthId).then(function (month) {
-			this.setupMonthCommon(month);
+		app.Month.findOrCreateAndFetch(monthId)
+			.then(function (month) {
+				this.setupMonthCommon(month);
 
-			this._views['side'].setBlocked(true);
+				this._views['side'].setBlocked(true);
 
-			this.setView('main', new app.ExpenseEditView({
-				model: 	new app.Expense({
-					month: monthId
-				})
-			}));
-		}.bind(this));
+				this.setView('main', new app.ExpenseEditView({
+					model: 	new app.Expense({
+						month: monthId
+					})
+				}));
+			}.bind(this))
+			.fail(this.showErrorView.bind(this))
+			.done()
+		;
 	},
 	showExpenseEditView: function (monthId, id) {
-		app.Month.findOrCreateAndFetch(monthId).then(function (month) {
-			this.setupMonthCommon(month);
+		app.Month.findOrCreateAndFetch(monthId)
+			.then(function (month) {
+				this.setupMonthCommon(month);
 
-			this.setView('main', new app.ExpenseEditView({
-				model: app.Expense.findOrCreate({id: id})
-			}));
-		}.bind(this));
+				if (!app.Expense.findOrCreate({id: id}, {create: false})) {
+					throw new Error('Expense not found!');
+				}
+
+				this.setView('main', new app.ExpenseEditView({
+					model: app.Expense.findOrCreate({id: id})
+				}));
+
+			}.bind(this))
+			.fail(this.showErrorView.bind(this))
+			.done()
+		;
 	},
 	showPersonsView: function () {
-		this.setView('side', new app.PersonCollectionView({
-			collection: app.persons
-		}));
-		this.setView('transfer', null);
+		try {
+			this.setView('side', new app.PersonCollectionView({
+				collection: app.persons
+			}));
+			this.setView('transfer', null);
 
-		this.setView('main', new app.PersonCollectionView({
-			collection: app.persons
-		}));
+			this.setView('main', new app.PersonCollectionView({
+				collection: app.persons
+			}));
+		} catch (e) {
+			this.showErrorView(e);
+		}
 	},
 	showPersonCreateView: function () {
-		var np = new app.Person();
-		app.persons.add(np);
+		try {
+			var np = new app.Person();
+			app.persons.add(np);
 
-		this.setView('side', new app.PersonCollectionView({
-			collection: app.persons
-		}));
-		this.setView('transfer', null);
+			this.setView('side', new app.PersonCollectionView({
+				collection: app.persons
+			}));
+			this.setView('transfer', null);
 
-		this.setView('main', new app.PersonEditView({
-			model: np
-		}));
+			this.setView('main', new app.PersonEditView({
+				model: np
+			}));
+		} catch (e) {
+			this.showErrorView(e);
+		}
 	},
 	showPersonEditView: function (id) {
-		this.setView('side', new app.PersonCollectionView({
-			collection: app.persons
-		}));
-		this.setView('transfer', null);
+		try {
+			if (!app.Person.findOrCreate({id: id}, {create: false})) {
+				throw new Error('Person not found!');
+			}
 
-		this.setView('main', new app.PersonEditView({
-			model: app.Person.findOrCreate({id: id})
-		}));
+			this.setView('side', new app.PersonCollectionView({
+				collection: app.persons
+			}));
+			this.setView('transfer', null);
+
+			this.setView('main', new app.PersonEditView({
+				model: app.Person.findOrCreate({id: id})
+			}));
+		} catch (e) {
+			this.showErrorView(e);
+		}
 	},
 	getView: function (name) {
 		return this._views[name];
