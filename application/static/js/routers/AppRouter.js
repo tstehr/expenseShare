@@ -48,8 +48,6 @@ app.AppRouter = Backbone.Router.extend({
 		app.appView.showMonthView(date);
 	},
 	showError: function (path) {
-		app.appView.showErrorView({
-			message: 'The URL you entered is invalid'
-		});
+		app.appView.showErrorView('The URL you entered is invalid');
 	}
 });

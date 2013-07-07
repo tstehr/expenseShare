@@ -223,12 +223,12 @@
 	<% Object.keys(transfers).forEach(function (fromCid) { %>
 		<% if (transfers[fromCid] && Object.keys(transfers[fromCid]).length > 0) { %> 
 			<p>
-				<%= app.persons.get(fromCid)/*.get('name')*/ %>: 
+				<%= app.persons.get(fromCid).get('name') %>: 
 				<ul>
 				<% Object.keys(transfers[fromCid]).forEach(function (toCid) { %>
 					<li>
 						<%= app.Util.formatCurrency(transfers[fromCid][toCid]) %>&thinsp;€
-						to <%= app.persons.get(toCid)/*.get('name')*/ %>
+						to <%= app.persons.get(toCid).get('name') %>
 					</li>
 				<% }); %>
 				</ul>
