@@ -10,7 +10,7 @@ var mysql = require('mysql');
 var _ = require('underscore');
 var Q = require('q');
 
-var argv = require('optimist').argv;
+
 
 var personsHandler = require('./socketHandlers/PersonsHandler');
 var monthsHandler = require('./socketHandlers/MonthsHandler');
@@ -21,18 +21,18 @@ var participationsHandler = require('./socketHandlers/ParticipationsHandler');
 
 var server, app, io, pool, sessionStore, cookieParser;
 
-var defaults = {
+var config = {
 	sqlHost: 'localhost',
 	sqlDB: 'expense_share',
 	port: 4242,
 	sessionSecret: Math.round(Math.random() * 1e200).toString(36)
 };
 
-var config = _.extend(defaults, argv);
+_.extend(config, require('./config.json'));
 
 
 if (!config.sqlUser && !config.sqlPassword) {
-	throw new Error('Please supply mysql username and mysql password. Options: --sqlUser --sqlPassword');
+	throw new Error('Please supply mysql username and mysql password. ');
 }
 
 pool = mysql.createPool({
@@ -96,7 +96,7 @@ app.post('/auth', function (req, res) {
 	}
 });
 
-// serve index file to all requests
+// serve index file to all other requests
 app.get('*', function (req, res) {
 	res.sendfile(path.join(application_root, 'static/index.html'));
 });
@@ -106,6 +106,8 @@ server = http.createServer(app);
 
 // create socket
 io = socketIo.listen(server);
+
+io.set('log level', 1);
 
 (new SessionSockets(io, sessionStore, cookieParser)).on('connection', function (err, socket, session) {
 	console.log(session);

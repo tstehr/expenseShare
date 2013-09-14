@@ -61,9 +61,15 @@ app.ACollectionView = app.AView.extend({
 	handleReset: function (collection) {
 		this.reset();
 	},
-	handleSort: function () {
-		this.getCollectionEl().empty();
-		this.addAll();
+	handleSort: function (model, options) {
+		// if this is a sort after adding, don't do anything
+		if ((options && !options.add) || !options) {
+			// readd all views in the correct order
+			this.collection.each(_.bind(function (model, index, collection) {
+				var view = this.getView(model);
+				this.getCollectionEl().append(view.el);
+			}, this))
+		}
 	},
 
 	addOne: function (model, index) {

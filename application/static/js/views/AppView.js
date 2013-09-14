@@ -6,8 +6,6 @@ app.AppView = app.AView.extend({
 	},
 	initialize: function () {
 		FastClick.attach(document.body);
-		$(window).on('keyup', this.handleKeyup.bind(this));
-
 		$(document).on('touchmove', function (e) {
 			var inScrolling = $('.module-body').find(e.target);
 			if (inScrolling.length > 0) {
@@ -17,6 +15,8 @@ app.AppView = app.AView.extend({
 				e.preventDefault();
 			}
 		});
+
+		$(window).on('keyup', this.handleKeyup.bind(this));
 
 		this._views = {};
 		this._viewEls = {
@@ -200,9 +200,11 @@ app.AppView = app.AView.extend({
 					(view.collection && view.collection === this._views[name].collection)
 				)
 			) {
+				// can reuse existing view
 				view.dispose();
 				this._views[name].resetState();
 			} else {
+				// need to use new view
 				this.disposeView(name);
 				this._views[name] = view;
 				this._viewEls[name].empty();

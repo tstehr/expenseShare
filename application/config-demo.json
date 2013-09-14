@@ -1,0 +1,7 @@
+{
+	"sqlHost": "xxx",
+	"sqlDB": "xxx",
+	"sqlUser": "xxx",
+	"sqlPassword": "xxx",
+	"port": 1337
+}

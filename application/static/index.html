@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html>
 <head>
@@ -206,11 +207,12 @@
 <script type="text/template" id="participation-template">
 	<label class="row row-checkbox">
 		<span class="visuallyhidden">Participating: </span>
-		<input type="checkbox" <%=participating ? "checked" : ""%> id="participation-toggle-<%= cid %>">
+		<input type="checkbox" class="participation-toggle" <%=participating ? "checked" : ""%> id="participation-toggle-<%= cid %>">
 		<span class="icon-ok" aria-hidden="true"></span>
 	</label>
 
 	<label class="row emphasize" for="participation-toggle-<%= cid %>"><%= personName %></label>
+	
 	<label class="row participation-amount-container">
 		<span class="visuallyhidden">Amount: </span>
 		<input type="number" value="<%= app.Util.formatCurrency(amount) %>" class="participation-amount">&thinsp;€
