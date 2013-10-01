@@ -1,7 +1,9 @@
 {
-	"sqlHost": "xxx",
-	"sqlDB": "xxx",
-	"sqlUser": "xxx",
+	"user":        "xxx",
+	"password":    "xxx",
+	"sqlHost":     "xxx",
+	"sqlDB":       "xxx",
+	"sqlUser":     "xxx",
 	"sqlPassword": "xxx",
-	"port": 1337
+	"port":        1337
 }

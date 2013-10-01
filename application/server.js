@@ -22,6 +22,8 @@ var participationsHandler = require('./socketHandlers/ParticipationsHandler');
 var server, app, io, pool, sessionStore, cookieParser;
 
 var config = {
+	user: 'expense',
+	password: 'share',
 	sqlHost: 'localhost',
 	sqlDB: 'expense_share',
 	port: 4242,
@@ -87,7 +89,7 @@ app.get('/auth', function (req, res) {
 app.post('/auth', function (req, res) {
 	if (
 		req.session.loggedIn || 
-		(req.body.username === 'expense' && req.body.password === 'share')
+		(req.body.username === config.user && req.body.password === config.password)
 	) {
 		req.session.loggedIn = true;
 		res.send(true);
