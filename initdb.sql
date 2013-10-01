@@ -1,4 +1,3 @@
-drop database if exists expense_share;
 create database expense_share;
 use expense_share
 set names utf8;
