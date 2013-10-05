@@ -1,0 +1,3 @@
+#!/bin/bash
+
+nohup node application/server.js > es.out &> es.err
