@@ -7,6 +7,7 @@ app.ParticipationView = app.AView.extend({
 
 	events: {
 		'change .participation-toggle': 'setParticipating',
+		'focus .participation-amount': 'clearAmount',
 		'blur .participation-amount': 'setAmount'
 	},
 
@@ -31,6 +32,11 @@ app.ParticipationView = app.AView.extend({
 		} else {
 			this.model.set('amount', am);
 			this.model.saveIfNotNew();
+		}
+	},
+	clearAmount: function (e) {
+		if (this.model.get('amount') === 0) {
+			e.target.value = '';
 		}
 	}
 });
