@@ -29,12 +29,13 @@ a {
 html {
 	font-size: 18px;
 	font-family: "Helvetica Neue", "Helvtica", "Arial", sans-serif;
-	font-weight: bold;
+	font-weight: 400;
 	text-shadow: 0 .1rem 0 white;
 	color: hsl(0, 90%, 45%);
 	background: black;
 
 	-webkit-user-select: none;
+	-webkit-font-smoothing: antialiased;
 }
 body, html, #app {
 	position: relative;
@@ -111,7 +112,7 @@ input::-webkit-inner-spin-button {
 }
 .row.emphasize {
 	background: hsl(0, 0%, 90%);
-	border-bottom: .1rem solid hsl(0, 0%, 87%);
+	border-bottom-color: hsl(0, 0%, 87%);
 }
 .invalid > .row {
 	text-decoration: line-through;
@@ -172,6 +173,7 @@ input::-webkit-inner-spin-button {
 .module-header > h1 {
 	font-size: 1rem;
 	text-align: center;
+	font-weight: 500;
 }
 .module.invalid .module-header > h1 {
 	text-decoration: line-through;
@@ -281,8 +283,6 @@ https://github.com/joelambert/ScrollFix/issues/2
 .edit-module .module-header input {
 	width: 100%;
 	padding: 0 3rem;
-	overflow: hidden;
-	text-overflow: ellipsis;
 }
 
 
