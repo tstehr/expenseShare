@@ -140,6 +140,7 @@ a {
 .row-amount {
 	width: 5.5rem;
 	text-align: right;
+	padding-left: 0;
 }
 
 
