@@ -17,7 +17,8 @@ app.ParticipationView = app.AView.extend({
 	},
 	render: function () {
 		var data = this.model.toJSONDecorated();
-		data.cid = this.model.cid;
+		data.cid = this.model.cid + '-' + this.cid;
+		
 		this.$el.html(this.template(data));
 		return this;
 	},

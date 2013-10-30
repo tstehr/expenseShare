@@ -61,12 +61,14 @@
 				<span class="visuallyhidden">Add new Expense</span>
 				<span class="icon-plus" aria-hidden="true"></span>
 			</a>
-			<ul class="month-expense-list list expense-list"></ul>
+			<ul class="month-expense-list list tabular expense-list"></ul>
 		</section>
 	</div>
 
 	<h2 class="visuallyhidden">Transfers</h2>
-	<section class="module-body month-transfers"></section>
+	<section class="module-body month-transfers">
+
+	</section>
 	
 
 	<div class="module-buttonBar">
@@ -109,6 +111,16 @@
 	<a href="/persons/<%= id %>" class="row"><%= name %></a>
 </script>
 
+
+<script type="text/template" id="person-transfer-group-template">
+	<div class="row person-name">
+		<%= name %>
+	</div>
+	<ul class="list tabular transfer-list">
+	
+	</ul>
+</script>
+
 <script type="text/template" id="person-edit-template">
 	<header class="module-header">
 		<h1><input type="text" class="person-name" value="<%= name %>" placeholder="Enter name"></h1>
@@ -147,7 +159,7 @@
 
 <script type="text/template" id="expense-template">
 	<a href="/<%= month %>/expenses/<%= id %>" class="row emphasize"><%= description %></a>
-	<a href="/<%= month %>/expenses/<%= id %>" class="row"><%= app.Util.formatCurrency(amount) %>&thinsp;€</a>
+	<a href="/<%= month %>/expenses/<%= id %>" class="row row-amount"><%= app.Util.formatCurrency(amount) %>&thinsp;€</a>
 </script>
 
 
@@ -156,7 +168,7 @@
 
 	<div class="scroll-wrapper">
 		<div class="module-body">
-			<ul class="list participation-list"></ul>
+			<ul class="list tabular participation-list"></ul>
 		</div>
 	</div>
 
@@ -213,7 +225,7 @@
 
 	<label class="row emphasize" for="participation-toggle-<%= cid %>"><%= personName %></label>
 	
-	<label class="row participation-amount-container">
+	<label class="row row-amount">
 		<span class="visuallyhidden">Amount: </span>
 		<input type="number" value="<%= app.Util.formatCurrency(amount) %>" class="participation-amount">&thinsp;€
 	</label>
@@ -221,22 +233,36 @@
 
 
 <script type="text/template" id="month-transfers-template">
-	<p> Total: <%= app.Util.formatCurrency(amount) %>&thinsp;€</p>
-	<% Object.keys(transfers).forEach(function (fromCid) { %>
-		<% if (transfers[fromCid] && Object.keys(transfers[fromCid]).length > 0) { %> 
-			<p>
-				<%= app.persons.get(fromCid).get('name') %>: 
-				<ul>
-				<% Object.keys(transfers[fromCid]).forEach(function (toCid) { %>
-					<li>
-						<%= app.Util.formatCurrency(transfers[fromCid][toCid]) %>&thinsp;€
-						to <%= app.persons.get(toCid).get('name') %>
-					</li>
-				<% }); %>
-				</ul>
-			</p>
-		<% } %>
-	<% }); %>
+	<div class="row amount">
+		
+	</div>
+	<ul class="list transfer-list">
+	
+	</ul>
+</script>
+
+<script type="text/template" id="month-transfers-amount-template">
+	Total: <%= app.Util.formatCurrency(amount) %>&thinsp;€
+</script>
+
+
+
+<script type="text/template" id="transfer-template">
+	<label class="row row-checkbox">
+		<span class="visuallyhidden">Paid: </span>
+		<input type="checkbox" class="paid-toggle" <%=paid ? "checked" : ""%> id="paid-toggle-<%= cid %>">
+		<span class="icon-ok" aria-hidden="true"></span>
+	</label>
+
+	
+	<label class="row emphasize row-amount" for="paid-toggle-<%= cid %>">
+		<%=app.Util.formatCurrency(amount)%>&thinsp;€
+	</label>
+	
+		
+	<label class="row" for="paid-toggle-<%= cid %>">
+		to <%= toPersonName %>
+	</label> 
 </script>
 
 <!--
@@ -260,10 +286,12 @@
 <script src="/js/models/Expense.js"></script>
 <script src="/js/models/Person.js"></script>
 <script src="/js/models/Participation.js"></script>
+<script src="/js/models/Transfer.js"></script>
 
 <script src="/js/collections/ExpenseCollection.js"></script>
 <script src="/js/collections/PersonCollection.js"></script>
 <script src="/js/collections/ParticipationCollection.js"></script>
+<script src="/js/collections/TransferCollection.js"></script>
 
 <script src="/js/views/AView.js"></script>
 <script src="/js/views/WrappingModuleView.js"></script>
@@ -276,12 +304,15 @@
 <script src="/js/views/ExpenseEditView.js"></script>
 <script src="/js/views/PersonView.js"></script>
 <script src="/js/views/PersonEditView.js"></script>
+<script src="/js/views/PersonTransferGroupView.js"></script>
 <script src="/js/views/ParticipationView.js"></script>
+<script src="/js/views/TransferView.js"></script>
 
 <script src="/js/views/ACollectionView.js"></script>
 <script src="/js/views/ExpenseCollectionView.js"></script>
 <script src="/js/views/PersonCollectionView.js"></script>
 <script src="/js/views/ParticipationCollectionView.js"></script>
+<script src="/js/views/TransferCollectionView.js"></script>
 
 <script src="/js/routers/AppRouter.js"></script>
 
