@@ -38,7 +38,7 @@
 		<div class="module-body hasBar">
 			<label class="row">
 				<span class="visuallyhidden">Username: </span>
-				<input type="text" class="login-username" placeholder="Username">
+				<input type="text" class="login-username" placeholder="Username" autocorrect="off" autocapitalize="off">
 			</label>
 			<label class="row">
 				<span class="visuallyhidden">Password: </span>
@@ -164,42 +164,44 @@
 
 
 <script type="text/template" id="expense-edit-template">
-	<header class="module-header"></header>
-
-	<div class="scroll-wrapper">
-		<div class="module-body">
-			<ul class="list tabular participation-list"></ul>
+	<form>
+		<header class="module-header"></header>
+	
+		<div class="scroll-wrapper">
+			<div class="module-body">
+				<ul class="list tabular participation-list"></ul>
+			</div>
 		</div>
-	</div>
-
-	<div class="module-buttonBar">
-		<button class="confirm edit-module-persistAndClose">
-			<span class="visuallyhidden">Save</span>
-			<span aria-hidden="true" class="icon-ok"></span>
-		</button>
-		<button class="confirm edit-module-persistAndEdit">
-			<span class="visuallyhidden">Save</span>
-			<span aria-hidden="true" class="icon-ok"></span>
-		</button>
-		<button class="decline edit-module-discard">
-			<span class="visuallyhidden">Discard</span>
-			<span aria-hidden="true" class="icon-cancel"></span>
-		</button>
-	</div>
-
-	<div class="module-overlay">
-		Sure?
+	
 		<div class="module-buttonBar">
-			<button class="confirm edit-module-delete">
-				<span class="visuallyhidden">Delete</span>
+			<button class="confirm edit-module-persistAndClose">
+				<span class="visuallyhidden">Save</span>
 				<span aria-hidden="true" class="icon-ok"></span>
 			</button>
-			<button class="decline edit-module-hideDelete">
-				<span class="visuallyhidden">Cancel</span>
+			<button class="confirm edit-module-persistAndEdit">
+				<span class="visuallyhidden">Save</span>
+				<span aria-hidden="true" class="icon-ok"></span>
+			</button>
+			<button class="decline edit-module-discard">
+				<span class="visuallyhidden">Discard</span>
 				<span aria-hidden="true" class="icon-cancel"></span>
 			</button>
 		</div>
-	</div>
+	
+		<div class="module-overlay">
+			Sure?
+			<div class="module-buttonBar">
+				<button class="confirm edit-module-delete">
+					<span class="visuallyhidden">Delete</span>
+					<span aria-hidden="true" class="icon-ok"></span>
+				</button>
+				<button class="decline edit-module-hideDelete">
+					<span class="visuallyhidden">Cancel</span>
+					<span aria-hidden="true" class="icon-cancel"></span>
+				</button>
+			</div>
+		</div>
+	</form>
 </script>
 
 
@@ -270,9 +272,10 @@
 	https://github.com/h5bp/node-build-script
 -->
 
-<script src="/socket.io/socket.io.js"></script>
+<script src="/js/libs/math.min.js"></script>
 <script src="/js/libs/fastclick.js"></script>
 <script src="/js/libs/jquery-1.9.1.js"></script>
+<script src="/socket.io/socket.io.js"></script>
 <script src="/js/libs/q.js"></script>
 <script src="/js/libs/underscore.js"></script>
 <script src="/js/libs/backbone.js"></script>
