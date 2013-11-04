@@ -28,7 +28,7 @@ app.TransferView = app.AView.extend({
 	setPaid: _.debounce(function (e) {
 		// TODO use current server month, instead of relying on local time
 		var parentMonth = this.model.get('month').getMonthData();
-		if (parentMonth.year >= (new Date()).getFullYear() && parentMonth.month >= (new Date()).getMonth()) {
+		if (parentMonth.year >= (new Date()).getFullYear() && parentMonth.month >= ((new Date()).getMonth() + 1)) {
 			this.render();
 			alert('How could one pay when the month in question is not yet at a close, I dare inquire.');
 		} else {
