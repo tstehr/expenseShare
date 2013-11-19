@@ -50,18 +50,6 @@ app.Util = {
 		var cents = absAmount - euros*100;
 		return (amount < 0 ? '-' : '') + euros + '.' + app.Util.formatNumber(cents, 2);
 	},
-	evalExpression: function (expr) {
-		var val;
-		expr = expr.split(',').join('.');
-		try {
-			val = this.MATH.eval(expr);
-		} catch (e) {
-			val = 0;
-		}
-		return this.parseCurrency(val) || 0;
-	},
-	MATH: mathjs(),
-	
 	normalizeComparison: function(string) {
 		string = string.toLowerCase();
 		
@@ -71,5 +59,5 @@ app.Util = {
 		return string;
 	},
 	SPECIAL_CHARS:     'äâáàöüß'.split(''),
-	REPLACEMENT_CHARS: 'aaaaous'.split(''),
+	REPLACEMENT_CHARS: 'aaaaous'.split('')
 };

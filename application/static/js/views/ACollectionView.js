@@ -37,15 +37,17 @@ app.ACollectionView = app.AView.extend({
 		return this._viewPointers[model.cid];
 	},
 	disposeView: function (model) {
-		var cid = model.cid;
+		this.disposeViewByCid(model.cid);
+	},
+	disposeViewByCid: function (cid) {
 		if (this._viewPointers[cid]) {
-			this._viewPointers[cid].dispose();	
-			delete this._viewPointers[cid];
+			this._viewPointers[cid].dispose();
 		}
+		delete this._viewPointers[cid];
 	},
 	disposeAllViews: function () {
 		Object.keys(this._viewPointers).forEach((function (cid) {
-			this.disposeView(this._viewPointers[cid]);
+			this.disposeViewByCid(cid);
 		}.bind(this)));
 	},
 
@@ -62,7 +64,7 @@ app.ACollectionView = app.AView.extend({
 	handleSort: function (model, options) {
 		// if this is a sort after adding, don't do anything
 		if ((options && !options.add) || !options) {
-			// re-add all views in the correct order
+			// readd all views in the correct order
 			this.collection.each(_.bind(function (model, index, collection) {
 				var view = this.getView(model);
 				this.getCollectionEl().append(view.el);
@@ -73,7 +75,10 @@ app.ACollectionView = app.AView.extend({
 	addOne: function (model, index) {
 		var view, prevView;
 		view = this.getView(model);
-		prevView = this.getPrevView(index);
+
+		for (var i = 1; i <= index && !prevView; i++) {
+			prevView = this._viewPointers[this.collection.at(index - i).cid];
+		}
 
 		if (prevView) {
 			prevView.$el.after(view.render().el);
@@ -93,18 +98,7 @@ app.ACollectionView = app.AView.extend({
 			this.addOne(model, index);
 		}, this));
 	},
-	
 	getCollectionEl: function () {
 		return this.$collectionEl || this.$el;
-	},
-	getPrevView: function (index) {
-		return this.getPrev(this.collection, this._viewPointers, index);
-	},
-	getPrev: function(collection, pointers, index) {
-		var prev;
-		for (var i = index - 1; i >= 0 && !prev; i--) {
-			prev = pointers[collection.at(i).cid];
-		}
-		return prev;
 	}
 });

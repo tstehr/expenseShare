@@ -7,9 +7,8 @@ app.ParticipationView = app.AView.extend({
 
 	events: {
 		'change .participation-toggle': 'setParticipating',
-		'focus .participation-amount': 'startEdit',
-		'blur .participation-amount': 'setAmount',
-		//'keydown input': 'blurOnEnter'
+		'focus .participation-amount': 'clearAmount',
+		'blur .participation-amount': 'setAmount'
 	},
 
 	initialize: function () {
@@ -18,8 +17,7 @@ app.ParticipationView = app.AView.extend({
 	},
 	render: function () {
 		var data = this.model.toJSONDecorated();
-		data.cid = this.model.cid + '-' + this.cid;
-		
+		data.cid = this.model.cid;
 		this.$el.html(this.template(data));
 		return this;
 	},
@@ -28,7 +26,7 @@ app.ParticipationView = app.AView.extend({
 		this.model.saveIfNotNew();
 	}, 50, true),
 	setAmount: function (e) {
-		var am = app.Util.evalExpression(e.target.value);
+		var am = app.Util.parseCurrency(e.target.value) || 0;
 		if (this.model.get('amount') === am) {
 			this.render();
 		} else {
@@ -36,20 +34,9 @@ app.ParticipationView = app.AView.extend({
 			this.model.saveIfNotNew();
 		}
 	},
-	startEdit: function (e) {
-		// set field type to "text", since we want to allow expressions instead of simple numbers. 
-		// we initialize it with type "number" to force display of the numerical keypad on mobile devices
-		e.target.type = 'text';
-		
-		// empty if value was 0
-		// TODO offer special input method 
+	clearAmount: function (e) {
 		if (this.model.get('amount') === 0) {
 			e.target.value = '';
-		}
-	},
-	blurOnEnter: function (e) {
-		if (e.which == 13) {
-			$(e.target).blur();
 		}
 	}
 });

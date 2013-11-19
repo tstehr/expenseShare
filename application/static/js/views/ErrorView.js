@@ -8,9 +8,9 @@ app.ErrorView = app.AView.extend({
 
 	render: function () {
 		var msg;
-		console.error(this.options.error);
+		console.log(this.options.error instanceof Error, typeof this.options.error);
 		if (this.options.error instanceof Error) {
-			msg = this.options.error.message + '<br><br><pre>' + this.options.error.stack + '</pre>';
+			msg = this.options.error+ '<br><br>';
 		} else {
 			msg = this.options.error.toString();
 		}

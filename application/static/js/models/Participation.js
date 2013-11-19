@@ -39,6 +39,7 @@ app.Participation = Backbone.RelationalModel.extend({
 			this.set(data);
 		});
 		this.ioBind('delete', function () {
+			console.log(this, this.collection);
 			if (this.collection) {
 				this.collection.remove(this);
 			}

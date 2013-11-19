@@ -5,100 +5,71 @@ var app = app || {};
  */
 app.Month = Backbone.RelationalModel.extend({
 	defaults: {
-		id: null,
-		amount: 0
+		id: null
 	},
-
-	relations: [
-		{
-			key: 'expenses',
-			type: Backbone.HasMany,
-			relatedModel: 'app.Expense',
-			includeInJSON: Backbone.Model.prototype.idAttribute,
-			collectionType: 'app.ExpenseCollection',
-			reverseRelation: {
-				key: 'month',
-				includeInJSON: Backbone.Model.prototype.idAttribute
-			}
-		}, {
-			key: 'transfers',
-			type: Backbone.HasMany,
-			relatedModel: 'app.Transfer',
-			includeInJSON: Backbone.Model.prototype.idAttribute,
-			collectionType: 'app.TransferCollection',
-			reverseRelation: {
-				key: 'month',
-				includeInJSON: Backbone.Model.prototype.idAttribute
-			}
+	relations: [{
+		key: 'expenses',
+		type: Backbone.HasMany,
+		relatedModel: 'app.Expense',
+		includeInJSON: Backbone.Model.prototype.idAttribute,
+		collectionType: 'app.ExpenseCollection',
+		reverseRelation: {
+			key: 'month',
+			includeInJSON: Backbone.Model.prototype.idAttribute
 		}
-	],
-
+	}],
 	urlRoot: 'month',
 	initialize: function () {
 		this.decorators = [];
-		
-		this.updateAmountAndTransfers();
-		this.updateAmountAndTransfersDecounced = _.debounce(this.updateAmountAndTransfers, 200);
 
 		this.listenTo(this.get('expenses'), 'pseudochange change add remove', function () {
 			this.trigger('pseudochange');
-			this.updateAmountAndTransfersDecounced();
 		});
 
 		this.ioBind('createExpense', function (data) {
 			this.get('expenses').add(data);
 		});
 	},
-	updateAmountAndTransfers: function () {
-		var data, transfers;
-
-		data = this.getAmounts();
-
-		this.set('amount', data.amount);
-
-		this.updateTransfers(data.personAmountMap);
-
-	},
-	getAmounts: function () {
+	getAmountAndTransfers: function () {
 		// pam := personAmountMap
 		var pam = {}, amount;
 
 		// calculate total
 		amount = this.get('expenses').reduce(function (memo, expense) {
-			var expenseAmount = 0, perParticipant, participants = [];
+			var amountPerExpense = 0, perParticipant, participants = [];
 
 			if (expense.isValid()) {
 				// add up per person
 
 				// add up all contributions by participants
 				expense.get('participations').forEach(function (part) {
-					var personId;
+					var personCid;
 					if (part && part.get('person')) {
-						personId = part.get('person').get('id');
+						personCid = part.get('person').cid;
 
-						pam[personId] = pam[personId] || 0;
+						pam[personCid] = pam[personCid] || 0;
 						if (typeof part.get('amount') === 'number') {
-							expenseAmount += part.get('amount');
-							pam[personId] += part.get('amount');
+							amountPerExpense += part.get('amount');
+							pam[personCid] += part.get('amount');
 						}
 
 						// remember participating persons to subtract their part
 						if (part.get('participating') == true) {
-							participants.push(personId);
+							participants.push(personCid);
 						}
 					}
 				});
 
-				if (expenseAmount !== 0) {
-					perParticipant = expenseAmount / participants.length;
+				if (amountPerExpense !== 0) {
+					perParticipant = amountPerExpense / participants.length;
 
-					participants.forEach(function (personId) {
-						pam[personId] = pam[personId] || 0;
-						pam[personId] -= perParticipant;
+					participants.forEach(function (personCid) {
+						pam[personCid] = pam[personCid] || 0;
+						pam[personCid] -= perParticipant;
 					});
 
 					// add up total
-					memo += expenseAmount;
+					return memo + amountPerExpense;
 				}
 			} 
 			return memo;
@@ -106,32 +77,40 @@ app.Month = Backbone.RelationalModel.extend({
 
 		return {
 			amount: amount,
-			personAmountMap: pam
+			transfers: this.distributePam(pam)
 		};
 	},
-	updateTransfers: function (pam) {
-		var INSIGNIFICANCE_CUTOFF, month, personIds, transfers, high, low;
+	distributePam: function (pam) {
+		var INSIGNIFICANCE_CUTOFF, personCids, transfers, high, low;
 
 		// values smaller than this are ignored by the algorithm
 		INSIGNIFICANCE_CUTOFF = 4;
 
-		transfers = [];
-		month = this;
+		var sum = _.reduce(pam, function (memo, x) {
+			return memo + x;
+		}, 0);
+		if (Math.abs(sum) > INSIGNIFICANCE_CUTOFF) {
+			throw new Error('Input not balanced!');
+		}
 
-		personIds = Object.keys(pam);
+		personCids = Object.keys(pam);
+		transfers = {};
+		personCids.forEach(function (personCid) {
+			transfers[personCid] = {};
+		});
 
 		high = [];
 		low = [];
 
 		// spilt pam in high (> 0) and low (< 0) values
-		personIds.forEach(function (personId) {
+		personCids.forEach(function (personCid) {
 			var data = {
-				id: personId,
-				val: pam[personId]
+				id: personCid,
+				val: pam[personCid]
 			};
-			if (pam[personId] < 0) {
+			if (pam[personCid] < 0) {
 				low.push(data);
-			} else if (pam[personId] > 0) {
+			} else if (pam[personCid] > 0) {
 				high.push(data);
 			}
 		});
@@ -142,7 +121,7 @@ app.Month = Backbone.RelationalModel.extend({
 		
 		high.forEach(function (highEl) {
 			low.every(function (lowEl) {
-				var change, transfer, moneyLeft = true;
+				var change;
 
 				if (Math.abs(lowEl.val) > INSIGNIFICANCE_CUTOFF) {
 					// Move money from high to low
@@ -151,44 +130,19 @@ app.Month = Backbone.RelationalModel.extend({
 					highEl.val -= change;
 					lowEl.val += change;
 
-					transfer = month.fetchTransfer(lowEl.id, highEl.id, change);
-					transfers.push(transfer);
+					// remmeber amount of transferred money
+					transfers[lowEl.id][highEl.id] = change;
 
-
-					// stop once there is no money left on the current high account anymore
+					// stop once there is no money left current high account anymore
 					if (highEl.val <= INSIGNIFICANCE_CUTOFF) {
-						moneyLeft = false;
+						return false;
 					}
 				}
-				return moneyLeft;
+				return true;
 			});
 		});
-		
-		this.get('transfers').difference(transfers).forEach(function (transfer) {
-			transfer.destroy();
-		});
-		
-		this.get('transfers').set(transfers);
-	},
-	fetchTransfer: function(fromId, toId, amount) {
-		var transfer = this.get('transfers').findWhere({
-			fromPerson: app.Person.findOrCreate({id: fromId}),
-			toPerson: app.Person.findOrCreate({id: toId}),
-		});
-		
-		if (transfer) {
-			transfer.set('amount', amount)
-		} else {
-			transfer = new app.Transfer({
-				fromPerson: app.Person.findOrCreate({id: fromId}),
-				toPerson: app.Person.findOrCreate({id: toId}),
-				month: this,
-				amount: amount
-			});
-			transfer.fetch();
-		}
-		
-		return transfer;
+
+		return transfers;
 	},
 	getMonthData: function () {
 		return app.Util.parseMonthId(this.get('id'));
@@ -219,9 +173,7 @@ app.Month = Backbone.RelationalModel.extend({
 			this.toJSON(), 
 			this.getMonthData(),
 			this.getRelatedMonths(),
-			{
-				transfers: {}
-			}
+			this.getAmountAndTransfers()
 		);
 	}
 });

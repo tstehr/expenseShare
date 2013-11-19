@@ -16,7 +16,6 @@ var personsHandler = require('./socketHandlers/PersonsHandler');
 var monthsHandler = require('./socketHandlers/MonthsHandler');
 var expensesHandler = require('./socketHandlers/ExpensesHandler');
 var participationsHandler = require('./socketHandlers/ParticipationsHandler');
-var transfersHandler = require('./socketHandlers/TransfersHandler');
 
 
 
@@ -119,7 +118,6 @@ io.set('log level', 1);
 		personsHandler(socket, pool);
 		expensesHandler(socket, pool);
 		participationsHandler(socket, pool);
-		transfersHandler(socket, pool);
 	}
 });
 
