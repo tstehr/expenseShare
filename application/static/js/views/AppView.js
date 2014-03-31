@@ -16,8 +16,6 @@ app.AppView = app.AView.extend({
 			}
 		});
 
-		$(window).on('keyup', this.handleKeyup.bind(this));
-
 		this._views = {};
 		this._viewEls = {
 			'main': this.$('.mainView'),
@@ -46,16 +44,7 @@ app.AppView = app.AView.extend({
 				trigger: true
 			});
 		}
-	},
-	handleKeyup: function (e) {
-		// 'panic button'
-		if (e.altKey && e.keyCode === 81) {
-			if (this._views['main'] instanceof app.ExpenseEditView) {
-				this._views['main'].participationView.collection.sort();
-			}
-			this.render();
-		}
-	},
+	},	
 	setupMonthCommon: function (month) {
 		this.setView('side', new app.MonthView({
 			model: month
