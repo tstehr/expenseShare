@@ -93,6 +93,7 @@ app.post('/auth', function (req, res) {
 		(req.body.username === config.user && req.body.password === config.password)
 	) {
 		req.session.loggedIn = true;
+		req.session.loggedIn.maxAge = new Date(Date.now() + 3600000),
 		res.send(true);
 	} else {
 		res.send(false);
