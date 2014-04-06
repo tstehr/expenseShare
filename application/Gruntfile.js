@@ -97,7 +97,7 @@ module.exports = function(grunt) {
 		'clean',
 		'useminPrepare',
 		'concat', 
-		//'uglify',
+		'uglify',
 		'cssmin',
 		'copy',
 		'filerev',
