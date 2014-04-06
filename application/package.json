@@ -1,16 +1,28 @@
 {
-	"name": "expenseShare",
-	"version": "0.0.1",
-	"description": "An application for sharing expenses",
-	"dependencies": {
-		"express": "~3.1.0",
-    	"connect": "",
-		"path": "~0.4.9",
-		"optimist": "",
-		"q": "",
-		"underscore": "",
-		"mysql": "git://github.com/felixge/node-mysql.git",
-    	"socket.io": "0.9.x",
-    	"session.socket.io": ""
-	}
+  "name": "expenseShare",
+  "version": "0.0.1",
+  "description": "An application for sharing expenses",
+  "dependencies": {
+    "express": "~3.1.0",
+    "connect": "",
+    "path": "~0.4.9",
+    "optimist": "",
+    "q": "",
+    "underscore": "",
+    "mysql": "~2.0.0",
+    "socket.io": "0.9.x",
+    "session.socket.io": ""
+  },
+  "devDependencies": {
+    "matchdep": "",
+    "grunt": "",
+    "grunt-contrib-clean": "",
+    "grunt-contrib-concat": "",
+    "grunt-contrib-uglify": "",
+    "grunt-contrib-cssmin": "",
+    "grunt-contrib-copy": "",
+    "grunt-usemin": "",
+    "grunt-filerev": "",
+    "grunt-contrib-htmlmin": "~0.2.0"
+  }
 }

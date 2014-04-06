@@ -8,9 +8,11 @@
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0">
 
+	<!-- build:css css/style.css -->
 	<link rel="stylesheet" href="/css/icons-embedded.css">
 	<link rel="stylesheet" href="/css/animate-custom.css">
 	<link rel="stylesheet" href="/css/style.css">
+	<!-- endbuild -->
 </head>
 <body>
 
@@ -270,10 +272,13 @@
 	https://github.com/h5bp/node-build-script
 -->
 
+
+<script src="/socket.io/socket.io.js"></script>
+
+<!-- build:js js/app.js -->
 <script src="/js/libs/math.min.js"></script>
 <script src="/js/libs/fastclick.js"></script>
 <script src="/js/libs/jquery-1.9.1.js"></script>
-<script src="/socket.io/socket.io.js"></script>
 <script src="/js/libs/q.js"></script>
 <script src="/js/libs/underscore.js"></script>
 <script src="/js/libs/backbone.js"></script>
@@ -316,6 +321,7 @@
 <script src="/js/views/TransferCollectionView.js"></script>
 
 <script src="/js/routers/AppRouter.js"></script>
+<!-- endbuild -->
 
 <script>
 Q.longStackSupport = true;

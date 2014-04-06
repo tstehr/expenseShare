@@ -5,5 +5,6 @@
 	"sqlDB":       "xxx",
 	"sqlUser":     "xxx",
 	"sqlPassword": "xxx",
-	"port":        1337
+	"port":        1337,
+	"staticDir":   "static_dist"
 }

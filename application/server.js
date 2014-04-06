@@ -23,11 +23,9 @@ var transfersHandler = require('./socketHandlers/TransfersHandler');
 var server, app, io, pool, sessionStore, cookieParser;
 
 var config = {
-	user: 'expense',
-	password: 'share',
 	sqlHost: 'localhost',
-	sqlDB: 'expense_share',
-	port: 4242,
+	port: 1337,
+	staticDir: 'static_dist',
 	sessionSecret: Math.round(Math.random() * 1e200).toString(36)
 };
 
@@ -36,6 +34,10 @@ _.extend(config, require('./config.json'));
 
 if (!config.sqlUser && !config.sqlPassword) {
 	throw new Error('Please supply mysql username and mysql password. ');
+}
+
+if (!config.user && !config.password) {
+	throw new Error('Please supply username and password. ');
 }
 
 pool = mysql.createPool({
@@ -74,7 +76,7 @@ app.use(express.session({
 }));
 
 app.use(express.bodyParser());
-app.use(express.static(path.join(application_root, 'static')));
+app.use(express.static(path.join(application_root, config.staticDir)));
 app.use(app.router);
 
 //Show all errors in development
@@ -102,7 +104,7 @@ app.post('/auth', function (req, res) {
 
 // serve index file to all other requests
 app.get('*', function (req, res) {
-	res.sendfile(path.join(application_root, 'static/index.html'));
+	res.sendfile(path.join(application_root, config.staticDir + '/index.html'));
 });
 
 // create http server using express as listener
