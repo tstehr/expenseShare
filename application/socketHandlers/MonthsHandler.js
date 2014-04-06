@@ -35,7 +35,7 @@ MonthsHandler.prototype.readMonth = function (socketData, callback) {
 					});
 				})
 				.fin(function () {
-					connection.end();
+					connection.release();
 				})
 			;
 		})

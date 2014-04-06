@@ -24,7 +24,7 @@ TransfersHandler.prototype.readTransfer = function (socketData, callback) {
 					callback(null, socketData);
 				})
 				.fin(function () {
-					connection.end();
+					connection.release();
 				})
 			;
 		})
@@ -59,7 +59,7 @@ TransfersHandler.prototype.createTransfer = function (socketData, callback) {
     				socket.broadcast.emit('transfer/' + socketData.id + ':update', socketData);
 				})
 				.fin(function () {
-					connection.end();
+					connection.release();
 				})
 			;
 		})
@@ -85,7 +85,7 @@ TransfersHandler.prototype.deleteTransfer = function (socketData, callback) {
     				socket.broadcast.emit('transfer/' + socketData.id + ':update', socketData);
 				})
 				.fin(function () {
-					connection.end();
+					connection.release();
 				})
 			;
 		})

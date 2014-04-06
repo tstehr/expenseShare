@@ -34,7 +34,7 @@ ExpensesHandler.prototype.readExpense = function (socketData, callback) {
 					callback(null, expense);
 				})
 				.fin(function () {
-					connection.end();
+					connection.release();
 				})
 			;
 		})
@@ -67,7 +67,7 @@ ExpensesHandler.prototype.createExpense = function (socketData, callback) {
 					callback(null, json);
 				})
 				.fin(function () {
-					connection.end();
+					connection.release();
 				})
 			;
 		})
@@ -99,7 +99,7 @@ ExpensesHandler.prototype.updateExpense = function (socketData, callback) {
 					callback(null, json);
 				})
 				.fin(function () {
-					connection.end();
+					connection.release();
 				})
 			;
 		})
@@ -126,7 +126,7 @@ ExpensesHandler.prototype.deleteExpense = function (socketData, callback) {
 					callback(null, true);
 				})
 				.fin(function () {
-					connection.end();
+					connection.release();
 				})
 			;
 		})

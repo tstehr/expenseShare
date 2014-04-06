@@ -20,7 +20,7 @@ PersonsHandler.prototype.readPersons = function (socketData, callback) {
 					callback(null, dbData[0]);
 				})
 				.fin(function () {
-					connection.end();
+					connection.release();
 				})
 			;
 		})
@@ -40,7 +40,7 @@ PersonsHandler.prototype.readPerson = function (socketData, callback) {
 					callback(null, dbData[0][0]);
 				})
 				.fin(function () {
-					connection.end();
+					connection.release();
 				})
 			;
 		})
@@ -68,7 +68,7 @@ PersonsHandler.prototype.createPerson = function (socketData, callback) {
 					callback(null, json);
 				})
 				.fin(function () {
-					connection.end();
+					connection.release();
 				})
 			;
 		})
@@ -98,7 +98,7 @@ PersonsHandler.prototype.updatePerson = function (socketData, callback) {
     				socket.broadcast.emit('person/' + socketData.id + ':update', json);
 				})
 				.fin(function () {
-					connection.end();
+					connection.release();
 				})
 			;
 		})
@@ -130,7 +130,7 @@ PersonsHandler.prototype.deletePerson = function (socketData, callback) {
     				socket.broadcast.emit('person/' + socketData.id + ':delete');
 				})
 				.fin(function () {
-					connection.end();
+					connection.release();
 				})
 			;
 		})

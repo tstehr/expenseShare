@@ -19,7 +19,7 @@ ParticipationsHandler.prototype.readParticipation = function (socketData, callba
 					callback(null, dbData[0][0]);
 				})
 				.fin(function () {
-					connection.end();
+					connection.release();
 				})
 			;
 		})
@@ -53,7 +53,7 @@ ParticipationsHandler.prototype.createParticipation = function (socketData, call
 					callback(null, json);
 				})
 				.fin(function () {
-					connection.end();
+					connection.release();
 				})
 			;
 		})
@@ -87,7 +87,7 @@ ParticipationsHandler.prototype.updateParticipation = function (socketData, call
 					callback(null, json);
 				})
 				.fin(function () {
-					connection.end();
+					connection.release();
 				})
 			;
 		})
@@ -112,7 +112,7 @@ ParticipationsHandler.prototype.deleteParticipation = function (socketData, call
 					callback(null, true);
 				})
 				.fin(function () {
-					connection.end();
+					connection.release();
 				})
 			;
 		})
