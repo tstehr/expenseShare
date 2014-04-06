@@ -1,19 +1,24 @@
 var app = app || {};
 
-app.PersonCollectionView = app.ACollectionView.extend({
-	tagName: 'section',
-	className: 'module persons',
+(function (app) {
+	'use strict';
 
-	template: _.template($('#person-collection-template').html()),
+	app.PersonCollectionView = app.ACollectionView.extend({
+		tagName: 'section',
+		className: 'module persons',
 
-	render: function () {
-		this.$el.html(this.template());
-		this.$collectionEl = this.$('.list');
+		template: _.template($('#person-collection-template').html()),
 
-		return app.ACollectionView.prototype.render.apply(this);
-	},
+		render: function () {
+			this.$el.html(this.template());
+			this.$collectionEl = this.$('.list');
 
-	createView: function (model) {
-		return new app.PersonView({model: model});
-	}
-});
+			return app.ACollectionView.prototype.render.apply(this);
+		},
+
+		createView: function (model) {
+			return new app.PersonView({model: model});
+		}
+	});
+	
+}(app));

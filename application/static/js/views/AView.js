@@ -1,17 +1,22 @@
 var app = app || {};
 
-app.AView = Backbone.View.extend({
-	dispose: function () {
-		this.remove();
-	},
-	setBlocked: function (block) {
-		if (block) {
-			this.$el.addClass('blocked');
-		} else {
-			this.$el.removeClass('blocked');
+(function (app) {
+	'use strict';
+
+	app.AView = Backbone.View.extend({
+		dispose: function () {
+			this.remove();
+		},
+		setBlocked: function (block) {
+			if (block) {
+				this.$el.addClass('blocked');
+			} else {
+				this.$el.removeClass('blocked');
+			}
+		},
+		resetState: function () {
+			
 		}
-	},
-	resetState: function () {
-		
-	}
-});
+	});
+	
+}(app));

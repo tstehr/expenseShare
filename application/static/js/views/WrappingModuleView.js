@@ -1,28 +1,33 @@
 app = app || {};
 
-app.WrappingModuleView = app.AView.extend({
-	tagName: 'section',
-	className: 'module',
+(function (app) {
+	'use strict';
 
-	template: _.template($('#module-template').html()),
+	app.WrappingModuleView = app.AView.extend({
+		tagName: 'section',
+		className: 'module',
 
-	initialize: function (params) {
-		this.wrappedView = new params.view(params);
-		this.title = params.title;
-	},
+		template: _.template($('#module-template').html()),
 
-	render: function () {
-		this.$el.html(this.template({
-			title: this.title
-		}));
+		initialize: function (params) {
+			this.wrappedView = new params.view(params);
+			this.title = params.title;
+		},
 
-		this.$('> .module-body').append(this.wrappedView.render().el);
+		render: function () {
+			this.$el.html(this.template({
+				title: this.title
+			}));
 
-		return this;
-	},
+			this.$('> .module-body').append(this.wrappedView.render().el);
 
-	dispose: function () {
-		this.wrappedView.dispose();
-		this.remove();
-	}
-})
+			return this;
+		},
+
+		dispose: function () {
+			this.wrappedView.dispose();
+			this.remove();
+		}
+	});
+	
+}(app));

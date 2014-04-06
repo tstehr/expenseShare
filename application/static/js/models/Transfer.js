@@ -1,57 +1,62 @@
 var app = app || {};
 
-app.Transfer = Backbone.RelationalModel.extend({
-	defaults: {
-		amount: 0,
-		paid: false
-	},
+(function (app) {
+	'use strict';
 
-	relations: [
-		{
-			type: Backbone.HasOne,
-			key: 'fromPerson',
-			relatedModel: 'app.Person',
-			includeInJSON: Backbone.Model.prototype.idAttribute
-		}, {
-			type: Backbone.HasOne,
-			key: 'toPerson',
-			relatedModel: 'app.Person',
-			includeInJSON: Backbone.Model.prototype.idAttribute
-		}
-	],
-		
-	urlRoot: 'transfer',
-	
-	initialize: function () {
-		this.listenTo(this.get('fromPerson'), 'change destroy', function () {
-			this.trigger('pseudochange');
-		});
-		this.listenTo(this.get('toPerson'), 'change destroy', function () {
-			this.trigger('pseudochange');
-		});
-		
-		if (this.isNew()) {
-			this.listenToOnce(this, 'sync', this.doIoBind.bind(this));
-		} else {
-			this.doIoBind();
-		}
-	},
-	doIoBind: function () {
-		this.ioBind('update', function (data) {
-			this.set('paid', data.paid);
-		});
+	app.Transfer = Backbone.RelationalModel.extend({
+		defaults: {
+			amount: 0,
+			paid: false
+		},
 
-		this.ioBind('delete', function (data) {
-			if (this.collection) {
-				this.collection.remove(this);
+		relations: [
+			{
+				type: Backbone.HasOne,
+				key: 'fromPerson',
+				relatedModel: 'app.Person',
+				includeInJSON: Backbone.Model.prototype.idAttribute
+			}, {
+				type: Backbone.HasOne,
+				key: 'toPerson',
+				relatedModel: 'app.Person',
+				includeInJSON: Backbone.Model.prototype.idAttribute
 			}
-			this.set('id', null);
-		});
-	},
-	toJSONDecorated: function () {
-		return _.extend(this.toJSON(), {
-			fromPersonName: this.get('fromPerson').get('name'),
-			toPersonName: this.get('toPerson').get('name')
-		});
-	}
-});
+		],
+			
+		urlRoot: 'transfer',
+		
+		initialize: function () {
+			this.listenTo(this.get('fromPerson'), 'change destroy', function () {
+				this.trigger('pseudochange');
+			});
+			this.listenTo(this.get('toPerson'), 'change destroy', function () {
+				this.trigger('pseudochange');
+			});
+			
+			if (this.isNew()) {
+				this.listenToOnce(this, 'sync', this.doIoBind.bind(this));
+			} else {
+				this.doIoBind();
+			}
+		},
+		doIoBind: function () {
+			this.ioBind('update', function (data) {
+				this.set('paid', data.paid);
+			});
+
+			this.ioBind('delete', function (data) {
+				if (this.collection) {
+					this.collection.remove(this);
+				}
+				this.set('id', null);
+			});
+		},
+		toJSONDecorated: function () {
+			return _.extend(this.toJSON(), {
+				fromPersonName: this.get('fromPerson').get('name'),
+				toPersonName: this.get('toPerson').get('name')
+			});
+		}
+	});
+
+}(app));
