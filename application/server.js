@@ -36,6 +36,10 @@ if (!config.sqlUser && !config.sqlPassword) {
 	throw new Error('Please supply mysql username and mysql password. ');
 }
 
+if (!config.sqlDB) {
+	throw new Error('Please supply database name');
+}
+
 if (!config.user && !config.password) {
 	throw new Error('Please supply username and password. ');
 }
