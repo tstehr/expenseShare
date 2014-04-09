@@ -6,10 +6,10 @@ var app = app || {};
 	app.Util = {
 		pad: function (str, l, pad) {
 			pad = pad || ' ';
-			return Array(l - str.length + 1).join(pad) + str;
+			return Array(Math.max(0, l - str.length + 1)).join(pad[0]) + str;
 		},
 		formatNumber: function(nr, l) {
-			return app.Util.pad(parseInt(nr, 10).toString(), l, "0");
+			return app.Util.pad(parseInt(Math.round(nr), 10).toString(), l, "0");
 		},
 		randomInt: function(min, max) {
 			return Math.floor(Math.random() * (max - min + 1)) + min;
