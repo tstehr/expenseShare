@@ -20,9 +20,9 @@
     "grunt-contrib-concat": "",
     "grunt-contrib-uglify": "",
     "grunt-contrib-cssmin": "",
+    "grunt-contrib-htmlmin": "",
     "grunt-contrib-copy": "",
     "grunt-usemin": "",
-    "grunt-filerev": "",
-    "grunt-contrib-htmlmin": "~0.2.0"
+    "grunt-filerev": ""
   }
 }
