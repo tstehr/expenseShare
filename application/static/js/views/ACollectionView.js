@@ -11,6 +11,7 @@ var app = app || {};
 	 */
 	app.ACollectionView = app.AView.extend({
 		initialize: function () {
+			// We cache our views, so needn't recreate them all the time
 			this._viewPointers = {};
 
 			this.listenTo(this.collection, 'add', this.handleAdd);
@@ -68,18 +69,22 @@ var app = app || {};
 				this.collection.each(_.bind(function (model, index, collection) {
 					var view = this.getView(model);
 					this.getCollectionEl().append(view.el);
-				}, this))
+				}, this));
 			}
 		},
 
 		addOne: function (model, index) {
 			var view, prevView;
 			view = this.getView(model);
+
+			// try to get the view of the model that is before the new model in the collection
 			prevView = this.getPrevView(index);
 
 			if (prevView) {
+				// insert after the prevView
 				prevView.$el.after(view.render().el);
 			} else {
+				// there is no prevView, therefore we are at the beginning; insert as first element
 				this.getCollectionEl().prepend(view.render().el);
 			}
 		},
@@ -103,6 +108,7 @@ var app = app || {};
 			return this.getPrev(this.collection, this._viewPointers, index);
 		},
 		getPrev: function(collection, pointers, index) {
+			// get the view of the first model that is before the one at the given index in the given collection
 			var prev;
 			for (var i = index - 1; i >= 0 && !prev; i--) {
 				prev = pointers[collection.at(i).cid];
