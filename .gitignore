@@ -1,0 +1,11 @@
+
+# /
+/node_modules
+/es.err
+/es.out
+
+# /application/
+/application/node_modules
+/application/.tmp
+/application/static_dist
+/application/config.json
