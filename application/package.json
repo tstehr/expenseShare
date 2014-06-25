@@ -4,7 +4,8 @@
   "description": "An application for sharing expenses",
   "dependencies": {
     "express": "~3.1.0",
-    "connect": "",
+    "connect": "",    
+    "connect-session": "",
     "path": "~0.4.9",
     "optimist": "",
     "q": "",

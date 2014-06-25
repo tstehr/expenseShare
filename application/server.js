@@ -3,6 +3,7 @@ var application_root = __dirname;
 var http = require('http');
 var express = require('express');
 var connect = require('connect');
+var session = require('connect-session');
 var socketIo = require('socket.io');
 var SessionSockets = require('session.socket.io');
 var path = require('path');
@@ -72,7 +73,7 @@ pool.on('connection', function (connection) {
 app = express();
 
 cookieParser = express.cookieParser(config.sessionSecret);
-sessionStore = new connect.middleware.session.MemoryStore();
+sessionStore = new session.session.MemoryStore();
 
 app.use(cookieParser);
 app.use(express.session({
