@@ -258,7 +258,8 @@ var app = app || {};
 					def.resolve(month);
 				}, function (err) {
 					def.reject(err);
-				});
+				})
+				.done()
 			;
 		}
 
