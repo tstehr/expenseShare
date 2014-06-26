@@ -13,7 +13,7 @@ create table persons(
 create table expenses(
     id int not null auto_increment primary key, 
     description varchar(50) not null, 
-    created timestamp not null,
+    created timestamp not null
 );
 
 create table participations(
