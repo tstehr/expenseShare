@@ -99,7 +99,7 @@ ExpensesHandler.prototype.createExpense = function (socketData, callback) {
 						month: socketData.month
 					};
 
-					socket.broadcast.emit('month/' + socketData.month + ':createExpense', json);
+					socket.broadcast.emit('expenses:create', json);
 					callback(null, json);
 				})
 				.fin(function () {
