@@ -4,7 +4,7 @@ var app = app || {};
 (function (app) {
 	'use strict';
 
-	app.MonthView = app.AView.extend({
+	app.AppExpensesView = app.AView.extend({
 		tagName: 'section',
 		className: 'module month',
 

@@ -49,7 +49,7 @@ var app = app || {};
 			}
 		},	
 		setupMonthCommon: function (month) {
-			this.setView('side', new app.MonthView({
+			this.setView('side', new app.AppExpensesView({
 				model: month
 			}));
 
@@ -78,7 +78,7 @@ var app = app || {};
 				.then(function (month) {
 					this.setupMonthCommon(month);
 
-					this.setView('main', new app.MonthView({
+					this.setView('main', new app.AppExpensesView({
 						model: month,
 						transfersShown: !!transfersShown,
 						isMain: true
