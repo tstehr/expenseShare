@@ -9,7 +9,8 @@ var app = app || {};
 	app.Expense = Backbone.RelationalModel.extend({
 		defaults: {
 			id: null,
-			description: ''
+			description: '',
+			created: 0,
 		},
 		relations: [{
 			key: 'participations',
