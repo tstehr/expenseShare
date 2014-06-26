@@ -10,6 +10,10 @@ var app = app || {};
 
 		template: _.template($('#module-template').html()),
 
+		initialize : function (options) {
+			this.options = options || {};
+		},
+
 		render: function () {
 			var msg;
 			if (this && this.options && this.options.error) {
