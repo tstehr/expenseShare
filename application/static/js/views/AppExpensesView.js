@@ -9,8 +9,8 @@ var app = app || {};
 		// TODO change classnames and styles and stuff...
 		className: 'module month',
 
-		structure: _.template($('#month-template').html()),
-		headerTemplate: _.template($('#month-header-template').html()),
+		structure: _.template($('#app-expenses-template').html()),
+		headerTemplate: _.template($('#app-expenses-header-template').html()),
 
 		events: {
 			'click .month-toggle': 'toggleTransferView'
