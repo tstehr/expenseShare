@@ -23,7 +23,7 @@ var app = app || {};
 				collection: this.model.get('expenses')
 			});
 
-			this.monthTransfersView = new app.MonthTransfersView({
+			this.appTransfersView = new app.AppTransfersView({
 				model: this.model
 			});
 
@@ -31,7 +31,7 @@ var app = app || {};
 		},
 		dispose: function () {
 			this.expenseCollectionView.dispose();
-			this.monthTransfersView.dispose();
+			this.appTransfersView.dispose();
 			this.remove();
 		},
 		render: function () {
@@ -76,8 +76,8 @@ var app = app || {};
 			this.expenseCollectionView.setElement(this.$('.expense-list'));
 			this.expenseCollectionView.render();
 
-			this.monthTransfersView.setElement(this.$('.month-transfers'));
-			this.monthTransfersView.render();
+			this.appTransfersView.setElement(this.$('.month-transfers'));
+			this.appTransfersView.render();
 		},
 		toggleTransferView: function () {
 			this.transfersShown = !this.transfersShown;

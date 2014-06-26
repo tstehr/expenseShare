@@ -3,12 +3,12 @@ app = app || {};
 (function (app) {
 	'use strict';
 
-	app.MonthTransfersView = app.AView.extend({
+	app.AppTransfersView = app.AView.extend({
 		tagName: 'section',
 		className: 'month-transfers',
 
-		structure: _.template($('#month-transfers-template').html()),
-		amountTemplate: _.template($('#month-transfers-amount-template').html()),
+		structure: _.template($('#app-transfers-template').html()),
+		amountTemplate: _.template($('#app-transfers-amount-template').html()),
 
 		initialize: function () {
 			this.transferCollectionView = new app.TransferCollectionView({
@@ -18,7 +18,7 @@ app = app || {};
 			this.listenTo(this.model, 'change:amount', this.renderAmount);
 		},
 		render: function () {
-			this.$el.html(this.structure(this.model.toJSONDecorated()));
+			this.$el.html(this.structure(this.model.toJSON()));
 			
 			this.renderAmount(this);
 			this.renderTransfers(this);
@@ -26,7 +26,7 @@ app = app || {};
 			return this;
 		},
 		renderAmount: function () {
-			this.$('> .amount').html(this.amountTemplate(this.model.toJSONDecorated()));
+			this.$('> .amount').html(this.amountTemplate(this.model.toJSON()));
 			
 			return this;
 		},

@@ -55,8 +55,8 @@ var app = app || {};
 
 			this.setView('transfer', new app.WrappingModuleView({
 				title: 'Transfers',
-				view: app.MonthTransfersView,
 				model: month
+				view: app.AppTransfersView,
 			}));
 		},
 		showErrorView: function (error) {
