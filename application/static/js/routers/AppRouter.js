@@ -26,15 +26,19 @@ var app = app || {};
 			});
 		},
 		showMonth: function(date) {
+			date = '2000-01';
 			app.appView.showMonthView(date);
 		},
 		showMonthTransfers: function (date) {
+			date = '2000-01';
 			app.appView.showMonthView(date, true);
 		},
 		editExpense: function (date, id) {
+			date = '2000-01';
 			app.appView.showExpenseEditView(date, id);
 		},
 		createExpense: function (date) {
+			date = '2000-01';
 			app.appView.showExpenseCreateView(date);
 		},
 		showPersons: function () {
@@ -47,8 +51,7 @@ var app = app || {};
 			app.appView.showPersonCreateView();
 		},
 		showCurrentMonth: function (path) {
-			var now = new Date();
-			var date = app.Util.formatNumber(now.getFullYear(), 4) + '-' + app.Util.formatNumber(now.getMonth() + 1, 2); 
+			var date = '2000-01';
 			app.appView.showMonthView(date);
 		},
 		showError: function (path) {
