@@ -63,10 +63,7 @@ var app = app || {};
 			// TODO decide wether to put this in model or view	
 			var data = this.model.toJSONDecorated();
 			
-			var monthName = app.MonthView.months[data.month-1];
-			var yearName = "’" + app.Util.formatNumber(data.year - Math.round(data.year / 100) * 100, 2);
-
-			data.title = monthName + ' ' + yearName;
+			data.title = 'Expenses'
 
 			this.$('> .module-header').html(this.headerTemplate(data));
 			
@@ -95,7 +92,5 @@ var app = app || {};
 			this.setBlocked(false);
 		}
 	});
-
-	app.MonthView.months = ['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 		
 }(app));
