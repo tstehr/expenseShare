@@ -6,6 +6,7 @@ var app = app || {};
 
 	app.AppExpensesView = app.AView.extend({
 		tagName: 'section',
+		// TODO change classnames and styles and stuff...
 		className: 'module month',
 
 		structure: _.template($('#month-template').html()),
