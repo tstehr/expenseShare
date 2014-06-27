@@ -1,0 +1,8 @@
+{
+  "name": "expenseShareDataGenerator",
+  "version": "0.0.1",
+  "description": "An application for sharing expenses",
+  "dependencies": {
+    "chance": "~0.5.0"
+  }
+}
