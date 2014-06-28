@@ -21,12 +21,16 @@
 
 
 <div id="app">
-	<div class="gridBox mainView"></div>
-	<div class="gridBox transferView"></div>
-	<div class="gridBox sideView"></diV>
+
 </div>
 
 <!-- Templates start here -->
+
+<script type="text/template" id="app-template">
+	<div class="gridBox mainView"></div>
+	<div class="gridBox transferView"></div>
+	<div class="gridBox sideView"></div>
+</script>
 
 <script type="text/template" id="module-template">
 	<header class="module-header"><h1><%= title %></h1></header>
@@ -322,15 +326,12 @@ Q.longStackSupport = true;
 
 
 $(function () {	
-	app.appView = new app.AppView({
-		el: '#app'
-	});
-	app.appView.render();
+
 
 	$.get('/auth')
 	.then(function (loggedIn) {
 		if (!loggedIn) {
-			return app.appView.showLoginView().getLoginPromise();
+			// return app.appView.showLoginView().getLoginPromise();
 		} else {
 			return true;
 		}
@@ -338,6 +339,11 @@ $(function () {
 	.then(function (state) {
 		if (state) {
 			window.socket = io.connect(window.location.protocol + '//' + window.location.hostname);
+			app.appView = new app.AppView({
+				el: '#app'
+			});
+			app.appView.render();
+
 			app.persons = new app.PersonCollection();
 
 			app.persons.fetch().then(function () {

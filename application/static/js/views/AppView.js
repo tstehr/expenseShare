@@ -4,6 +4,8 @@ var app = app || {};
 	'use strict';
 
 	app.AppView = app.AView.extend({
+
+		template: _.template($('#app-template').html()),
 		events: {
 			'click a[href^="/"]': 'navigate'
 		},
@@ -20,10 +22,11 @@ var app = app || {};
 			});
 
 			this._views = {};
+
 			this._viewEls = {
-				'main': this.$('.mainView'),
-				'side': this.$('.sideView'),
-				'transfer': this.$('.transferView')
+				main: null,
+				side: null,
+				transfer: null,
 			};
 
 			// in case we create to many dangeling views for mobile, could use this
@@ -32,6 +35,12 @@ var app = app || {};
 			// };
 		},
 		render: function () {
+			this.$el.html(this.template());
+
+			this._viewEls.main = this.$('.mainView');
+			this._viewEls.side = this.$('.sideView');
+			this._viewEls.transfer = this.$('.transferView');
+
 			Object.keys(this._viewEls).forEach(function (viewName) {
 				if (this._views[viewName]) {
 					this._views[viewName].render();
