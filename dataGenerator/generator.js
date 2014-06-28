@@ -8,9 +8,9 @@ var config = {
 	personHiddenPercentage: 30,
 	personCount: 10,
 	expensePath: 'expense.csv',
-	expenseStartDate: undefined,
+	expenseStartDate: "Jan 1, 2014",
 	expenseRate: 3 / (60 * 60 * 24),
-	expenseCount: 100,
+	expenseCount: 1200,
 };
 
 // _.extend(config, require('./config.json'));
@@ -25,8 +25,8 @@ var nextTime = function (rate) {
 
 	var personStream = fs.createWriteStream(path.join(config.rootPath, config.personPath));
 
-	for (var i = 0; i < config.personCount; i++) {
-		line = [i, chance.name(), chance.bool({likelihood: config.personHiddenPercentage})];
+	for (var i = 1; i <= config.personCount; i++) {
+		line = [i, chance.name(), +chance.bool({likelihood: config.personHiddenPercentage})];
 		personStream.write(line.join(',') + "\n");
 	}
 
@@ -36,13 +36,12 @@ var nextTime = function (rate) {
 (function () {
 	var time = new Date(config.expenseStartDate).getTime() / 1000;
 
-	var timeStep;
 	var line;
 	var name;
 
 	var expenseStream = fs.createWriteStream(path.join(config.rootPath, config.expensePath));
 
-	for (var i = 0; i < config.expenseCount; i++) {
+	for (var i = 1; i <= config.expenseCount; i++) {
 		time += nextTime(config.expenseRate);
 
 		name = chance.sentence({
@@ -52,7 +51,7 @@ var nextTime = function (rate) {
 			})),
 		});
 
-		line = [i, name, time];
+		line = [i, name, Math.round(time)];
 		expenseStream.write(line.join(',') + "\n");
 	}
 
