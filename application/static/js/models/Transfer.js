@@ -3,10 +3,13 @@ var app = app || {};
 (function (app) {
 	'use strict';
 
+	// TODO make this not sync
 	app.Transfer = Backbone.RelationalModel.extend({
 		defaults: {
 			amount: 0,
-			paid: false
+			paid: false,
+			// TODO remove
+			month: '',
 		},
 
 		relations: [

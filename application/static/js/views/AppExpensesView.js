@@ -36,7 +36,7 @@ var app = app || {};
 			this.remove();
 		},
 		render: function () {
-			this.$el.html(this.structure(this.model.toJSONDecorated()));
+			this.$el.html(this.structure(this.model.toJSON()));
 
 			this.setElClasses();
 			
@@ -61,8 +61,7 @@ var app = app || {};
 			}
 		},
 		renderHeader: function () {
-			// TODO decide wether to put this in model or view	
-			var data = this.model.toJSONDecorated();
+			var data = this.model.toJSON();
 			
 			data.title = 'Expenses'
 
@@ -83,9 +82,9 @@ var app = app || {};
 
 			if (this.isMain) {
 				if (this.transfersShown) {
-					app.appRouter.navigate(this.model.get('id') + '/transfers');
+					app.appRouter.navigate('/transfers');
 				} else {
-					app.appRouter.navigate(this.model.get('id'));
+					app.appRouter.navigate('/');
 				}
 			}
 		},

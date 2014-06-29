@@ -58,16 +58,22 @@ var app = app || {};
 		showMainView: function () {
 			window.socket = io.connect(window.location.protocol + '//' + window.location.hostname);
 
-			var appView = new app.AppMainView();
+			var appView = new app.AppMainView({
+				model: this.model,
+			});
 
 			this.setView(appView);
 
-			app.persons = new app.PersonCollection();
-
-			app.persons.fetch().then(function () {
-				app.appRouter = new app.AppRouter(appView);
-				Backbone.history.start({pushState: true});
-			})
+			Q.all([
+				this.model.get('persons').fetch(), 
+				this.model.get('expenses').fetch(),
+			])
+				.then(function () {
+					app.appRouter = new app.AppRouter(appView);
+					Backbone.history.start({pushState: true});
+				})
+				.done()
+			;
 		},
 		setView: function (view) {
 			if (this.view) {

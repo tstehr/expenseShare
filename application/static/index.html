@@ -62,7 +62,7 @@
 	<h2 class="visuallyhidden">Expenses</h2>
 	<div class="scroll-wrapper">
 		<section class="module-body month-expenses">
-			<a class="month-new row" href="/<%= id %>/expenses/new">
+			<a class="month-new row" href="/expenses/new">
 				<span class="visuallyhidden">Add new Expense</span>
 				<span class="icon-plus" aria-hidden="true"></span>
 			</a>
@@ -155,8 +155,8 @@
 
 
 <script type="text/template" id="expense-template">
-	<a href="/<%= month %>/expenses/<%= id %>" class="row emphasize"><%= description %></a>
-	<a href="/<%= month %>/expenses/<%= id %>" class="row row-amount"><%= app.Util.formatCurrency(amount) %>&thinsp;€</a>
+	<a href="/expenses/<%= id %>" class="row emphasize"><%= description %></a>
+	<a href="/expenses/<%= id %>" class="row row-amount"><%= app.Util.formatCurrency(amount) %>&thinsp;€</a>
 </script>
 
 
@@ -203,8 +203,8 @@
 <script type="text/template" id="expense-edit-header-template">
 	<h1><input type="text" value="<%= description %>" class="expense-description" placeholder="Enter description"></h1>
 
-	<a href="/<%= month %>" class="edit-module-back">
-		<span class="visuallyhidden">Back to month</span>
+	<a href="/" class="edit-module-back">
+		<span class="visuallyhidden">Back to all expenses</span>
 		<span aria-hidden="true" class="icon-left-open"></span>
 	</a>
 	<button class="edit-module-showDelete right">
@@ -283,7 +283,7 @@
 
 <script src="/js/util/Util.js"></script>
 
-<script src="/js/models/Month.js"></script>
+<script src="/js/models/App.js"></script>
 <script src="/js/models/Expense.js"></script>
 <script src="/js/models/Person.js"></script>
 <script src="/js/models/Participation.js"></script>
@@ -326,13 +326,25 @@ Q.longStackSupport = true;
 // http://addyosmani.github.io/backbone-fundamentals
 
 
-$(function () {	
+$(function () {
+	var appModel = new app.App();
+
+	// TODO remove this
+	app.persons = appModel.get('persons');
+
 	var esv = new app.AppRootView({
 		el: '#app',
+		model: appModel,
 	});
 
 	esv.render();
 	esv.init();
+
+	// DBG
+	window.x = {
+		appModel: appModel,
+		esv: esv,
+	};
 });
 </script>
 

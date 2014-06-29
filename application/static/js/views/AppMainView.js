@@ -35,14 +35,14 @@ var app = app || {};
 
 			return this;
 		},
-		setupMonthCommon: function (month) {
+		setupCommon: function () {
 			this.setView('side', new app.AppExpensesView({
-				model: month
+				model: this.model
 			}));
 
 			this.setView('transfer', new app.WrappingModuleView({
 				title: 'Transfers',
-				model: month,
+				model: this.model,
 				view: app.AppTransfersView,
 			}));
 		},
@@ -53,55 +53,37 @@ var app = app || {};
 				error: error
 			}));
 		},
-		showMonthView: function (monthId, transfersShown) {
-			app.Month.findOrCreateAndFetch(monthId)
-				.then(function (month) {
-					this.setupMonthCommon(month);
+		showExpensesView: function (transfersShown) {
+			this.setupCommon();
 
-					this.setView('main', new app.AppExpensesView({
-						model: month,
-						transfersShown: !!transfersShown,
-						isMain: true
-					}));
-				}.bind(this))
-				.fail(this.showErrorView.bind(this))
-				.done()
-			;
+			this.setView('main', new app.AppExpensesView({
+				model: this.model,
+				transfersShown: !!transfersShown,
+				isMain: true
+			}));
+
 		},
-		showExpenseCreateView: function (monthId) {
-			app.Month.findOrCreateAndFetch(monthId)
-				.then(function (month) {
-					this.setupMonthCommon(month);
+		showExpenseCreateView: function () {
+			this.setupCommon();
 
-					this._views['side'].setBlocked(true);
+			this._views['side'].setBlocked(true);
 
-					this.setView('main', new app.ExpenseEditView({
-						model: 	new app.Expense({
-							month: monthId
-						})
-					}));
-				}.bind(this))
-				.fail(this.showErrorView.bind(this))
-				.done()
-			;
+			this.setView('main', new app.ExpenseEditView({
+				model: 	new app.Expense({
+					created: Date.now() / 1000,
+				})
+			}));
 		},
-		showExpenseEditView: function (monthId, id) {
-			app.Month.findOrCreateAndFetch(monthId)
-				.then(function (month) {
-					this.setupMonthCommon(month);
+		showExpenseEditView: function (id) {
+			this.setupCommon();
 
-					if (!app.Expense.findOrCreate({id: id}, {create: false})) {
-						throw new Error('Expense not found!');
-					}
-
-					this.setView('main', new app.ExpenseEditView({
-						model: app.Expense.findOrCreate({id: id})
-					}));
-
-				}.bind(this))
-				.fail(this.showErrorView.bind(this))
-				.done()
-			;
+			if (app.Expense.findOrCreate({id: id}, {create: false})) {
+				this.setView('main', new app.ExpenseEditView({
+					model: app.Expense.findOrCreate({id: id}),
+				}));
+			} else {
+				this.showErrorView('Expense not found!')
+			}
 		},
 		showPersonsView: function () {
 			try {

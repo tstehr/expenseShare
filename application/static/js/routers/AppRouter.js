@@ -12,11 +12,10 @@ var app = app || {};
 			'persons': 'showPersons',
 			'persons/new': 'createPerson',
 			'persons/:id': 'editPerson',
-			':date/transfers': 'showMonthTransfers',
-			':date/expenses/new': 'createExpense',
-			':date/expenses/:id': 'editExpense',
-			':date': 'showMonth',
-			'': 'showCurrentMonth',
+			'transfers': 'showTransfers',
+			'expenses/new': 'createExpense',
+			'expenses/:id': 'editExpense',
+			'': 'showHome',
 			'*path': 'showError'
 		},
 		initialize: function (appView) {
@@ -27,21 +26,16 @@ var app = app || {};
 				this.navigate(path, true);
 			});
 		},
-		showMonth: function(date) {
-			date = '2000-01';
-			this.appView.showMonthView(date);
+		showMonth: function() {
 		},
-		showMonthTransfers: function (date) {
-			date = '2000-01';
-			this.appView.showMonthView(date, true);
+		showTransfers: function () {
+			this.appView.showExpensesView(true);
 		},
-		editExpense: function (date, id) {
-			date = '2000-01';
-			this.appView.showExpenseEditView(date, id);
+		editExpense: function (id) {
+			this.appView.showExpenseEditView(id);
 		},
-		createExpense: function (date) {
-			date = '2000-01';
-			this.appView.showExpenseCreateView(date);
+		createExpense: function () {
+			this.appView.showExpenseCreateView();
 		},
 		showPersons: function () {
 			this.appView.showPersonsView();
@@ -52,9 +46,8 @@ var app = app || {};
 		createPerson: function () {
 			this.appView.showPersonCreateView();
 		},
-		showCurrentMonth: function (path) {
-			var date = '2000-01';
-			this.appView.showMonthView(date);
+		showHome: function () {
+			this.appView.showExpensesView();
 		},
 		showError: function (path) {
 			this.appView.showErrorView('The URL you entered is invalid');
