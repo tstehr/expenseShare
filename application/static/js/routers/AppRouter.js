@@ -26,8 +26,6 @@ var app = app || {};
 				this.navigate(path, true);
 			});
 		},
-		showMonth: function() {
-		},
 		showTransfers: function () {
 			this.appView.showExpensesView(true);
 		},
