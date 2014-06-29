@@ -9,7 +9,6 @@ var app = app || {};
 		className: 'module home',
 
 		structure: _.template($('#app-home-template').html()),
-		headerTemplate: _.template($('#app-home-header-template').html()),
 
 		events: {
 			'click .home-toggle': 'toggleTransferView'
@@ -26,8 +25,6 @@ var app = app || {};
 			this.appTransfersView = new app.AppTransfersView({
 				model: this.model
 			});
-
-			this.listenTo(this.model, 'change', this.renderHeader)
 		},
 		dispose: function () {
 			this.expenseCollectionView.dispose();
@@ -39,10 +36,11 @@ var app = app || {};
 
 			this.setElClasses();
 			
-			this
-				.renderHeader()
-				.renderBody()
-			;
+			this.expenseCollectionView.setElement(this.$('.expense-list'));
+			this.expenseCollectionView.render();
+
+			this.appTransfersView.setElement(this.$('.home-transfers'));
+			this.appTransfersView.render();
 
 			return this;
 		},
@@ -58,22 +56,6 @@ var app = app || {};
 			} else {
 				this.$el.removeClass('transfersShown');
 			}
-		},
-		renderHeader: function () {
-			var data = this.model.toJSON();
-			
-			data.title = 'Expenses'
-
-			this.$('> .module-header').html(this.headerTemplate(data));
-			
-			return this;
-		},
-		renderBody: function () {
-			this.expenseCollectionView.setElement(this.$('.expense-list'));
-			this.expenseCollectionView.render();
-
-			this.appTransfersView.setElement(this.$('.home-transfers'));
-			this.appTransfersView.render();
 		},
 		toggleTransferView: function () {
 			this.transfersShown = !this.transfersShown;

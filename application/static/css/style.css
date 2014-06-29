@@ -357,14 +357,17 @@ https://github.com/joelambert/ScrollFix/issues/2
 	bottom: 3rem;
 }
 .home .home-transfers, 
+.home .home-headline-transfers, 
 .home .home-showExpenses {
 	display: none;
 }
 .home.transfersShown .home-transfers,
+.home.transfersShown .home-headline-transfers,
 .home.transfersShown .home-showExpenses {
 	display: block;
 }
 .home.transfersShown .home-expenses, 
+.home.transfersShown .home-headline-expenses, 
 .home.transfersShown .home-showTransfers {
 	display: none;
 }
@@ -458,10 +461,12 @@ https://github.com/joelambert/ScrollFix/issues/2
 	.home .module-buttonBar {
 		display: none;
 	}
-	.home.transfersShown .home-transfers {
+	.home.transfersShown .home-transfers,
+	.home.transfersShown .home-headline-transfers {
 		display: none;
 	}
-	.home.transfersShown .home-expenses {
+	.home.transfersShown .home-expenses,
+	.home.transfersShown .home-headline-expenses {
 		display: block;
 	}
 }
