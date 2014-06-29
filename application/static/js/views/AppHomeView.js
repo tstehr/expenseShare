@@ -6,14 +6,13 @@ var app = app || {};
 
 	app.AppHomeView = app.AView.extend({
 		tagName: 'section',
-		// TODO change classnames and styles and stuff...
-		className: 'module month',
+		className: 'module home',
 
 		structure: _.template($('#app-expenses-template').html()),
 		headerTemplate: _.template($('#app-expenses-header-template').html()),
 
 		events: {
-			'click .month-toggle': 'toggleTransferView'
+			'click .home-toggle': 'toggleTransferView'
 		},
 
 		initialize: function (params) {
@@ -73,7 +72,7 @@ var app = app || {};
 			this.expenseCollectionView.setElement(this.$('.expense-list'));
 			this.expenseCollectionView.render();
 
-			this.appTransfersView.setElement(this.$('.month-transfers'));
+			this.appTransfersView.setElement(this.$('.home-transfers'));
 			this.appTransfersView.render();
 		},
 		toggleTransferView: function () {

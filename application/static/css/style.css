@@ -142,6 +142,10 @@ a {
 	text-align: right;
 	padding-left: 0;
 }
+.row-new {
+	text-align:center;
+	font-size: 1.2rem;
+}
 
 
 
@@ -347,28 +351,24 @@ https://github.com/joelambert/ScrollFix/issues/2
 
 
 /**
- * Month module
+ * App home module
  */
-.month .module-body {
+.home .module-body {
 	bottom: 3rem;
 }
-.month .month-transfers, 
-.month .month-showExpenses {
+.home .home-transfers, 
+.home .home-showExpenses {
 	display: none;
 }
-.month.transfersShown .month-transfers,
-.month.transfersShown .month-showExpenses {
+.home.transfersShown .home-transfers,
+.home.transfersShown .home-showExpenses {
 	display: block;
 }
-.month.transfersShown .month-expenses, 
-.month.transfersShown .month-showTransfers {
+.home.transfersShown .home-expenses, 
+.home.transfersShown .home-showTransfers {
 	display: none;
 }
-.month-new {
-	text-align:center;
-	font-size: 1.2rem;
-}
-.month-toggle {
+.home-toggle {
 	width: 100%;
 }
 
@@ -413,7 +413,7 @@ https://github.com/joelambert/ScrollFix/issues/2
 	}
 
 
-	.mainView .month, .mainView .persons {
+	.mainView .home, .mainView .persons {
 		display: none;
 	}
 
@@ -452,16 +452,16 @@ https://github.com/joelambert/ScrollFix/issues/2
 		padding-left: 1rem;
 	}
 
-	.month .module-body {
+	.home .module-body {
 		bottom: 0rem;
 	}
-	.month .module-buttonBar {
+	.home .module-buttonBar {
 		display: none;
 	}
-	.month.transfersShown .month-transfers {
+	.home.transfersShown .home-transfers {
 		display: none;
 	}
-	.month.transfersShown .month-expenses {
+	.home.transfersShown .home-expenses {
 		display: block;
 	}
 }

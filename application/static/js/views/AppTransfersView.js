@@ -6,7 +6,7 @@ app = app || {};
 	app.AppTransfersView = app.AView.extend({
 		tagName: 'section',
 		// TODO change classnames and styles and stuff...
-		className: 'month-transfers',
+		className: 'home-transfers',
 
 		structure: _.template($('#app-transfers-template').html()),
 		amountTemplate: _.template($('#app-transfers-amount-template').html()),
