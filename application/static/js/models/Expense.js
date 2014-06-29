@@ -9,7 +9,8 @@ var app = app || {};
 	app.Expense = Backbone.RelationalModel.extend({
 		defaults: {
 			id: null,
-			description: ''
+			description: '',
+			created: 0,
 		},
 		relations: [{
 			key: 'participations',
@@ -31,11 +32,12 @@ var app = app || {};
 				this.trigger('pseudochange');
 			});
 
-			if (this.isNew()) {
-				this.listenToOnce(this, 'sync', this.doIoBind.bind(this));
-			} else {
-				this.doIoBind();
-			}
+			// TODO reenable ioBind
+			// if (this.isNew()) {
+			// 	this.listenToOnce(this, 'sync', this.doIoBind.bind(this));
+			// } else {
+			// 	this.doIoBind();
+			// }
 		},
 		doIoBind: function () {
 			this.ioBind('createParticipation', function (data) {

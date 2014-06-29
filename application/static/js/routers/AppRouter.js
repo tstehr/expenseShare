@@ -12,47 +12,43 @@ var app = app || {};
 			'persons': 'showPersons',
 			'persons/new': 'createPerson',
 			'persons/:id': 'editPerson',
-			':date/transfers': 'showMonthTransfers',
-			':date/expenses/new': 'createExpense',
-			':date/expenses/:id': 'editExpense',
-			':date': 'showMonth',
-			'': 'showCurrentMonth',
+			'transfers': 'showTransfers',
+			'expenses/new': 'createExpense',
+			'expenses/:id': 'editExpense',
+			'': 'showHome',
 			'*path': 'showError'
 		},
-		initialize: function () {
+		initialize: function (appView) {
+			this.appView = appView;
+
 			this.route(/(.*)\/+$/, 'removeTrailingSlashes', function (path) {
 				path = path.replace(/(\/)+$/, '');
 				this.navigate(path, true);
 			});
 		},
-		showMonth: function(date) {
-			app.appView.showMonthView(date);
+		showTransfers: function () {
+			this.appView.showExpensesView(true);
 		},
-		showMonthTransfers: function (date) {
-			app.appView.showMonthView(date, true);
+		editExpense: function (id) {
+			this.appView.showExpenseEditView(id);
 		},
-		editExpense: function (date, id) {
-			app.appView.showExpenseEditView(date, id);
-		},
-		createExpense: function (date) {
-			app.appView.showExpenseCreateView(date);
+		createExpense: function () {
+			this.appView.showExpenseCreateView();
 		},
 		showPersons: function () {
-			app.appView.showPersonsView();
+			this.appView.showPersonsView();
 		},
 		editPerson: function (id) {
-			app.appView.showPersonEditView(id);
+			this.appView.showPersonEditView(id);
 		},
 		createPerson: function () {
-			app.appView.showPersonCreateView();
+			this.appView.showPersonCreateView();
 		},
-		showCurrentMonth: function (path) {
-			var now = new Date();
-			var date = app.Util.formatNumber(now.getFullYear(), 4) + '-' + app.Util.formatNumber(now.getMonth() + 1, 2); 
-			app.appView.showMonthView(date);
+		showHome: function () {
+			this.appView.showExpensesView();
 		},
 		showError: function (path) {
-			app.appView.showErrorView('The URL you entered is invalid');
+			this.appView.showErrorView('The URL you entered is invalid');
 		}
 	});
 	

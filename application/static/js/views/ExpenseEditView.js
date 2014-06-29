@@ -26,8 +26,6 @@ var app = app || {};
 		},
 
 		initialize: function () {
-			this.modelMonthId = this.model.get('month').id;
-
 			this.participationView = new app.ParticipationCollectionView({
 				collection: this.model.get('participations')
 			});
@@ -80,14 +78,14 @@ var app = app || {};
 		},
 		persistAndClose: function () {
 			this.persistNewModel(function () {
-				app.appRouter.navigate(this.model.get('month').get('id'), {
+				app.appRouter.navigate('/', {
 					trigger: true
 				});
 			}.bind(this));
 		},
 		persistAndEdit: function () {
 			this.persistNewModel(function () {
-				app.appRouter.navigate(this.model.get('month').get('id') + '/expenses/' + this.model.get('id'), {
+				app.appRouter.navigate('/expenses/' + this.model.get('id'), {
 					replace: true,
 					trigger: true
 				});
@@ -95,12 +93,6 @@ var app = app || {};
 		},
 		persistNewModel: function (callback)  {
 			this.setBlocked(true);
-
-			// if a delete was issued by the server the model is removed from its month
-			// in this case we need to restore it here before saving
-			if (!this.model.get('month') && this.modelMonthId) {
-				this.model.set('month', this.modelMonthId);
-			}
 
 			this.model.saveExpenseAndParticipations().then(
 				function () {
@@ -116,7 +108,7 @@ var app = app || {};
 		},
 		deleteModel: function () {
 			this.model.destroy();
-			app.appRouter.navigate(this.modelMonthId, {
+			app.appRouter.navigate('/', {
 				trigger: true
 			});
 		},

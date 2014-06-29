@@ -21,12 +21,16 @@
 
 
 <div id="app">
-	<div class="gridBox mainView"></div>
-	<div class="gridBox transferView"></div>
-	<div class="gridBox sideView"></diV>
+
 </div>
 
 <!-- Templates start here -->
+
+<script type="text/template" id="app-template">
+	<div class="gridBox mainView"></div>
+	<div class="gridBox transferView"></div>
+	<div class="gridBox sideView"></div>
+</script>
 
 <script type="text/template" id="module-template">
 	<header class="module-header"><h1><%= title %></h1></header>
@@ -52,54 +56,43 @@
 	</form>
 </script>
 
-<script type="text/template" id="month-template">
-	<header class="module-header"></header>
+<script type="text/template" id="app-home-template">
+	<header class="module-header">
+		<h1 class="home-headline-expenses">Expenses</h1>
+		<h1 class="home-headline-transfers">Transfers</h1>
+	</header>
 
 	<h2 class="visuallyhidden">Expenses</h2>
 	<div class="scroll-wrapper">
-		<section class="module-body month-expenses">
-			<a class="month-new row" href="/<%= id %>/expenses/new">
+		<section class="module-body home-expenses">
+			<a class="row row-new" href="/expenses/new">
 				<span class="visuallyhidden">Add new Expense</span>
 				<span class="icon-plus" aria-hidden="true"></span>
 			</a>
-			<ul class="month-expense-list list tabular expense-list"></ul>
+			<ul class="home-expense-list list tabular expense-list"></ul>
 		</section>
 	</div>
 
 	<h2 class="visuallyhidden">Transfers</h2>
-	<section class="module-body month-transfers">
+	<section class="module-body home-transfers">
 
 	</section>
 	
 
 	<div class="module-buttonBar">
-		<button class="month-toggle">
-			<span class="month-showTransfers">Show Results</span>
-			<span class="month-showExpenses">Show Expenses</span>
+		<button class="home-toggle">
+			<span class="home-showTransfers">Show Results</span>
+			<span class="home-showExpenses">Show Expenses</span>
 		</button>
 	</div>
 </script>
-
-<script type="text/template" id="month-header-template">
-	<h1><%= title %></h1>
-	<a href="/<%= prevMonth %>">
-		<span class="icon-left-open" aria-hidden="true"></span>
-		<span class="visuallyhidden">Back</span>
-	</a>
-	<a href="/<%= nextMonth %>" class="right">
-		<span class="visuallyhidden">Next</span>
-		<span class="icon-right-open" aria-hidden="true"></span>
-	</a>
-</script>
-
-
 
 <script type="text/template" id="person-collection-template">
 	<header class="module-header"><h1>Persons</h1></header>
 
 	<div class="scroll-wrapper">
 		<section class="module-body">
-			<a class="month-new row" href="/persons/new">
+			<a class="row row-new" href="/persons/new">
 				<span class="visuallyhidden">Create new Person</span>
 				<span class="icon-user-add" aria-hidden="true"></span>
 			</a>
@@ -159,8 +152,8 @@
 
 
 <script type="text/template" id="expense-template">
-	<a href="/<%= month %>/expenses/<%= id %>" class="row emphasize"><%= description %></a>
-	<a href="/<%= month %>/expenses/<%= id %>" class="row row-amount"><%= app.Util.formatCurrency(amount) %>&thinsp;€</a>
+	<a href="/expenses/<%= id %>" class="row emphasize"><%= description %></a>
+	<a href="/expenses/<%= id %>" class="row row-amount"><%= app.Util.formatCurrency(amount) %>&thinsp;€</a>
 </script>
 
 
@@ -207,8 +200,8 @@
 <script type="text/template" id="expense-edit-header-template">
 	<h1><input type="text" value="<%= description %>" class="expense-description" placeholder="Enter description"></h1>
 
-	<a href="/<%= month %>" class="edit-module-back">
-		<span class="visuallyhidden">Back to month</span>
+	<a href="/" class="edit-module-back">
+		<span class="visuallyhidden">Back to all expenses</span>
 		<span aria-hidden="true" class="icon-left-open"></span>
 	</a>
 	<button class="edit-module-showDelete right">
@@ -233,7 +226,7 @@
 </script>
 
 
-<script type="text/template" id="month-transfers-template">
+<script type="text/template" id="app-transfers-template">
 	<div class="row amount">
 		
 	</div>
@@ -242,28 +235,20 @@
 	</ul>
 </script>
 
-<script type="text/template" id="month-transfers-amount-template">
+<script type="text/template" id="app-transfers-amount-template">
 	Total: <%= app.Util.formatCurrency(amount) %>&thinsp;€
 </script>
 
 
 
 <script type="text/template" id="transfer-template">
-	<label class="row row-checkbox">
-		<span class="visuallyhidden">Paid: </span>
-		<input type="checkbox" class="paid-toggle" <%=paid ? "checked" : ""%> id="paid-toggle-<%= cid %>">
-		<span class="icon-ok" aria-hidden="true"></span>
-	</label>
-
-	
-	<label class="row emphasize row-amount" for="paid-toggle-<%= cid %>">
+	<div class="row emphasize row-amount" for="paid-toggle-<%= cid %>">
 		<%=app.Util.formatCurrency(amount)%>&thinsp;€
-	</label>
+	</div>
 	
-		
-	<label class="row" for="paid-toggle-<%= cid %>">
+	<div class="row" for="paid-toggle-<%= cid %>">
 		to <%= toPersonName %>
-	</label> 
+	</div> 
 </script>
 
 <!--
@@ -287,7 +272,7 @@
 
 <script src="/js/util/Util.js"></script>
 
-<script src="/js/models/Month.js"></script>
+<script src="/js/models/App.js"></script>
 <script src="/js/models/Expense.js"></script>
 <script src="/js/models/Person.js"></script>
 <script src="/js/models/Participation.js"></script>
@@ -300,11 +285,12 @@
 
 <script src="/js/views/AView.js"></script>
 <script src="/js/views/WrappingModuleView.js"></script>
-<script src="/js/views/AppView.js"></script>
+<script src="/js/views/AppRootView.js"></script>
+<script src="/js/views/AppMainView.js"></script>
 <script src="/js/views/ErrorView.js"></script>
 <script src="/js/views/LoginView.js"></script>
-<script src="/js/views/MonthView.js"></script>
-<script src="/js/views/MonthTransfersView.js"></script>
+<script src="/js/views/AppHomeView.js"></script>
+<script src="/js/views/AppTransfersView.js"></script>
 <script src="/js/views/ExpenseView.js"></script>
 <script src="/js/views/ExpenseEditView.js"></script>
 <script src="/js/views/PersonView.js"></script>
@@ -329,34 +315,25 @@ Q.longStackSupport = true;
 // http://addyosmani.github.io/backbone-fundamentals
 
 
-$(function () {	
-	app.appView = new app.AppView({
-		el: '#app'
-	});
-	app.appView.render();
+$(function () {
+	var appModel = new app.App();
 
-	$.get('/auth')
-	.then(function (loggedIn) {
-		if (!loggedIn) {
-			return app.appView.showLoginView().getLoginPromise();
-		} else {
-			return true;
-		}
-	})
-	.then(function (state) {
-		if (state) {
-			window.socket = io.connect(window.location.protocol + '//' + window.location.hostname);
-			app.persons = new app.PersonCollection();
+	// TODO remove this
+	app.persons = appModel.get('persons');
 
-			app.persons.fetch().then(function () {
-				app.appRouter = new app.AppRouter();
-				Backbone.history.start({pushState: true});
-			})
-		} else {
-			app.appView.showErrorView('Could not authenticate!');
-		}
+	var esv = new app.AppRootView({
+		el: '#app',
+		model: appModel,
 	});
 
+	esv.render();
+	esv.init();
+
+	// DBG
+	window.x = {
+		appModel: appModel,
+		esv: esv,
+	};
 });
 </script>
 

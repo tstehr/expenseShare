@@ -26,11 +26,13 @@ var app = app || {};
 				}.bind(this)));
 			}
 
-			if (this.isNew()) {
-				this.listenToOnce(this, 'sync', this.doIoBind.bind(this));
-			} else {
-				this.doIoBind();
-			}
+
+			// TODO reenable ioBind
+			// if (this.isNew()) {
+			// 	this.listenToOnce(this, 'sync', this.doIoBind.bind(this));
+			// } else {
+			// 	this.doIoBind();
+			// }
 		},
 		toJSONDecorated: function () {
 			return _.extend(this.toJSON(), {

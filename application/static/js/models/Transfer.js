@@ -3,10 +3,10 @@ var app = app || {};
 (function (app) {
 	'use strict';
 
+	// TODO make this not sync
 	app.Transfer = Backbone.RelationalModel.extend({
 		defaults: {
 			amount: 0,
-			paid: false
 		},
 
 		relations: [
@@ -22,8 +22,6 @@ var app = app || {};
 				includeInJSON: Backbone.Model.prototype.idAttribute
 			}
 		],
-			
-		urlRoot: 'transfer',
 		
 		initialize: function () {
 			this.listenTo(this.get('fromPerson'), 'change destroy', function () {
@@ -33,11 +31,12 @@ var app = app || {};
 				this.trigger('pseudochange');
 			});
 			
-			if (this.isNew()) {
-				this.listenToOnce(this, 'sync', this.doIoBind.bind(this));
-			} else {
-				this.doIoBind();
-			}
+			// TODO reenable ioBind
+			// if (this.isNew()) {
+			// 	this.listenToOnce(this, 'sync', this.doIoBind.bind(this));
+			// } else {
+			// 	this.doIoBind();
+			// }
 		},
 		doIoBind: function () {
 			this.ioBind('update', function (data) {
