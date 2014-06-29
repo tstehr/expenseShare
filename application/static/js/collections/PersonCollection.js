@@ -9,13 +9,14 @@ var app = app || {};
 		initialize: function () {
 			this.listenTo(this, 'change:name change:hidden', this.sort);
 
-			this.ioBind('create', function (data) {
-				if (this.get(data.id)) {
-					this.get(data.id).set(data);
-				} else {
-					this.add(data);
-				}
-			});
+			// TODO reenable ioBind
+			// this.ioBind('create', function (data) {
+			// 	if (this.get(data.id)) {
+			// 		this.get(data.id).set(data);
+			// 	} else {
+			// 		this.add(data);
+			// 	}
+			// });
 		},
 		comparator: function (p1, p2) {
 			if (
