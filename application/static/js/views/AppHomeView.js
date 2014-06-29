@@ -8,8 +8,8 @@ var app = app || {};
 		tagName: 'section',
 		className: 'module home',
 
-		structure: _.template($('#app-expenses-template').html()),
-		headerTemplate: _.template($('#app-expenses-header-template').html()),
+		structure: _.template($('#app-home-template').html()),
+		headerTemplate: _.template($('#app-home-header-template').html()),
 
 		events: {
 			'click .home-toggle': 'toggleTransferView'
