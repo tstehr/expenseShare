@@ -97,7 +97,7 @@ var app = app || {};
 				this.setView('transfer', null);
 
 				this.setView('main', new app.PersonCollectionView({
-					collection: app.persons
+					collection: this.model.get('persons'),
 				}));
 			} catch (e) {
 				this.showErrorView(e);
@@ -106,10 +106,10 @@ var app = app || {};
 		showPersonCreateView: function () {
 			try {
 				var np = new app.Person();
-				app.persons.add(np);
+				tihs.model.get('persons').add(np);
 
 				this.setView('side', new app.PersonCollectionView({
-					collection: app.persons
+					collection: this.model.get('persons'),
 				}));
 				this.setView('transfer', null);
 
@@ -127,7 +127,7 @@ var app = app || {};
 				}
 
 				this.setView('side', new app.PersonCollectionView({
-					collection: app.persons
+					collection: this.model.get('persons'),
 				}));
 				this.setView('transfer', null);
 
