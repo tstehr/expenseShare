@@ -89,7 +89,7 @@ ExpensesHandler.prototype.createExpense = function (socketData, callback) {
 		.then(function (connection) {
 			// TODO valid expense (has decription, created in valid range)
 			return Q.nmcall(
-					connection, 'query', 'insert into expenses (description, created) values (?, ?)', 
+					connection, 'query', 'insert into expenses (description, created) values (?, from_unixtime(?))', 
 					[socketData.description, socketData.created]
 				)
 				.then(function (data) {
