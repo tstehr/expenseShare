@@ -64,14 +64,18 @@ var app = app || {};
 
 		},
 		showExpenseCreateView: function () {
+			var expense = new app.Expense({
+				created: Date.now() / 1000,
+			});
+
+			this.model.get('expenses').add(expense);
+
 			this.setupCommon();
 
 			this._views['side'].setBlocked(true);
 
 			this.setView('main', new app.ExpenseEditView({
-				model: 	new app.Expense({
-					created: Date.now() / 1000,
-				})
+				model: 	expense,
 			}));
 		},
 		showExpenseEditView: function (id) {
