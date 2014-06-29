@@ -19,7 +19,9 @@ var app = app || {};
 			'': 'showCurrentMonth',
 			'*path': 'showError'
 		},
-		initialize: function () {
+		initialize: function (appView) {
+			this.appView = appView;
+
 			this.route(/(.*)\/+$/, 'removeTrailingSlashes', function (path) {
 				path = path.replace(/(\/)+$/, '');
 				this.navigate(path, true);
@@ -27,35 +29,35 @@ var app = app || {};
 		},
 		showMonth: function(date) {
 			date = '2000-01';
-			app.appView.showMonthView(date);
+			this.appView.showMonthView(date);
 		},
 		showMonthTransfers: function (date) {
 			date = '2000-01';
-			app.appView.showMonthView(date, true);
+			this.appView.showMonthView(date, true);
 		},
 		editExpense: function (date, id) {
 			date = '2000-01';
-			app.appView.showExpenseEditView(date, id);
+			this.appView.showExpenseEditView(date, id);
 		},
 		createExpense: function (date) {
 			date = '2000-01';
-			app.appView.showExpenseCreateView(date);
+			this.appView.showExpenseCreateView(date);
 		},
 		showPersons: function () {
-			app.appView.showPersonsView();
+			this.appView.showPersonsView();
 		},
 		editPerson: function (id) {
-			app.appView.showPersonEditView(id);
+			this.appView.showPersonEditView(id);
 		},
 		createPerson: function () {
-			app.appView.showPersonCreateView();
+			this.appView.showPersonCreateView();
 		},
 		showCurrentMonth: function (path) {
 			var date = '2000-01';
-			app.appView.showMonthView(date);
+			this.appView.showMonthView(date);
 		},
 		showError: function (path) {
-			app.appView.showErrorView('The URL you entered is invalid');
+			this.appView.showErrorView('The URL you entered is invalid');
 		}
 	});
 	
