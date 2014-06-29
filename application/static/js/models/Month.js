@@ -48,9 +48,10 @@ var app = app || {};
 				this.updateAmountAndTransfersDecounced();
 			});
 
-			this.ioBind('createExpense', function (data) {
-				this.get('expenses').add(data);
-			});
+			// TODO reenable ioBind
+			// this.ioBind('createExpense', function (data) {
+			// 	this.get('expenses').add(data);
+			// });
 		},
 		updateAmountAndTransfers: function () {
 			var data, transfers;

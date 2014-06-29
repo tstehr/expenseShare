@@ -14,11 +14,12 @@ var app = app || {};
 		},
 		urlRoot: 'person',
 		initialize: function () {
-			if (this.isNew()) {
-				this.listenToOnce(this, 'sync', this.doIoBind.bind(this));
-			} else {
-				this.doIoBind();
-			}
+			// TODO reenable ioBind
+			// if (this.isNew()) {
+			// 	this.listenToOnce(this, 'sync', this.doIoBind.bind(this));
+			// } else {
+			// 	this.doIoBind();
+			// }
 		},
 		doIoBind: function () {
 			this.ioBind('update', function (data) {

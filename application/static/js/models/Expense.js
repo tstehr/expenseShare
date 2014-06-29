@@ -32,11 +32,12 @@ var app = app || {};
 				this.trigger('pseudochange');
 			});
 
-			if (this.isNew()) {
-				this.listenToOnce(this, 'sync', this.doIoBind.bind(this));
-			} else {
-				this.doIoBind();
-			}
+			// TODO reenable ioBind
+			// if (this.isNew()) {
+			// 	this.listenToOnce(this, 'sync', this.doIoBind.bind(this));
+			// } else {
+			// 	this.doIoBind();
+			// }
 		},
 		doIoBind: function () {
 			this.ioBind('createParticipation', function (data) {
