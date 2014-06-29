@@ -4,7 +4,7 @@ var app = app || {};
 (function (app) {
 	'use strict';
 
-	app.AppExpensesView = app.AView.extend({
+	app.AppHomeView = app.AView.extend({
 		tagName: 'section',
 		// TODO change classnames and styles and stuff...
 		className: 'module month',

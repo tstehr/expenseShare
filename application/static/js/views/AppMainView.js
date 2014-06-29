@@ -36,7 +36,7 @@ var app = app || {};
 			return this;
 		},
 		setupCommon: function () {
-			this.setView('side', new app.AppExpensesView({
+			this.setView('side', new app.AppHomeView({
 				model: this.model
 			}));
 
@@ -56,7 +56,7 @@ var app = app || {};
 		showExpensesView: function (transfersShown) {
 			this.setupCommon();
 
-			this.setView('main', new app.AppExpensesView({
+			this.setView('main', new app.AppHomeView({
 				model: this.model,
 				transfersShown: !!transfersShown,
 				isMain: true
