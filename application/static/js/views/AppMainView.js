@@ -106,7 +106,7 @@ var app = app || {};
 		showPersonCreateView: function () {
 			try {
 				var np = new app.Person();
-				tihs.model.get('persons').add(np);
+				this.model.get('persons').add(np);
 
 				this.setView('side', new app.PersonCollectionView({
 					collection: this.model.get('persons'),
