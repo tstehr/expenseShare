@@ -173,7 +173,6 @@ var app = app || {};
 					toPerson: app.Person.findOrCreate({id: toId}),
 					amount: amount
 				});
-				transfer.fetch();
 			}
 			
 			return transfer;

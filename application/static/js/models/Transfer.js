@@ -7,9 +7,6 @@ var app = app || {};
 	app.Transfer = Backbone.RelationalModel.extend({
 		defaults: {
 			amount: 0,
-			paid: false,
-			// TODO remove
-			month: '',
 		},
 
 		relations: [
@@ -25,8 +22,6 @@ var app = app || {};
 				includeInJSON: Backbone.Model.prototype.idAttribute
 			}
 		],
-			
-		urlRoot: 'transfer',
 		
 		initialize: function () {
 			this.listenTo(this.get('fromPerson'), 'change destroy', function () {

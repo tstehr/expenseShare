@@ -245,21 +245,13 @@
 
 
 <script type="text/template" id="transfer-template">
-	<label class="row row-checkbox">
-		<span class="visuallyhidden">Paid: </span>
-		<input type="checkbox" class="paid-toggle" <%=paid ? "checked" : ""%> id="paid-toggle-<%= cid %>">
-		<span class="icon-ok" aria-hidden="true"></span>
-	</label>
-
-	
-	<label class="row emphasize row-amount" for="paid-toggle-<%= cid %>">
+	<div class="row emphasize row-amount" for="paid-toggle-<%= cid %>">
 		<%=app.Util.formatCurrency(amount)%>&thinsp;€
-	</label>
+	</div>
 	
-		
-	<label class="row" for="paid-toggle-<%= cid %>">
+	<div class="row" for="paid-toggle-<%= cid %>">
 		to <%= toPersonName %>
-	</label> 
+	</div> 
 </script>
 
 <!--
