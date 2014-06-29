@@ -296,7 +296,8 @@
 
 <script src="/js/views/AView.js"></script>
 <script src="/js/views/WrappingModuleView.js"></script>
-<script src="/js/views/AppView.js"></script>
+<script src="/js/views/AppRootView.js"></script>
+<script src="/js/views/AppMainView.js"></script>
 <script src="/js/views/ErrorView.js"></script>
 <script src="/js/views/LoginView.js"></script>
 <script src="/js/views/AppExpensesView.js"></script>
@@ -326,36 +327,12 @@ Q.longStackSupport = true;
 
 
 $(function () {	
-
-
-	$.get('/auth')
-	.then(function (loggedIn) {
-		if (!loggedIn) {
-			// return app.appView.showLoginView().getLoginPromise();
-		} else {
-			return true;
-		}
-	})
-	.then(function (state) {
-		if (state) {
-			window.socket = io.connect(window.location.protocol + '//' + window.location.hostname);
-			var appView = new app.AppView({
-				el: '#app'
-			});
-			appView.render();
-
-			app.persons = new app.PersonCollection();
-
-			app.persons.fetch().then(function () {
-				app.appRouter = new app.AppRouter(appView);
-				Backbone.history.start({pushState: true});
-			})
-		} else {
-			// TODO error!
-			// app.appView.showErrorView('Could not authenticate!');
-		}
+	var esv = new app.AppRootView({
+		el: '#app',
 	});
 
+	esv.render();
+	esv.init();
 });
 </script>
 

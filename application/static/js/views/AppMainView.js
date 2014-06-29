@@ -3,24 +3,10 @@ var app = app || {};
 (function (app) {
 	'use strict';
 
-	app.AppView = app.AView.extend({
-
+	app.AppMainView = app.AView.extend({
 		template: _.template($('#app-template').html()),
-		events: {
-			'click a[href^="/"]': 'navigate'
-		},
-		initialize: function () {
-			FastClick.attach(document.body);
-			$(document).on('touchmove', function (e) {
-				var inScrolling = $('.module-body').find(e.target);
-				if (inScrolling.length > 0) {
-					console.log('STOP');
-					e.stopPropagation();
-				} else {
-					e.preventDefault();
-				}
-			});
 
+		initialize: function () {
 			this._views = {};
 
 			this._viewEls = {
@@ -46,17 +32,9 @@ var app = app || {};
 					this._views[viewName].render();
 				}
 			}.bind(this));
+
+			return this;
 		},
-		navigate: function (e) {
-			var url;
-			if (!e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
-				e.preventDefault();
-				url = $(e.currentTarget).attr('href').replace(/^\//, "");
-				app.appRouter.navigate(url, {
-					trigger: true
-				});
-			}
-		},	
 		setupMonthCommon: function (month) {
 			this.setView('side', new app.AppExpensesView({
 				model: month
@@ -74,13 +52,6 @@ var app = app || {};
 			this.setView('main', new app.ErrorView({
 				error: error
 			}));
-		},
-		showLoginView: function () {
-			this.disposeAllViews();
-
-			var lw = new app.LoginView();
-			this.setView('main', lw);
-			return lw;
 		},
 		showMonthView: function (monthId, transfersShown) {
 			app.Month.findOrCreateAndFetch(monthId)
