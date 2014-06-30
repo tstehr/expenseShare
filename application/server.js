@@ -14,7 +14,6 @@ var Q = require('q');
 
 
 var personsHandler = require('./socketHandlers/PersonsHandler');
-var monthsHandler = require('./socketHandlers/MonthsHandler');
 var expensesHandler = require('./socketHandlers/ExpensesHandler');
 var participationsHandler = require('./socketHandlers/ParticipationsHandler');
 
@@ -122,7 +121,6 @@ io.set('log level', 1);
 (new SessionSockets(io, sessionStore, cookieParser)).on('connection', function (err, socket, session) {
 	console.log(session);
 	if (session && session.loggedIn) {
-		monthsHandler(socket, pool);
 		personsHandler(socket, pool);
 		expensesHandler(socket, pool);
 		participationsHandler(socket, pool);
