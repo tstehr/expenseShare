@@ -1,7 +1,7 @@
 var mysql = require('mysql');
 var Q = require('q');
 
-var ParticipationsHandler = function (socket, pool) {
+var ParticipationHandler = function (socket, pool) {
 	this.socket = socket;
 	this.pool = pool;
 
@@ -11,7 +11,7 @@ var ParticipationsHandler = function (socket, pool) {
 	socket.on('participation:delete', this.deleteParticipation.bind(this));
 };
 
-ParticipationsHandler.prototype.readParticipation = function (socketData, callback) {
+ParticipationHandler.prototype.readParticipation = function (socketData, callback) {
 	Q.nmcall(this.pool, 'getConnection')
 		.then(function (connection) {
 			return Q.nmcall(connection, 'query', 'select * from participations where id = ?', [socketData.id])
@@ -31,7 +31,7 @@ ParticipationsHandler.prototype.readParticipation = function (socketData, callba
 	;
 };
 
-ParticipationsHandler.prototype.createParticipation = function (socketData, callback) {
+ParticipationHandler.prototype.createParticipation = function (socketData, callback) {
 	var socket = this.socket;
 
 	Q.nmcall(this.pool, 'getConnection')
@@ -65,7 +65,7 @@ ParticipationsHandler.prototype.createParticipation = function (socketData, call
 	;
 };
 
-ParticipationsHandler.prototype.updateParticipation = function (socketData, callback) {
+ParticipationHandler.prototype.updateParticipation = function (socketData, callback) {
 	var socket = this.socket;
 
 	Q.nmcall(this.pool, 'getConnection')
@@ -100,7 +100,7 @@ ParticipationsHandler.prototype.updateParticipation = function (socketData, call
 };
 
 
-ParticipationsHandler.prototype.deleteParticipation = function (socketData, callback) {
+ParticipationHandler.prototype.deleteParticipation = function (socketData, callback) {
 	var socket = this.socket;
 
 	Q.nmcall(this.pool, 'getConnection')
@@ -125,5 +125,5 @@ ParticipationsHandler.prototype.deleteParticipation = function (socketData, call
 };
 
 module.exports = function (socket, pool) {
-	return new ParticipationsHandler(socket, pool);
+	return new ParticipationHandler(socket, pool);
 }

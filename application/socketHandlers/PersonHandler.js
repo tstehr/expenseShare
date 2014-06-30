@@ -1,7 +1,7 @@
 var mysql = require('mysql');
 var Q = require('q');
 
-var PersonsHandler = function(socket, pool) {
+var PersonHandler = function(socket, pool) {
 	this.socket = socket;
 	this.pool = pool;
 
@@ -12,7 +12,7 @@ var PersonsHandler = function(socket, pool) {
 	this.socket.on('person:delete', this.deletePerson.bind(this));
 };
 
-PersonsHandler.prototype.readPersons = function (socketData, callback) {
+PersonHandler.prototype.readPersons = function (socketData, callback) {
 	Q.nmcall(this.pool, 'getConnection')
 		.then(function (connection) {
 			return Q.nmcall(connection, 'query', 'select * from persons')
@@ -32,7 +32,7 @@ PersonsHandler.prototype.readPersons = function (socketData, callback) {
 	;
 };
 
-PersonsHandler.prototype.readPerson = function (socketData, callback) {
+PersonHandler.prototype.readPerson = function (socketData, callback) {
 	Q.nmcall(this.pool, 'getConnection')
 		.then(function (connection) {
 			return Q.nmcall(connection, 'query', 'select * from persons where id = ?', [socketData.id])
@@ -52,7 +52,7 @@ PersonsHandler.prototype.readPerson = function (socketData, callback) {
 	;
 };
 
-PersonsHandler.prototype.createPerson = function (socketData, callback) {
+PersonHandler.prototype.createPerson = function (socketData, callback) {
 	var socket = this.socket;
 
 	Q.nmcall(this.pool, 'getConnection')
@@ -79,7 +79,7 @@ PersonsHandler.prototype.createPerson = function (socketData, callback) {
 	;
 };
 
-PersonsHandler.prototype.updatePerson = function (socketData, callback) {
+PersonHandler.prototype.updatePerson = function (socketData, callback) {
 	var socket = this.socket;
 
 	Q.nmcall(this.pool, 'getConnection')
@@ -109,7 +109,7 @@ PersonsHandler.prototype.updatePerson = function (socketData, callback) {
 	;
 }
 
-PersonsHandler.prototype.deletePerson = function (socketData, callback) {
+PersonHandler.prototype.deletePerson = function (socketData, callback) {
 	var socket = this.socket;
 
 	Q.nmcall(this.pool, 'getConnection')
@@ -142,5 +142,5 @@ PersonsHandler.prototype.deletePerson = function (socketData, callback) {
 }
 
 module.exports = function (socket, pool) {
-	return new PersonsHandler(socket, pool);
+	return new PersonHandler(socket, pool);
 };

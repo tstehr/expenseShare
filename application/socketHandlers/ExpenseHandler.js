@@ -1,7 +1,7 @@
 var mysql = require('mysql');
 var Q = require('q');
 
-var ExpensesHandler = function (socket, pool) {
+var ExpenseHandler = function (socket, pool) {
 	this.socket = socket;
 	this.pool = pool;
 
@@ -13,7 +13,7 @@ var ExpensesHandler = function (socket, pool) {
 	this.socket.on('expense:delete', this.deleteExpense.bind(this));
 };
 
-ExpensesHandler.prototype.readExpenses = function (socketData, callback) {
+ExpenseHandler.prototype.readExpenses = function (socketData, callback) {
 	Q.nmcall(this.pool, 'getConnection')
 		.then(function (connection) {
 			return Q.nmcall(connection, 'query', 'select id, description, created from expenses', [socketData.id])
@@ -47,7 +47,7 @@ ExpensesHandler.prototype.readExpenses = function (socketData, callback) {
 	;
 };
 
-ExpensesHandler.prototype.readExpense = function (socketData, callback) {
+ExpenseHandler.prototype.readExpense = function (socketData, callback) {
 	Q.nmcall(this.pool, 'getConnection')
 		.then(function (connection) {
 			return Q.nmcall(
@@ -82,7 +82,7 @@ ExpensesHandler.prototype.readExpense = function (socketData, callback) {
 	;
 };
 
-ExpensesHandler.prototype.createExpense = function (socketData, callback) {
+ExpenseHandler.prototype.createExpense = function (socketData, callback) {
 	var socket = this.socket;
 
 	Q.nmcall(this.pool, 'getConnection')
@@ -115,7 +115,7 @@ ExpensesHandler.prototype.createExpense = function (socketData, callback) {
 	;
 };
 
-ExpensesHandler.prototype.updateExpense = function (socketData, callback) {
+ExpenseHandler.prototype.updateExpense = function (socketData, callback) {
 	var socket = this.socket;
 
 	Q.nmcall(this.pool, 'getConnection')
@@ -147,7 +147,7 @@ ExpensesHandler.prototype.updateExpense = function (socketData, callback) {
 	;
 };
 
-ExpensesHandler.prototype.deleteExpense = function (socketData, callback) {
+ExpenseHandler.prototype.deleteExpense = function (socketData, callback) {
 	var socket = this.socket;
 	
 	Q.nmcall(this.pool, 'getConnection')
@@ -176,5 +176,5 @@ ExpensesHandler.prototype.deleteExpense = function (socketData, callback) {
 
 
 module.exports = function (socket, pool) {
-	return new ExpensesHandler(socket, pool);
+	return new ExpenseHandler(socket, pool);
 };
