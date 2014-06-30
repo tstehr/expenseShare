@@ -10,18 +10,7 @@ var app = app || {};
 		url: 'expenses',
 		// TODO iobind me
 		comparator: function (e1, e2) {
-			if (e1.get('id') === null && e2.get('id') === null) {
-				return e1.cid > e2.cid ? -1 : 1;
-			}
-			if (e1.get('id') === null && e2.get('id') !== null) {
-				return -1;
-			}
-			if (e1.get('id') !== null && e2.get('id') === null) {
-				return 1;
-			}
-			if (e1.get('id') !== null && e2.get('id') !== null) {
-				return e1.get('id') > e2.get('id') ? -1 : 1;
-			}			
+			return e1.get('created') > e2.get('created') ? -1 : 1;		
 		}
 	});
 }(app));
