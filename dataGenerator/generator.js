@@ -110,11 +110,13 @@ var nextTime = function (rate) {
 
 			participating = +chance.bool({likelihood: config.participationParticipatingPercentage});
 
-			line = [partId, personId, expenseId, amount, participating];
-			
-			participationStream.write(line.join(',') + "\n");
+			if (amount || participating) {	
+				line = [partId, personId, expenseId, amount, participating];
+				
+				participationStream.write(line.join(',') + "\n");
 
-			partId++;
+				partId++;
+			}
 		}
 	}
 
