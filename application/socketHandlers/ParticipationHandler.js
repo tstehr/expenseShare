@@ -14,7 +14,10 @@ var ParticipationHandler = function (socket, pool) {
 ParticipationHandler.prototype.readParticipation = function (socketData, callback) {
 	Q.nmcall(this.pool, 'getConnection')
 		.then(function (connection) {
-			return Q.nmcall(connection, 'query', 'select * from participations where id = ?', [socketData.id])
+			return Q.nmcall(
+					connection, 'query', 'select * from participations where person = ? and expense = ?', 
+					[socketData.person, socketData.expense]
+				)
 				.then(function (dbData) {
 					callback(null, dbData[0][0]);
 				})
@@ -72,8 +75,8 @@ ParticipationHandler.prototype.updateParticipation = function (socketData, callb
 		.then(function (connection) {
 			// TODO valid person id, expense id?
 			return Q.nmcall(
-					connection, 'query', 'update participations set person = ?, expense = ?, amount = ?, participating = ? where id = ?',
-					[socketData.person, socketData.expense, socketData.amount, socketData.participating, socketData.id]
+					connection, 'query', 'update participations set amount = ?, participating = ? where person = ? and expense = ?',
+					[socketData.amount, socketData.participating, socketData.person, socketData.expense]
 				)
 				.then(function (data) {
 					var json = {
@@ -106,7 +109,10 @@ ParticipationHandler.prototype.deleteParticipation = function (socketData, callb
 	Q.nmcall(this.pool, 'getConnection')
 		.then(function (connection) {
 			// TODO valid person id, expense id?
-			return Q.nmcall(connection, 'query', 'delete from participations where id = ?', [socketData.id])
+			return Q.nmcall(
+					connection, 'query', 'delete from participations where person = ? and expense = ?', 
+					[socketData.person, socketData.expense]
+				)
 				.then(function (data) {
 					socket.broadcast.emit('participation/' + socketData.id + ':delete', true);
 					callback(null, true);
