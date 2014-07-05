@@ -126,4 +126,4 @@ ParticipationHandler.prototype.deleteParticipation = function (socketData, callb
 
 module.exports = function (socket, pool) {
 	return new ParticipationHandler(socket, pool);
-}
+};
