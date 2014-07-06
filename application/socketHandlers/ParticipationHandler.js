@@ -144,6 +144,7 @@ ParticipationHandler.prototype.deleteParticipation = function (socketData, callb
 					[socketData.person, socketData.expense]
 				)
 				.then(function (data) {
+					// TODO check whether something was actually deleted (mysql changed lines)
 					socket.broadcast.emit('participation/' + socketData.id + ':delete', true);
 					callback(null, true);
 				})
