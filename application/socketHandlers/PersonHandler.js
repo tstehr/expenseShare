@@ -141,6 +141,4 @@ PersonHandler.prototype.deletePerson = function (socketData, callback) {
 	;
 }
 
-module.exports = function (socket, pool) {
-	return new PersonHandler(socket, pool);
-};
+module.exports = PersonHandler;

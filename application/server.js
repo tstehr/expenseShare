@@ -13,9 +13,9 @@ var Q = require('q');
 
 
 
-var personHandler = require('./socketHandlers/PersonHandler');
-var expenseHandler = require('./socketHandlers/ExpenseHandler');
-var participationHandler = require('./socketHandlers/ParticipationHandler');
+var PersonHandler = require('./socketHandlers/PersonHandler');
+var ExpenseHandler = require('./socketHandlers/ExpenseHandler');
+var ParticipationHandler = require('./socketHandlers/ParticipationHandler');
 
 
 
@@ -121,9 +121,9 @@ io.set('log level', 1);
 (new SessionSockets(io, sessionStore, cookieParser)).on('connection', function (err, socket, session) {
 	console.log(session);
 	if (session && session.loggedIn) {
-		personHandler(socket, pool);
-		expenseHandler(socket, pool);
-		participationHandler(socket, pool);
+		new PersonHandler(socket, pool);
+		new ExpenseHandler(socket, pool);
+		new ParticipationHandler(socket, pool);
 	}
 });
 

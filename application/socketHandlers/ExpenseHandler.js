@@ -1,6 +1,8 @@
 var mysql = require('mysql');
 var Q = require('q');
 
+var ParticipationHandler = require('./ParticipationHandler');
+
 var ExpenseHandler = function (socket, pool) {
 	this.socket = socket;
 	this.pool = pool;
@@ -32,6 +34,9 @@ ExpenseHandler.prototype.readExpenses = function (socketData, callback) {
 					var partsDbData = Array.prototype.slice.call(arguments, 1);
 					partsDbData.forEach(function (dbData, i) {
 						expenses[i].participations = dbData[0];
+						expenses[i].participations.forEach(function (participation) {
+							participation.id = ParticipationHandler.generateId(participation);
+						});
 					});
 					callback(null, expenses);
 				})
@@ -175,6 +180,4 @@ ExpenseHandler.prototype.deleteExpense = function (socketData, callback) {
 };
 
 
-module.exports = function (socket, pool) {
-	return new ExpenseHandler(socket, pool);
-};
+module.exports = ExpenseHandler;
