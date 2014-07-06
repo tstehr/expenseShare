@@ -72,7 +72,7 @@ var app = app || {};
 
 			this.setupCommon();
 
-			this._views['side'].setBlocked(true);
+			this._views.side.setBlocked(true);
 
 			this.setView('main', new app.ExpenseEditView({
 				model: 	expense,
@@ -86,7 +86,7 @@ var app = app || {};
 					model: app.Expense.findOrCreate({id: id}),
 				}));
 			} else {
-				this.showErrorView('Expense not found!')
+				this.showErrorView('Expense not found!');
 			}
 		},
 		showPersonsView: function () {
@@ -183,7 +183,7 @@ var app = app || {};
 			Object.keys(this._viewEls).forEach(function (name) {
 				this.disposeView(name);
 			}.bind(this));
-		}
+		},
 	});
 	
 }(app));

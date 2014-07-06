@@ -34,7 +34,7 @@ var app = app || {};
 			return this.filter(function (part) {
 				return !!part.get('person') && part.get('person').id == person.id;
 			});
-		}
+		},
 	});
 
 	/**
@@ -65,7 +65,7 @@ var app = app || {};
 				this.remove(part);
 				part.destroy();
 			}
-		}
+		},
 	});
 
 }(app));

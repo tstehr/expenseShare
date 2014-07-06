@@ -54,7 +54,7 @@ var app = app || {};
 			} else {
 				group.getListEl().prepend(view.render().el);
 			}
-		}
+		},
 	});
 	
 }(app));

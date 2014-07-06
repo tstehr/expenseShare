@@ -90,7 +90,7 @@ var app = app || {};
 			app.appRouter.navigate('/persons', {
 				trigger: true
 			});
-		}
+		},
 	});
 	
 }(app));

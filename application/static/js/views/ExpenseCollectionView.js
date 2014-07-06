@@ -8,7 +8,7 @@ var app = app || {};
 		tagName: 'ul',
 		createView: function (model) {
 			return new app.ExpenseView({model: model});
-		}
+		},
 	});
 	
 }(app));

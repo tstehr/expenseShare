@@ -23,7 +23,7 @@ var app = app || {};
 			}
 
 	 		return this;
-		}
+		},
 	});
 	
 }(app));

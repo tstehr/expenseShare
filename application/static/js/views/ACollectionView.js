@@ -114,7 +114,7 @@ var app = app || {};
 				prev = pointers[collection.at(i).cid];
 			}
 			return prev;
-		}
+		},
 	});
 	
 }(app));

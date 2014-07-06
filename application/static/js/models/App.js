@@ -166,7 +166,7 @@ var app = app || {};
 			});
 			
 			if (transfer) {
-				transfer.set('amount', amount)
+				transfer.set('amount', amount);
 			} else {
 				transfer = new app.Transfer({
 					fromPerson: app.Person.findOrCreate({id: fromId}),

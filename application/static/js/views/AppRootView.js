@@ -81,7 +81,7 @@ var app = app || {};
 			}
 			this.view = view;
 			this.$el.html(this.view.render().el);
-		}
+		},
 	});
 	
 }(app));

@@ -37,7 +37,7 @@ var app = app || {};
 			if (!this.isNew()) {
 				this.save();
 			}
-		}
+		},
 	});
 	
 }(app));

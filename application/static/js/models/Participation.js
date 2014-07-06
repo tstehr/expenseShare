@@ -57,7 +57,7 @@ var app = app || {};
 			if (this.get('expense') && !this.get('expense').isNew()) {
 				this.save();
 			}
-		}
+		},
 	});
 
 }(app));

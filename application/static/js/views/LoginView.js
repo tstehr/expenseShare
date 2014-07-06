@@ -43,7 +43,7 @@ var app = app || {};
 					this.$el.addClass('shake');
 				}
 			}.bind(this));
-		}
+		},
 	});
 	
 }(app));

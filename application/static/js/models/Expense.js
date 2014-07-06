@@ -97,7 +97,7 @@ var app = app || {};
 				amount: this.getAmount(),
 				isNew: this.isNew()
 			});
-		}
+		},
 	});
 
 }(app));

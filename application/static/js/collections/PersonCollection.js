@@ -27,7 +27,7 @@ var app = app || {};
 			} else {
 				return p1.get('hidden') ? 1 : -1;
 			}
-		}
+		},
 	});
 
-}(app))
+}(app));

@@ -71,7 +71,7 @@ var app = app || {};
 		},
 		resetState: function () {
 			this.setBlocked(false);
-		}
+		},
 	});
 		
 }(app));

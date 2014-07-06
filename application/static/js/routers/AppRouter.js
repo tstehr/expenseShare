@@ -49,7 +49,7 @@ var app = app || {};
 		},
 		showError: function (path) {
 			this.appView.showErrorView('The URL you entered is invalid');
-		}
+		},
 	});
 	
 }(app));

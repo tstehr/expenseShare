@@ -16,13 +16,13 @@ var app = app || {};
 			this.$el.html(this.template(this.model.toJSONDecorated()));
 
 			if (!this.model.isValid()) {
-				this.$el.addClass('invalid')
+				this.$el.addClass('invalid');
 			} else {
 				this.$el.removeClass('invalid');
 			} 
 
 			return this;
-		}
+		},
 	});
 	
 }(app));

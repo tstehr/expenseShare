@@ -28,7 +28,7 @@ var app = app || {};
 		},
 		getListEl: function () {
 			return this.$('> .transfer-list');
-		}
+		},
 	});
 	
 }(app));

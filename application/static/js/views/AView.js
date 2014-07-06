@@ -16,7 +16,7 @@ var app = app || {};
 		},
 		resetState: function () {
 			
-		}
+		},
 	});
 	
 }(app));

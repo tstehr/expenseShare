@@ -34,7 +34,7 @@ app = app || {};
 		renderTransfers: function () {
 			this.transferCollectionView.setElement(this.$('> .transfer-list'));
 			this.transferCollectionView.render();
-		}
+		},
 	});
 	
 }(app));

@@ -18,7 +18,7 @@ var app = app || {};
 
 		createView: function (model) {
 			return new app.PersonView({model: model});
-		}
+		},
 	});
 	
 }(app));

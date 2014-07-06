@@ -55,7 +55,7 @@ var app = app || {};
 				fromPersonName: this.get('fromPerson').get('name'),
 				toPersonName: this.get('toPerson').get('name')
 			});
-		}
+		},
 	});
 
 }(app));

@@ -27,7 +27,7 @@ app = app || {};
 		dispose: function () {
 			this.wrappedView.dispose();
 			this.remove();
-		}
+		},
 	});
 	
 }(app));

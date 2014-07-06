@@ -30,7 +30,7 @@ var app = app || {};
 				body: msg
 			}));
 			return this;
-		}
+		},
 	});
 	
 }(app));

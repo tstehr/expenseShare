@@ -117,7 +117,7 @@ var app = app || {};
 		},
 		hideDelete: function () {
 			this.$el.removeClass('deleteShown');
-		}
+		},
 	});
 	
 }(app));

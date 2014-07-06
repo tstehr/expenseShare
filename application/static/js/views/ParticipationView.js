@@ -55,7 +55,7 @@ var app = app || {};
 			if (e.which == 13) {
 				$(e.target).blur();
 			}
-		}
+		},
 	});
 	
 }(app));

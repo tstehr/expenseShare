@@ -11,6 +11,6 @@ var app = app || {};
 		// TODO iobind me
 		comparator: function (e1, e2) {
 			return e1.get('created') > e2.get('created') ? -1 : 1;		
-		}
+		},
 	});
 }(app));

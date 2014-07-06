@@ -41,7 +41,7 @@ var app = app || {};
 
 			this.collection.add(this._masterCollection.toArray());
 			this.collection.add(this._slaveCollection.filter(function (part) {
-				return !part.get('person').get('hidden')
+				return !part.get('person').get('hidden');
 			}));
 
 			this.collection.sort();
@@ -79,7 +79,7 @@ var app = app || {};
 
 			var slaveParts = this._slaveCollection.getByPerson(person);
 			if (slaveParts) {
-				this._slaveCollection.remove(slaveParts)
+				this._slaveCollection.remove(slaveParts);
 			}
 		},
 		addToSlave: function (model) {
