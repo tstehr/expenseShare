@@ -80,7 +80,6 @@ var nextTime = function (rate) {
 
 	var amount, participating;
 
-	var partId = 1;
 	var participationStream = fs.createWriteStream(path.join(config.rootPath, config.participationPath));
 
 
@@ -111,11 +110,9 @@ var nextTime = function (rate) {
 			participating = +chance.bool({likelihood: config.participationParticipatingPercentage});
 
 			if (amount || participating) {	
-				line = [partId, personId, expenseId, amount, participating];
+				line = [personId, expenseId, amount, participating];
 				
 				participationStream.write(line.join(',') + "\n");
-
-				partId++;
 			}
 		}
 	}

@@ -11,11 +11,38 @@ var ParticipationHandler = function (socket, pool) {
 	socket.on('participation:delete', this.deleteParticipation.bind(this));
 };
 
+ParticipationHandler.generateId = function (data) {
+	return data.person + '_' + data.expense;
+};
+
+ParticipationHandler.unpackId = function (id) {
+	var split, object = null;
+
+	if (typeof id === 'string') {
+		unpacked = id.split('_');
+
+		if (unpacked.length === 2) {
+			object = {
+				person: unpacked[0],
+				expense: unpacked[1],
+			};
+		}
+	}
+
+	return object;
+};
+
 ParticipationHandler.prototype.readParticipation = function (socketData, callback) {
+	// TODO validate incoming id (is it <person>_<expense>?)
 	Q.nmcall(this.pool, 'getConnection')
 		.then(function (connection) {
-			return Q.nmcall(connection, 'query', 'select * from participations where id = ?', [socketData.id])
+			return Q.nmcall(
+					connection, 'query', 'select * from participations where person = ? and expense = ?', 
+					[socketData.person, socketData.expense]
+				)
 				.then(function (dbData) {
+					var json = dbData[0][0];
+					json.id = ParticipationHandler.generateId(json);
 					callback(null, dbData[0][0]);
 				})
 				.fin(function () {
@@ -34,6 +61,7 @@ ParticipationHandler.prototype.readParticipation = function (socketData, callbac
 ParticipationHandler.prototype.createParticipation = function (socketData, callback) {
 	var socket = this.socket;
 
+	// TODO validate incoming id (is it <person>_<expense>?)
 	Q.nmcall(this.pool, 'getConnection')
 		.then(function (connection) {
 			// TODO valid person id, expense id?
@@ -43,12 +71,13 @@ ParticipationHandler.prototype.createParticipation = function (socketData, callb
 				)
 				.then(function (dbData) {
 					var json = {
-						id: dbData[0].insertId,
 						person: socketData.person,
 						expense: socketData.expense,
 						amount: socketData.amount,
 						participating: socketData.participating
 					};
+					json.id = ParticipationHandler.generateId(json);
+
 					socket.broadcast.emit('expense/' + socketData.expense + ':createParticipation', json);
 					callback(null, json);
 				})
@@ -68,21 +97,24 @@ ParticipationHandler.prototype.createParticipation = function (socketData, callb
 ParticipationHandler.prototype.updateParticipation = function (socketData, callback) {
 	var socket = this.socket;
 
+	// TODO validate incoming id (is it <person>_<expense>?)
 	Q.nmcall(this.pool, 'getConnection')
 		.then(function (connection) {
 			// TODO valid person id, expense id?
 			return Q.nmcall(
-					connection, 'query', 'update participations set person = ?, expense = ?, amount = ?, participating = ? where id = ?',
-					[socketData.person, socketData.expense, socketData.amount, socketData.participating, socketData.id]
+					connection, 'query', 'update participations set amount = ?, participating = ? where person = ? and expense = ?',
+					[socketData.amount, socketData.participating, socketData.person, socketData.expense]
 				)
 				.then(function (data) {
+					// TODO check whether something was actually updated (mysql changed lines)
 					var json = {
-						id: socketData.id,
 						person: socketData.person,
 						expense: socketData.expense,
 						amount: socketData.amount,
 						participating: socketData.participating
 					};
+					json.id = ParticipationHandler.generateId(json);
+
 					socket.broadcast.emit('participation/' + socketData.id + ':update', json);
 					callback(null, json);
 				})
@@ -103,10 +135,14 @@ ParticipationHandler.prototype.updateParticipation = function (socketData, callb
 ParticipationHandler.prototype.deleteParticipation = function (socketData, callback) {
 	var socket = this.socket;
 
+	// TODO validate incoming id (is it <person>_<expense>?)
 	Q.nmcall(this.pool, 'getConnection')
 		.then(function (connection) {
 			// TODO valid person id, expense id?
-			return Q.nmcall(connection, 'query', 'delete from participations where id = ?', [socketData.id])
+			return Q.nmcall(
+					connection, 'query', 'delete from participations where person = ? and expense = ?', 
+					[socketData.person, socketData.expense]
+				)
 				.then(function (data) {
 					socket.broadcast.emit('participation/' + socketData.id + ':delete', true);
 					callback(null, true);
@@ -124,6 +160,4 @@ ParticipationHandler.prototype.deleteParticipation = function (socketData, callb
 	;
 };
 
-module.exports = function (socket, pool) {
-	return new ParticipationHandler(socket, pool);
-};
+module.exports = ParticipationHandler;

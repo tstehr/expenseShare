@@ -17,9 +17,11 @@ create table expenses(
 );
 
 create table participations(
-	id int not null auto_increment primary key, 
 	person int not null, 
 	expense int not null, 
 	amount int not null, 
-	participating boolean not null
+	participating boolean not null,
+	primary key (person, expense),
+	foreign key (person) references persons(id),
+	foreign key (expense) references expenses(id)
 );
