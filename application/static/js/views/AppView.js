@@ -172,6 +172,16 @@ var app = app || {};
 				this.showErrorView(e);
 			}
 		},
+		showCarryoverView: function () {
+			try {
+				this.setView('side', null);
+				this.setView('transfer', null);
+
+				this.setView('main', new app.CarryoverView());
+			} catch (e) {
+				this.showErrorView(e);
+			}
+		},
 		getView: function (name) {
 			return this._views[name];
 		},

@@ -9,6 +9,7 @@ var app = app || {};
 
 	app.AppRouter = Backbone.Router.extend({
 		routes: {
+			'carryover': 'showCarryover',
 			'persons': 'showPersons',
 			'persons/new': 'createPerson',
 			'persons/:id': 'editPerson',
@@ -45,6 +46,9 @@ var app = app || {};
 		},
 		createPerson: function () {
 			app.appView.showPersonCreateView();
+		},
+		showCarryover: function () {
+			app.appView.showCarryoverView();
 		},
 		showCurrentMonth: function (path) {
 			var now = new Date();
