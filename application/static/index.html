@@ -102,7 +102,7 @@
 </script>
 
 <script type="text/template" id="person-template">
-	<a href="/persons/<%= id %>" class="row"><%= name %></a>
+	<a href="/persons/<%= _id %>" class="row"><%= name %></a>
 </script>
 
 
@@ -152,8 +152,8 @@
 
 
 <script type="text/template" id="expense-template">
-	<a href="/expenses/<%= id %>" class="row emphasize"><%= description %></a>
-	<a href="/expenses/<%= id %>" class="row row-amount"><%= app.Util.formatCurrency(amount) %>&thinsp;€</a>
+	<a href="/expenses/<%= _id %>" class="row emphasize"><%= description %></a>
+	<a href="/expenses/<%= _id %>" class="row row-amount"><%= app.Util.formatCurrency(amount) %>&thinsp;€</a>
 </script>
 
 

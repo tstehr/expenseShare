@@ -9,8 +9,8 @@ var app = app || {};
 			if (t1.get('fromPerson').get('name') !== t2.get('fromPerson').get('name')) {
 				return t1.get('fromPerson').get('name') < t2.get('fromPerson').get('name') ? -1 : 1;
 			} 
-			if (t1.get('fromPerson').get('id') !== t2.get('fromPerson').get('id')) {
-				return t1.get('fromPerson').get('id') < t2.get('fromPerson').get('id') ? -1 : 1;
+			if (t1.get('fromPerson').id !== t2.get('fromPerson').id) {
+				return t1.get('fromPerson').id < t2.get('fromPerson').id ? -1 : 1;
 			}
 			return t1.get('toPerson').get('name') < t2.get('toPerson').get('name') ? -1 : 1;
 		},

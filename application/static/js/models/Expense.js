@@ -8,7 +8,7 @@ var app = app || {};
 	 */
 	app.Expense = Backbone.RelationalModel.extend({
 		defaults: {
-			id: null,
+			_id: null,
 			description: '',
 			created: 0,
 		},

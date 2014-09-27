@@ -85,7 +85,7 @@ var app = app || {};
 		},
 		persistAndEdit: function () {
 			this.persistNewModel(function () {
-				app.appRouter.navigate('/expenses/' + this.model.get('id'), {
+				app.appRouter.navigate('/expenses/' + this.model.id, {
 					replace: true,
 					trigger: true
 				});

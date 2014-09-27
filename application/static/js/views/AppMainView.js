@@ -81,9 +81,9 @@ var app = app || {};
 		showExpenseEditView: function (id) {
 			this.setupCommon();
 
-			if (app.Expense.findOrCreate({id: id}, {create: false})) {
+			if (app.Expense.findOrCreate({_id: id}, {create: false})) {
 				this.setView('main', new app.ExpenseEditView({
-					model: app.Expense.findOrCreate({id: id}),
+					model: app.Expense.findOrCreate({_id: id}),
 				}));
 			} else {
 				this.showErrorView('Expense not found!');
@@ -132,7 +132,7 @@ var app = app || {};
 				this.setView('transfer', null);
 
 				this.setView('main', new app.PersonEditView({
-					model: app.Person.findOrCreate({id: id})
+					model: app.Person.findOrCreate({_id: id})
 				}));
 			} catch (e) {
 				this.showErrorView(e);
