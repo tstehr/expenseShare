@@ -5,7 +5,7 @@ var app = app || {};
 
 	app.PersonCollection = Backbone.Collection.extend({
 		model: app.Person,
-		url: 'persons',
+		url: 'person',
 		initialize: function () {
 			this.listenTo(this, 'change:name change:hidden', this.sort);
 
