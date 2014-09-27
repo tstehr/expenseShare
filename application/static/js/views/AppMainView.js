@@ -122,7 +122,7 @@ var app = app || {};
 		},
 		showPersonEditView: function (id) {
 			try {
-				if (!app.Person.findOrCreate({id: id}, {create: false})) {
+				if (!app.Person.findOrCreate({_id: id}, {create: false})) {
 					throw new Error('Person not found!');
 				}
 
