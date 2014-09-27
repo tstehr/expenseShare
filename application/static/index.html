@@ -257,7 +257,6 @@
 -->
 
 
-<script src="/socket.io/socket.io.js"></script>
 
 <!-- build:js js/app.js -->
 <script src="/js/libs/math.js"></script>
@@ -267,8 +266,9 @@
 <script src="/js/libs/underscore.js"></script>
 <script src="/js/libs/backbone.js"></script>
 <script src="/js/libs/backbone-relational.js"></script>
-<script src="/js/libs/backbone.iosync.js"></script>
-<script src="/js/libs/backbone.iobind.js"></script>
+<script src="/js/libs/pouchdb-3.0.5.js"></script>
+<script src="/js/libs/uuid.js"></script>
+<script src="/js/libs/backbone-pouch-ts.js"></script>
 
 <script src="/js/util/Util.js"></script>
 
@@ -316,6 +316,13 @@ Q.longStackSupport = true;
 
 
 $(function () {
+	Backbone.sync = new BackbonePouch({
+		db: new PouchDB('expenseShare')
+	}).getSync();
+
+	Backbone.Model.prototype.idAttribute = '_id';
+
+
 	var appModel = new app.App();
 
 	// TODO remove this

@@ -34,30 +34,30 @@ var app = app || {};
 			}
 		},	
 		init: function () {
-			$.get('/auth')
-			.then(function (loggedIn) {
-				if (!loggedIn) {
-					return this.showLoginView().getLoginPromise();
-				} else {
-					return true;
-				}
-			}.bind(this))
-			.then(function (state) {
-				if (state) {
-					this.showMainView();
-				} else {
-					// TODO error!
-					console.log('login failed...');
-				}
-			}.bind(this));
+			// $.get('/auth')
+			// .then(function (loggedIn) {
+			// 	if (!loggedIn) {
+			// 		return this.showLoginView().getLoginPromise();
+			// 	} else {
+			// 		return true;
+			// 	}
+			// }.bind(this))
+			// .then(function (state) {
+			// 	if (state) {
+			// 		this.showMainView();
+			// 	} else {
+			// 		// TODO error!
+			// 		console.log('login failed...');
+			// 	}
+			// }.bind(this));
+
+			this.showMainView();
 		},
 		showLoginView: function () {
 			this.setView(new app.LoginView());
 			return this.view;
 		},
 		showMainView: function () {
-			window.socket = io.connect(window.location.protocol + '//' + window.location.hostname);
-
 			var appView = new app.AppMainView({
 				model: this.model,
 			});
