@@ -46,7 +46,7 @@ var app = app || {};
 		model: app.Participation,
 
 		initialize: function () {
-			this.listenTo(this, 'change', this.removeIfEmpty);
+			this.listenTo(this, 'change add', this.removeIfEmpty);
 		},
 		add: function (model) {
 			// don't add if part with person already exists in collection
@@ -62,10 +62,13 @@ var app = app || {};
 		},
 		removeIfEmpty: function (part) {
 			if (part.isEmpty()) {
+				var expense = part.get('expense');
 				this.remove(part);
-				part.destroy();
+				if (expense) {
+					expense.saveIfNotNew();
+				}
 			}
 		},
-	});
+	}); 
 
 }(app));

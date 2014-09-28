@@ -16,7 +16,7 @@ var app = app || {};
 			key: 'participations',
 			type: Backbone.HasMany,
 			relatedModel: 'app.Participation',
-			includeInJSON: Backbone.Model.prototype.idAttribute,
+			includeInJSON: true,
 			collectionType: 'app.ParticipationCollection',
 			reverseRelation: {
 				key: 'expense',
@@ -69,6 +69,7 @@ var app = app || {};
 			}
 		},
 		saveExpenseAndParticipations: function () {
+			console.warn('call to "saveExpenseAndParticipations"');
 			return this.save().then(function () {
 				return $.when.apply(null, this.get('participations').map(function (part) {
 					return part.save();
@@ -78,10 +79,7 @@ var app = app || {};
 		saveIfNotNew: function () {
 			var changed;
 			if (!this.isNew()) {
-				changed = Object.keys(this.changedAttributes());
-				if (changed.length !== 1 || changed[0] !== 'id') {
-					this.save();
-				}
+				this.save();
 			}
 		},
 		getAmount: function () {

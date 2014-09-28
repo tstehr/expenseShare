@@ -217,7 +217,7 @@
 		<span class="icon-ok" aria-hidden="true"></span>
 	</label>
 
-	<label class="row emphasize" for="participation-toggle-<%= cid %>"><%= personName %></label>
+	<label class="row emphasize" for="participation-toggle-<%= cid %>"><%= name %></label>
 	
 	<label class="row row-amount">
 		<span class="visuallyhidden">Amount: </span>
@@ -258,6 +258,7 @@
 
 
 
+
 <!-- build:js js/app.js -->
 <script src="/js/libs/math.js"></script>
 <script src="/js/libs/fastclick.js"></script>
@@ -269,6 +270,10 @@
 <script src="/js/libs/pouchdb-3.0.5.js"></script>
 <script src="/js/libs/uuid.js"></script>
 <script src="/js/libs/backbone-pouch-ts.js"></script>
+
+<script>
+	Backbone.Model.prototype.idAttribute = '_id';
+</script>
 
 <script src="/js/util/Util.js"></script>
 
@@ -296,13 +301,13 @@
 <script src="/js/views/PersonView.js"></script>
 <script src="/js/views/PersonEditView.js"></script>
 <script src="/js/views/PersonTransferGroupView.js"></script>
-<script src="/js/views/ParticipationView.js"></script>
+<script src="/js/views/PersonParticipationView.js"></script>
 <script src="/js/views/TransferView.js"></script>
 
 <script src="/js/views/ACollectionView.js"></script>
 <script src="/js/views/ExpenseCollectionView.js"></script>
 <script src="/js/views/PersonCollectionView.js"></script>
-<script src="/js/views/ParticipationCollectionView.js"></script>
+<script src="/js/views/PersonCollectionParticipationView.js"></script>
 <script src="/js/views/TransferCollectionView.js"></script>
 
 <script src="/js/routers/AppRouter.js"></script>

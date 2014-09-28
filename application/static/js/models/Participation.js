@@ -8,7 +8,6 @@ var app = app || {};
 	 */
 	app.Participation = Backbone.RelationalModel.extend({
 		defaults: {
-			_id: null,
 			participating: false,
 			amount: 0
 		},
@@ -18,26 +17,13 @@ var app = app || {};
 			relatedModel: 'app.Person',
 			includeInJSON: Backbone.Model.prototype.idAttribute
 		}],
-		urlRoot: 'participation',
 		initialize: function () {
-			if (this.get('person')) {
-				this.listenTo(this.get('person'), 'change destroy', (function () {
-					this.trigger('pseudochange', this);
-				}.bind(this)));
-			}
-
-
 			// TODO reenable ioBind
 			// if (this.isNew()) {
 			// 	this.listenToOnce(this, 'sync', this.doIoBind.bind(this));
 			// } else {
 			// 	this.doIoBind();
 			// }
-		},
-		toJSONDecorated: function () {
-			return _.extend(this.toJSON(), {
-				personName: this.get('person').get('name')
-			});
 		},
 		doIoBind: function () {
 			this.ioBind('update', function (data) {
@@ -55,7 +41,7 @@ var app = app || {};
 		},
 		saveIfNotNew: function () {
 			if (this.get('expense') && !this.get('expense').isNew()) {
-				this.save();
+				return this.get('expense').save();
 			}
 		},
 	});

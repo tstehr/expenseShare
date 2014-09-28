@@ -26,8 +26,9 @@ var app = app || {};
 		},
 
 		initialize: function () {
-			this.participationView = new app.ParticipationCollectionView({
-				collection: this.model.get('participations')
+			this.participationView = new app.PersonCollectionParticipationView({
+				persons: app.persons,
+				participations: this.model.get('participations'),
 			});
 
 			this.listenTo(this.model, 'change pseudochange', this.renderHeader);
