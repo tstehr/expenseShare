@@ -64,7 +64,7 @@ var app = app || {};
 					expense.get('participations').forEach(function (part) {
 						var personId;
 						if (part && part.get('person')) {
-							personId = part.get('person').get('id');
+							personId = part.get('person').id;
 
 							pam[personId] = pam[personId] || 0;
 							if (typeof part.get('amount') === 'number') {
@@ -143,7 +143,6 @@ var app = app || {};
 						transfer = this.fetchTransfer(lowEl.id, highEl.id, change);
 						transfers.push(transfer);
 
-
 						// stop once there is no money left on the current high account anymore
 						if (highEl.val <= INSIGNIFICANCE_CUTOFF) {
 							moneyLeft = false;
@@ -161,16 +160,16 @@ var app = app || {};
 		},
 		fetchTransfer: function(fromId, toId, amount) {
 			var transfer = this.get('transfers').findWhere({
-				fromPerson: app.Person.findOrCreate({id: fromId}),
-				toPerson: app.Person.findOrCreate({id: toId}),
+				fromPerson: app.Person.findOrCreate({_id: fromId}),
+				toPerson: app.Person.findOrCreate({_id: toId}),
 			});
 			
 			if (transfer) {
 				transfer.set('amount', amount);
 			} else {
 				transfer = new app.Transfer({
-					fromPerson: app.Person.findOrCreate({id: fromId}),
-					toPerson: app.Person.findOrCreate({id: toId}),
+					fromPerson: app.Person.findOrCreate({_id: fromId}),
+					toPerson: app.Person.findOrCreate({_id: toId}),
 					amount: amount
 				});
 			}

@@ -19,7 +19,7 @@ var app = app || {};
 		
 		initialize: function () {
 			this.listenTo(this.model, 'change:name', this.render);
-			this.listenTo(this.model, 'change:id change:hidden', this.setElClasses);
+			this.listenTo(this.model, 'change:_id change:hidden', this.setElClasses);
 		},
 		render: function () {
 			this.$el.html(this.template(this.model.toJSON()));
@@ -62,7 +62,7 @@ var app = app || {};
 		},
 		persistAndEdit: function () {
 			this.persistNewModel(function () {
-				app.appRouter.navigate('persons/' + this.model.get('id'), {
+				app.appRouter.navigate('persons/' + this.model.id, {
 					replace: true,
 					trigger: true
 				});
