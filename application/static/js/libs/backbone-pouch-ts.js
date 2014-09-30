@@ -1,9 +1,10 @@
 /**
- * Version: 0.2.1
+ * Version: 0.2.2
  */
 
 var BackbonePouch = function (options) {
 	this.db = options.db;
+	this.debug = options.debug || false;
 
 	this.changeQueueLock = 0;
 	this.changeQueue = [];
@@ -17,7 +18,7 @@ var BackbonePouch = function (options) {
 };
 
 BackbonePouch.prototype.sync = function (method, el, options) {	
-	console.log(method, this.getKey(el), el.cid, JSON.stringify(el.attributes));
+	this.log(method, this.getKey(el), el.cid, JSON.stringify(el.attributes));
 
 	this.lockChangeQueue();
 
@@ -43,14 +44,14 @@ BackbonePouch.prototype.sync = function (method, el, options) {
 					this.bind(el);
 				}
 
-				console.log('end', method, this.getKey(el), el.cid, JSON.stringify(el.attributes));
+				this.log('end', method, this.getKey(el), el.cid, JSON.stringify(el.attributes));
 				this.unlockChangeQueue();
 
 				return doc;
 			}, this), _.bind(function (error) {
 				options.error(error);
 
-				console.log('endfail', method, this.getKey(el), el.cid, JSON.stringify(el.attributes));
+				this.log('endfail', method, this.getKey(el), el.cid, JSON.stringify(el.attributes));
 				this.unlockChangeQueue();
 
 				throw error;
@@ -113,7 +114,7 @@ BackbonePouch.prototype.readCollection = function (collection, options) {
 
 BackbonePouch.prototype.bind = function (el) {
 	var key = this.getKey(el);
-	console.log('bind', this.getKey(el), el.cid, JSON.stringify(el.attributes));
+	this.log('bind', this.getKey(el), el.cid, JSON.stringify(el.attributes));
 	
 	var boundElements = this.getBoundElements(key);
 	if (!_.contains(boundElements, el)) {
@@ -127,25 +128,25 @@ BackbonePouch.prototype.bind = function (el) {
 
 BackbonePouch.prototype.unbind = function (el) {
 	var key = this.getKey(el);
-	console.log('unbind', key, el.cid);
+	this.log('unbind', key, el.cid);
 	this.boundElements[key] = _.without(this.getBoundElements(key), el);
 };
 
 BackbonePouch.prototype.lockChangeQueue = function () {
 	this.changeQueueLock++;
-	console.log('locking change queue', this.changeQueueLock, 'changes', this.changeQueue.length);
+	this.log('locking change queue', this.changeQueueLock, 'changes', this.changeQueue.length);
 };
 
 BackbonePouch.prototype.unlockChangeQueue = function () {
 	this.changeQueueLock--;
-	console.log('unlocking change queue', this.changeQueueLock, 'changes', this.changeQueue.length);
+	this.log('unlocking change queue', this.changeQueueLock, 'changes', this.changeQueue.length);
 
 	this.processChangeQueue();
 };
 
 BackbonePouch.prototype.enqueueChange = function (change) {
 	this.changeQueue.push(change);
-	console.log('enqueuing change', change.seq, 'changes', this.changeQueue.length);
+	this.log('enqueuing change', change.seq, 'changes', this.changeQueue.length);
 
 	this.processChangeQueue();
 };
@@ -159,7 +160,7 @@ BackbonePouch.prototype.processChangeQueue = function () {
 };
 
 BackbonePouch.prototype.handleChange = function (change) {
-	console.log('change', change.seq, change);
+	this.log('change', change.seq, change);
 	
 	this.handleModelChange(change);
 	if (!change.deleted) {
@@ -195,10 +196,17 @@ BackbonePouch.prototype.handleCollectionChange = function (change) {
 
 		_.forEach(boundCollections, function (collection) {
 			if (!collection.get(modelId)) {
-				var newModel = collection.add({
+				// we only prepare the model here, not adding it to the collection yer
+				var newModel = collection._prepareModel({
 					_id: modelId
 				});
-				newModel.fetch();
+
+				newModel.fetch()
+					.then(function () {
+						// adding model only after fetching, because only now it can be sorted correctly
+						collection.add(newModel);
+					})
+				;
 			}
 		});
 	}
@@ -227,5 +235,11 @@ BackbonePouch.prototype.getKey = function (el) {
 		return this.getUrl(el);
 	} else {
 		return el.id;
+	}
+};
+
+BackbonePouch.prototype.log = function () {
+	if (this.debug && console && console.log) {
+		console.log.apply(console, arguments);
 	}
 };
