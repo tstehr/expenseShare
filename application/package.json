@@ -3,16 +3,14 @@
   "version": "0.0.2",
   "description": "An application for sharing expenses",
   "dependencies": {
-    "express": "~3.1.0",
+    "express": "",
     "connect": "",    
-    "connect-session": "",
-    "path": "~0.4.9",
-    "optimist": "",
+    "cookie-session": "",
+    "body-parser": "",
+    "errorhandler": "",
+    "path": "",
     "q": "",
-    "underscore": "",
-    "mysql": "~2.0.0",
-    "socket.io": "0.9.x",
-    "session.socket.io": ""
+    "underscore": ""
   },
   "devDependencies": {
     "matchdep": "",

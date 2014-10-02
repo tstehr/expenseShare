@@ -1,28 +1,20 @@
 var application_root = __dirname;
 
-var http = require('http');
 var express = require('express');
 var connect = require('connect');
-var session = require('connect-session');
-var socketIo = require('socket.io');
-var SessionSockets = require('session.socket.io');
+var session = require('cookie-session');
+var bodyParser = require('body-parser');
+var errorhandler = require('errorhandler');
+
 var path = require('path');
-var mysql = require('mysql');
 var _ = require('underscore');
 var Q = require('q');
 
 
 
-var PersonHandler = require('./socketHandlers/PersonHandler');
-var ExpenseHandler = require('./socketHandlers/ExpenseHandler');
-var ParticipationHandler = require('./socketHandlers/ParticipationHandler');
-
-
-
-var server, app, io, pool, sessionStore, cookieParser;
+var server, app, sessionStore, cookieParser;
 
 var config = {
-	sqlHost: 'localhost',
 	port: 1337,
 	staticDir: 'static_dist',
 	sessionSecret: Math.round(Math.random() * 1e200).toString(36)
@@ -31,59 +23,19 @@ var config = {
 _.extend(config, require('./config.json'));
 
 
-if (!config.sqlUser && !config.sqlPassword) {
-	throw new Error('Please supply mysql username and mysql password. ');
-}
-
-if (!config.sqlDB) {
-	throw new Error('Please supply database name');
-}
-
-if (!config.user && !config.password) {
-	throw new Error('Please supply username and password. ');
-}
-
-pool = mysql.createPool({
-	host: config.sqlHost,
-	user: config.sqlUser,
-	password: config.sqlPassword,
-	connectionLimit: 5
-});
-
-pool.on('connection', function (connection) {
-	Q.nmcall(connection, 'query', 'use ' + config.sqlDB)
-		.then(function () {
-			return Q.nmcall(connection, 'query', 'set names utf8');
-		})
-		.then(
-			function () {
-				console.log('New connection initialized.');
-			}, 
-			function (err) {
-				console.log('Failed to initialize connection!');
-				console.log(err);
-			}
-		)
-	;
-});
-
 // create express server
 app = express();
 
-cookieParser = express.cookieParser(config.sessionSecret);
-sessionStore = new session.session.MemoryStore();
+app.use(bodyParser.urlencoded({ extended: false }))
 
-app.use(cookieParser);
-app.use(express.session({
-	store: sessionStore
+app.use(session({
+	secret: config.sessionSecret,
 }));
 
-app.use(express.bodyParser());
 app.use(express.static(path.join(application_root, config.staticDir)));
-app.use(app.router);
 
 //Show all errors in development
-app.use(express.errorHandler({
+app.use(errorhandler({
 	dumpExceptions: true, 
 	showStack: true 
 }));
@@ -105,28 +57,13 @@ app.post('/auth', function (req, res) {
 	}
 });
 
+// TODO proxy couch...
+
 // serve index file to all other requests
 app.get('*', function (req, res) {
-	res.sendfile(path.join(application_root, config.staticDir + '/index.html'));
+	res.sendFile(path.join(application_root, config.staticDir + '/index.html'));
 });
 
-// create http server using express as listener
-server = http.createServer(app);
-
-// create socket
-io = socketIo.listen(server);
-
-io.set('log level', 1);
-
-(new SessionSockets(io, sessionStore, cookieParser)).on('connection', function (err, socket, session) {
-	console.log(session);
-	if (session && session.loggedIn) {
-		new PersonHandler(socket, pool);
-		new ExpenseHandler(socket, pool);
-		new ParticipationHandler(socket, pool);
-	}
-});
-
-server.listen(config.port, function() {
+app.listen(config.port, function() {
 	console.log('Express server listening on port %d in %s mode', config.port, app.settings.env);
 });
