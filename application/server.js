@@ -1,8 +1,7 @@
 var application_root = __dirname;
 
 var express = require('express');
-var connect = require('connect');
-var session = require('cookie-session');
+var session = require('express-session');
 var bodyParser = require('body-parser');
 var errorhandler = require('errorhandler');
 
@@ -26,10 +25,19 @@ _.extend(config, require('./config.json'));
 // create express server
 app = express();
 
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(session({
 	secret: config.sessionSecret,
+	saveUninitialized: false,
+	resave: false,
+	rolling: true,
+	cookie: { 
+		path: '/', 
+		httpOnly: true, 
+		secure: false,
+		maxAge: new Date(Date.now() + 3600000),
+	},
 }));
 
 app.use(express.static(path.join(application_root, config.staticDir)));
@@ -50,14 +58,13 @@ app.post('/auth', function (req, res) {
 		(req.body.username === config.user && req.body.password === config.password)
 	) {
 		req.session.loggedIn = true;
-		req.session.loggedIn.maxAge = new Date(Date.now() + 3600000);
 		res.send(true);
 	} else {
-		res.send(false);
+		res.status(403).send(false);
 	}
 });
 
-// TODO proxy couch...
+
 
 // serve index file to all other requests
 app.get('*', function (req, res) {
