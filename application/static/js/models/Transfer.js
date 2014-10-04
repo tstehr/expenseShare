@@ -30,25 +30,6 @@ var app = app || {};
 			this.listenTo(this.get('toPerson'), 'change destroy', function () {
 				this.trigger('pseudochange');
 			});
-			
-			// TODO reenable ioBind
-			// if (this.isNew()) {
-			// 	this.listenToOnce(this, 'sync', this.doIoBind.bind(this));
-			// } else {
-			// 	this.doIoBind();
-			// }
-		},
-		doIoBind: function () {
-			this.ioBind('update', function (data) {
-				this.set('paid', data.paid);
-			});
-
-			this.ioBind('delete', function (data) {
-				if (this.collection) {
-					this.collection.remove(this);
-				}
-				this.set('id', null);
-			});
 		},
 		toJSONDecorated: function () {
 			return _.extend(this.toJSON(), {

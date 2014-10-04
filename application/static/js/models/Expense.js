@@ -31,27 +31,6 @@ var app = app || {};
 				// cf. Backbone.RelationalModel.trigger
 				this.trigger('pseudochange');
 			});
-
-			// TODO reenable ioBind
-			// if (this.isNew()) {
-			// 	this.listenToOnce(this, 'sync', this.doIoBind.bind(this));
-			// } else {
-			// 	this.doIoBind();
-			// }
-		},
-		doIoBind: function () {
-			this.ioBind('createParticipation', function (data) {
-				this.get('participations').add(data);
-			});
-			this.ioBind('update', function (data) {
-				this.set(data);
-			});
-			this.ioBind('delete', function (data) {
-				if (this.collection) {
-					this.collection.remove(this);
-				}
-				this.set('id', null);
-			});
 		},
 		validate: function () {
 			var count = 0, amount = 0;
