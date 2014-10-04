@@ -1,18 +1,17 @@
 var chance = new require('chance')(),
-    fs = require('fs'),
-    path = require('path');
+	couchdb = require('then-couchdb'),
+	Promise = require('promise'),
+	uuid = require('uuid');
 
 var config = {
-	rootPath: path.join(__dirname, 'output'),
-	personPath: 'person.csv',
+	couchUrl: 'http://127.0.0.1:5984/expense_share',
 	personHiddenPercentage: 30,
-	personCount: 10,
-	expensePath: 'expense.csv',
+	personCount: 15,
 	expenseStartDate: 'Jan 1, 2014',
-	expenseRate: .5 / (60 * 60 * 24),
+	expenseRate: 0.5 / (60 * 60 * 24),
 	expenseDescriptionWordsMean: 6,
 	expenseDescriptionWordsDev: 2,
-	expenseCount: 150,
+	expenseCount: 1500,
 	participationPath: 'participation.csv',
 	participationParticipatingPercentage: 40,
 	participationPayingMean: 1,
@@ -27,97 +26,105 @@ var nextTime = function (rate) {
 	return -Math.log(1.0 - Math.random()) / rate;
 };
 
+var db = couchdb.createClient(config.couchUrl);
+
+var createPerson = function () {
+	return {
+		_id: 'person_' + uuid.v4(),
+		name: chance.name(),
+		hidden: chance.bool({likelihood: config.personHiddenPercentage}),
+	};
+};
+
+var createExpense = function (baseTime, persons) {
+	var description = chance.sentence({
+		words: Math.round(chance.normal({
+			mean: config.expenseDescriptionWordsMean, 
+			dev: config.expenseDescriptionWordsDev,
+		})),
+	});
+
+	var id = 'expense_' + uuid.v4();
+
+	return {
+		_id: id,
+		description: description,
+		time: baseTime + nextTime(config.expenseRate),
+		participations: createParticipations(id, persons),
+	};
+};
+
+var createParticipations = function (expenseId, persons) {
+	var payerCount, payers, payerId, participations;
+
+	payerCount = chance.normal({
+		mean: config.participationPayingMean, 
+		dev: config.participationPayingDev,
+	});
+
+	payerCount = Math.min(persons.length, Math.max(1, Math.round(payerCount)));
+
+	payers = [];
+
+	for (var i = 0; i < payerCount; i++) {
+		do {
+			payerId = chance.pick(persons)._id;
+		} while (payers.indexOf(payerId) != -1);
+		payers.push(payerId);
+	}
+
+	participations = [];
+
+	persons.forEach(function (person) {
+		var amount, particpating;
+		var personId = person._id;
+
+		if (payers.indexOf(personId) == -1) {
+			amount = 0;
+		} else {
+			amount = Math.round(chance.normal({mean: config.participationAmoutMean, dev: config.participationAmountDev}));
+		}
+
+		participating = chance.bool({likelihood: config.participationParticipatingPercentage});
+
+		if (amount || participating) {	
+			participations.push({
+				participating: participating,
+				amount: amount,
+				person: personId,
+				expense: expenseId,
+			});
+		}
+	});
+
+	return participations;
+};
+
 // persons:
-(function () {
-	var line;
+Promise.resolve()
+	.then(function () {
+		var person, personPromises = [];
 
-	var personId;
-
-	var personStream = fs.createWriteStream(path.join(config.rootPath, config.personPath));
-
-	for (personId = 1; personId <= config.personCount; personId++) {
-		line = [personId, chance.name(), +chance.bool({likelihood: config.personHiddenPercentage})];
-		personStream.write(line.join(',') + "\n");
-	}
-
-	personStream.end();
-}());
-
-// expenses
-(function () {
-	var line;
-
-	var expenseId, name;
-
-	var time = new Date(config.expenseStartDate).getTime() / 1000;
-
-	var expenseStream = fs.createWriteStream(path.join(config.rootPath, config.expensePath));
-
-	for (expenseId = 1; expenseId <= config.expenseCount; expenseId++) {
-		time += nextTime(config.expenseRate);
-
-		name = chance.sentence({
-			words: Math.round(chance.normal({
-				mean: config.expenseDescriptionWordsMean, 
-				dev: config.expenseDescriptionWordsDev,
-			})),
-		});
-
-		line = [expenseId, name, Math.round(time)];
-		expenseStream.write(line.join(',') + "\n");
-	}
-
-	expenseStream.end();
-}());
-
-// participations
-(function () {
-	var line;
-
-	var expenseId, personId;
-
-	var payerCount, payers, payerId;
-
-	var amount, participating;
-
-	var participationStream = fs.createWriteStream(path.join(config.rootPath, config.participationPath));
-
-
-	for (expenseId = 1; expenseId <= config.expenseCount; expenseId++) {
-		payerCount = chance.normal({
-			mean: config.participationPayingMean, 
-			dev: config.participationPayingDev,
-		});
-
-		payerCount = Math.min(config.personCount, Math.max(1, Math.round(payerCount)));
-
-		payers = [];
-
-		for (var i = 0; i < payerCount; i++) {
-			do {
-				payerId = chance.integer({min: 1, max: config.personCount});
-			} while (payers.indexOf(payerId) != -1);
-			payers.push(payerId);
+		for (var i = 1; i <= config.personCount; i++) {
+			person = createPerson();
+			personPromises.push(db.save(person));
 		}
 
-		for (personId = 1; personId <= config.personCount; personId++) {
-			if (payers.indexOf(personId) == -1) {
-				amount = 0;
-			} else {
-				amount = Math.round(chance.normal({mean: config.participationAmoutMean, dev: config.participationAmountDev}));
-			}
+		return Promise.all(personPromises);
+	})
+	.then(function (persons) {
+		var expense, baseTime, expensePromises = [];
 
-			participating = +chance.bool({likelihood: config.participationParticipatingPercentage});
+		baseTime = new Date(config.expenseStartDate).getTime() / 1000;
 
-			if (amount || participating) {	
-				line = [personId, expenseId, amount, participating];
-				
-				participationStream.write(line.join(',') + "\n");
-			}
+		for (var i = 1; i <= config.expenseCount; i++) {
+			expense = createExpense(baseTime, persons);
+			baseTime = expense.time;
+			expensePromises.push(db.save(expense));
 		}
-	}
 
-	participationStream.end();
-}());
+		return Promise.all(expensePromises);
+	})
+;
 
 
