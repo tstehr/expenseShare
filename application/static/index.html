@@ -321,9 +321,11 @@ Q.longStackSupport = true;
 
 
 $(function () {
-	Backbone.sync = new BackbonePouch({
-		db: new PouchDB('expenseShare')
-	}).getSync();
+	app.sync = new BackbonePouch({
+		db: new PouchDB('expense_share'),
+	});
+
+	Backbone.sync = app.sync.getSync();
 
 	Backbone.Model.prototype.idAttribute = '_id';
 

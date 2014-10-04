@@ -34,24 +34,27 @@ var app = app || {};
 			}
 		},	
 		init: function () {
-			// $.get('/auth')
-			// .then(function (loggedIn) {
-			// 	if (!loggedIn) {
-			// 		return this.showLoginView().getLoginPromise();
-			// 	} else {
-			// 		return true;
-			// 	}
-			// }.bind(this))
-			// .then(function (state) {
-			// 	if (state) {
-			// 		this.showMainView();
-			// 	} else {
-			// 		// TODO error!
-			// 		console.log('login failed...');
-			// 	}
-			// }.bind(this));
+			$.get('/auth')
+			.then(function (loggedIn) {
+				if (!loggedIn) {
+					return this.showLoginView().getLoginPromise();
+				} else {
+					return true;
+				}
+			}.bind(this))
+			.then(function (state) {
+				if (state) {
+					// TODO support IE (https://gist.github.com/hbogs/7908703)
+					PouchDB.sync(app.sync.db, window.location.origin + '/sync', {
+						live: true,
+					});
 
-			this.showMainView();
+					this.showMainView();
+				} else {
+					// TODO error!
+					console.log('login failed...');
+				}
+			}.bind(this));
 		},
 		showLoginView: function () {
 			this.setView(new app.LoginView());

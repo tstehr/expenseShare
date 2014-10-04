@@ -3,11 +3,11 @@
   "version": "0.0.2",
   "description": "An application for sharing expenses",
   "dependencies": {
-    "express": "",
-    "connect": "",    
-    "cookie-session": "",
     "body-parser": "",
     "errorhandler": "",
+    "express": "",
+    "express-session": "",
+    "http-proxy": "",
     "path": "",
     "q": "",
     "underscore": ""

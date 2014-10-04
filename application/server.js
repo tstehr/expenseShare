@@ -4,6 +4,7 @@ var express = require('express');
 var session = require('express-session');
 var bodyParser = require('body-parser');
 var errorhandler = require('errorhandler');
+var httpProxy = require('http-proxy');
 
 var path = require('path');
 var _ = require('underscore');
@@ -60,11 +61,22 @@ app.post('/auth', function (req, res) {
 		req.session.loggedIn = true;
 		res.send(true);
 	} else {
-		res.status(403).send(false);
+		res.send(false);
 	}
 });
 
+var proxy = httpProxy.createProxyServer({});
 
+app.use('/sync', function(req, res) {
+	if (req.session.loggedIn) {
+		proxy.web(req, res, { 
+			target: 'http://127.0.0.1:5984/expense_share' 
+		});
+	} else {
+		res.status(403).end();
+	}
+
+});
 
 // serve index file to all other requests
 app.get('*', function (req, res) {
