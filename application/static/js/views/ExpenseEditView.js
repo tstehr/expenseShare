@@ -95,7 +95,7 @@ var app = app || {};
 		persistNewModel: function (callback)  {
 			this.setBlocked(true);
 
-			this.model.saveExpenseAndParticipations().then(
+			this.model.save().then(
 				function () {
 					this.setBlocked(false);
 					if (callback) {

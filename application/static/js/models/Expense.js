@@ -68,14 +68,6 @@ var app = app || {};
 				return 'An expense needs at least one participant!';
 			}
 		},
-		saveExpenseAndParticipations: function () {
-			console.warn('call to "saveExpenseAndParticipations"');
-			return this.save().then(function () {
-				return $.when.apply(null, this.get('participations').map(function (part) {
-					return part.save();
-				}));
-			}.bind(this));
-		},
 		saveIfNotNew: function () {
 			var changed;
 			if (!this.isNew()) {
