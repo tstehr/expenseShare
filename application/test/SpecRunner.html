@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Jasmine Spec Runner v2.0.1</title>
+
+	<link rel="shortcut icon" type="image/png" href="lib/jasmine-2.0.1/jasmine_favicon.png">
+	<link rel="stylesheet" type="text/css" href="lib/jasmine-2.0.1/jasmine.css">
+
+	<!-- Jasmine -->
+	<script type="text/javascript" src="lib/jasmine-2.0.1/jasmine.js"></script>
+	<script type="text/javascript" src="lib/jasmine-2.0.1/jasmine-html.js"></script>
+	<script type="text/javascript" src="lib/jasmine-2.0.1/boot.js"></script>
+
+	<!-- include source files here... -->
+	<!-- libs -->
+	<script src="../static/js/libs/math.js"></script>
+	<script src="../static/js/libs/fastclick.js"></script>
+	<script src="../static/js/libs/jquery-1.9.1.js"></script>
+	<script src="../static/js/libs/q.js"></script>
+	<script src="../static/js/libs/underscore.js"></script>
+	<script src="../static/js/libs/backbone.js"></script>
+	<script src="../static/js/libs/backbone-relational.js"></script>
+
+
+	<!-- the file itself -->
+	<script>
+		Backbone.Model.prototype.idAttribute = '_id';
+	</script>
+
+	<script src="../static/js/util/Util.js"></script>
+
+	<script src="../static/js/models/App.js"></script>
+	<script src="../static/js/models/Expense.js"></script>
+	<script src="../static/js/models/Person.js"></script>
+	<script src="../static/js/models/Participation.js"></script>
+	<script src="../static/js/models/Transfer.js"></script>
+
+	<script src="../static/js/collections/ExpenseCollection.js"></script>
+	<script src="../static/js/collections/PersonCollection.js"></script>
+	<script src="../static/js/collections/ParticipationCollection.js"></script>
+	<script src="../static/js/collections/TransferCollection.js"></script>
+
+	<!-- include spec files here... -->
+	<script type="text/javascript" src="spec/TransferAlgorithmSpec.js"></script>
+</head>
+
+<body>
+</body>
+</html>
