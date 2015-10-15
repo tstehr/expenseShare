@@ -267,7 +267,7 @@
 <script src="/js/libs/underscore.js"></script>
 <script src="/js/libs/backbone.js"></script>
 <script src="/js/libs/backbone-relational.js"></script>
-<script src="/js/libs/pouchdb-3.0.5.js"></script>
+<script src="/js/libs/pouchdb-5.0.0.js"></script>
 <script src="/js/libs/uuid.js"></script>
 <script src="/js/libs/backbone-pouch-ts.js"></script>
 
@@ -323,6 +323,7 @@ Q.longStackSupport = true;
 $(function () {
 	app.sync = new BackbonePouch({
 		db: new PouchDB('expense_share'),
+//		debug: true,
 	});
 
 	Backbone.sync = app.sync.getSync();

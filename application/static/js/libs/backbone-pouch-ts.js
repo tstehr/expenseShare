@@ -1,5 +1,5 @@
 /**
- * Version: 0.2.2
+ * Version: 0.2.3
  */
 
 var BackbonePouch = function (options) {
@@ -93,7 +93,13 @@ BackbonePouch.prototype.update = function (model, options) {
 };
 
 BackbonePouch.prototype.delete = function (model, options) {
-	return this.db.remove(model.toJSON());
+	return this.db.remove(model.toJSON())
+		.then(function (resp) {
+			// Remove _id and _rev after deleting. Backbone thus sees the model as new and attemting to save it again will create a new id.
+			model.set('_id', undefined);
+			model.set('_rev', undefined);
+		})
+	;
 };
 
 BackbonePouch.prototype.readCollection = function (collection, options) {
