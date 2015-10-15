@@ -67,7 +67,7 @@ app.post('/auth', function (req, res) {
 
 var proxy = httpProxy.createProxyServer({});
 
-app.use('/sync', function(req, res) {
+app.all('/sync*', function(req, res) {
 	if (req.session.loggedIn) {
 		proxy.web(req, res, { 
 			target: 'http://127.0.0.1:5984/expense_share' 
@@ -80,7 +80,7 @@ app.use('/sync', function(req, res) {
 
 // serve index file to all other requests
 app.get('*', function (req, res) {
-	res.sendFile(path.join(application_root, config.staticDir + '/index.html'));
+	res.sendfile(path.join(application_root, config.staticDir + '/index.html'));
 });
 
 app.listen(config.port, function() {
