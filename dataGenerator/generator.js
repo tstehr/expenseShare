@@ -1,7 +1,8 @@
 var chance = new require('chance')(),
-	couchdb = require('then-couchdb'),
-	Promise = require('promise'),
+	nano = require('nano'),
+	Promise = require('prfun'),
 	uuid = require('uuid');
+
 
 var config = {
 	couchUrl: 'http://127.0.0.1:5984/expense_share',
@@ -12,7 +13,6 @@ var config = {
 	expenseDescriptionWordsMean: 6,
 	expenseDescriptionWordsDev: 2,
 	expenseCount: 1500,
-	participationPath: 'participation.csv',
 	participationParticipatingPercentage: 40,
 	participationPayingMean: 1,
 	participationPayingDev: 3,
@@ -26,7 +26,7 @@ var nextTime = function (rate) {
 	return -Math.log(1.0 - Math.random()) / rate;
 };
 
-var db = couchdb.createClient(config.couchUrl);
+
 
 var createPerson = function () {
 	return {
@@ -100,31 +100,33 @@ var createParticipations = function (expenseId, persons) {
 	return participations;
 };
 
-// persons:
-Promise.resolve()
-	.then(function () {
-		var person, personPromises = [];
+var db = nano(config.couchUrl);
 
-		for (var i = 1; i <= config.personCount; i++) {
-			person = createPerson();
-			personPromises.push(db.save(person));
-		}
+db.bulkPr = Promise.promisify(db.bulk, false, db);
 
-		return Promise.all(personPromises);
-	})
-	.then(function (persons) {
-		var expense, baseTime, expensePromises = [];
 
-		baseTime = new Date(config.expenseStartDate).getTime() / 1000;
+var person, persons = [], expense, baseTime, expenses = [];;
 
-		for (var i = 1; i <= config.expenseCount; i++) {
-			expense = createExpense(baseTime, persons);
-			baseTime = expense.time;
-			expensePromises.push(db.save(expense));
-		}
+for (var i = 1; i <= config.personCount; i++) {
+	person = createPerson();
+	persons.push(person);
+}
 
-		return Promise.all(expensePromises);
-	})
+baseTime = new Date(config.expenseStartDate).getTime() / 1000;
+
+for (var i = 1; i <= config.expenseCount; i++) {
+	expense = createExpense(baseTime, persons);
+	baseTime = expense.time;
+	expenses.push(expense);
+}
+
+db.bulkPr({
+	docs: persons.concat(expenses),
+})
+	.then(
+		console.log.bind(console), 
+		console.error.bind(console)
+	)
 ;
 
 
